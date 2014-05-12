@@ -58,21 +58,25 @@
         <pathelement location="${basedir}/../jetbrick-webmvc/src/main/java"/>
     </path>
     <path id="compile.resources">
+        <fileset dir="${basedir}/../jetbrick-commons/src/main/java" excludes="**/*.java" />
         <fileset dir="${basedir}/../jetbrick-commons/src/main/resources" excludes="**/*.java" />
+        <fileset dir="${basedir}/../jetbrick-ioc/src/main/java" excludes="**/*.java" />
         <fileset dir="${basedir}/../jetbrick-ioc/src/main/resources" excludes="**/*.java" />
+        <fileset dir="${basedir}/../jetbrick-webmvc/src/main/java" excludes="**/*.java" />
         <fileset dir="${basedir}/../jetbrick-webmvc/src/main/resources" excludes="**/*.java" />
     </path>
     <path id="sources.resources">
-        <fileset dir="${basedir}/../jetbrick-commons/src/main/resources" includes="**/*.java" />
-        <fileset dir="${basedir}/../jetbrick-ioc/src/main/resources" includes="**/*.java" />
-        <fileset dir="${basedir}/../jetbrick-webmvc/src/main/resources" includes="**/*.java" />
+        <fileset dir="${basedir}/../jetbrick-commons/src/main/java" />
+        <fileset dir="${basedir}/../jetbrick-commons/src/main/resources" />
+        <fileset dir="${basedir}/../jetbrick-ioc/src/main/java" />
+        <fileset dir="${basedir}/../jetbrick-ioc/src/main/resources" />
+        <fileset dir="${basedir}/../jetbrick-webmvc/src/main/java" />
+        <fileset dir="${basedir}/../jetbrick-webmvc/src/main/resources" />
     </path>
 
     <patternset id="metainf.resources">
-        <!--
         <include name="NOTICE" />
         <include name="LICENSE" />
-        -->
         <include name="pom.xml" />
     </patternset>
 
@@ -179,7 +183,10 @@
         </artifact:install>
     </target>
 
-    <target name="deploy" depends="jar, sources.jar, javadoc.jar, install">
+    <target name="release" depends="jar, sources.jar, javadoc.jar, install">
+    </target>
+
+    <target name="deploy" depends="release, install">
         <property name="maven-snapshots-repository-id" value="sonatype-nexus-snapshots" />
         <property name="maven-snapshots-repository-url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
         <property name="maven-staging-repository-id" value="sonatype-nexus-staging" />

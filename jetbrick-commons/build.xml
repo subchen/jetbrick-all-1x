@@ -53,22 +53,20 @@
     </path>
     -->
     <path id="compile.sourcepath">
-        <pathelement location="${basedir}/src/main/java"/>
+        <pathelement location="${basedir}/src/main/java" />
     </path>
     <path id="compile.resources">
+        <fileset dir="${basedir}/src/main/java" excludes="**/*.java" />
         <fileset dir="${basedir}/src/main/resources" excludes="**/*.java" />
     </path>
     <path id="sources.resources">
-        <fileset dir="${basedir}/src/main/java">
-            <include name="**/*.java" />
-        </fileset>
+        <fileset dir="${basedir}/src/main/java" />
+        <fileset dir="${basedir}/src/main/resources" />
     </path>
 
     <patternset id="metainf.resources">
-        <!--
         <include name="NOTICE" />
         <include name="LICENSE" />
-        -->
         <include name="pom.xml" />
     </patternset>
 
@@ -175,7 +173,10 @@
         </artifact:install>
     </target>
 
-    <target name="deploy" depends="jar, sources.jar, javadoc.jar, install">
+    <target name="release" depends="jar, sources.jar, javadoc.jar, install">
+    </target>
+
+    <target name="deploy" depends="release, install">
         <property name="maven-snapshots-repository-id" value="sonatype-nexus-snapshots" />
         <property name="maven-snapshots-repository-url" value="https://oss.sonatype.org/content/repositories/snapshots/" />
         <property name="maven-staging-repository-id" value="sonatype-nexus-staging" />
