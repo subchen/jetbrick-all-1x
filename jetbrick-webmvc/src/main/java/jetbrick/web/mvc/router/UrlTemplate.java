@@ -49,7 +49,7 @@ public final class UrlTemplate {
 
         for (int i = 1; i < matchers.length; i++) {
             if (!matchers[i].match(urlSegments[i], pathVariables)) {
-                pathVariables.reset(); // 注意：不匹配的情况下，需要清除此次匹配的内容
+                pathVariables.clear(); // 注意：不匹配的情况下，需要清除此次匹配的内容
                 return false;
             }
         }

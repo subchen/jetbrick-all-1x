@@ -41,7 +41,7 @@ public final class PathVariables {
         size += 2;
     }
 
-    public void reset() {
+    public void clear() {
         // 没有必要将 items 的内容设置为 null，设置 size 就可以了.
         size = 0;
     }
