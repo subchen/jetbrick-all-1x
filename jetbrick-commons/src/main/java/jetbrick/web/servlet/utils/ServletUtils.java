@@ -21,14 +21,11 @@ package jetbrick.web.servlet.utils;
 import java.io.*;
 import java.net.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Enumeration;
+import java.util.*;
 import javax.servlet.ServletContext;
 import javax.servlet.http.*;
 import jetbrick.commons.codec.Base64;
-import jetbrick.commons.lang.ArrayUtils;
-import jetbrick.commons.lang.StringUtils;
-import com.alibaba.fastjson.JSONObject;
+import jetbrick.commons.lang.*;
 
 public abstract class ServletUtils {
 
@@ -79,8 +76,8 @@ public abstract class ServletUtils {
         return sb.toString();
     }
 
-    public static JSONObject getParametersAsJSON(HttpServletRequest request) {
-        JSONObject json = new JSONObject();
+    public static String getParametersAsJSON(HttpServletRequest request) {
+        Map<String, Object> json = new HashMap<String, Object>();
         Enumeration<String> enu = request.getParameterNames();
         while (enu.hasMoreElements()) {
             String name = enu.nextElement();
@@ -94,7 +91,7 @@ public abstract class ServletUtils {
                 json.put(name, value[0]);
             }
         }
-        return json;
+        return JSONUtils.toJSONString(json);
     }
 
     public static String getUrlParameters(HttpServletRequest request, String excludeNames) {
