@@ -18,6 +18,9 @@
  */
 package jetbrick.commons.beans;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import jetbrick.commons.lang.StringUtils;
@@ -121,6 +124,61 @@ public class ClassLoaderUtils {
             name = sb.toString();
         }
         return name;
+    }
+
+    public static URL getResource(String resourceName) {
+        return getResource(resourceName, null);
+    }
+
+    public static URL getResource(String resourceName, ClassLoader classLoader) {
+        if (resourceName.startsWith("/")) {
+            resourceName = resourceName.substring(1);
+        }
+        if (classLoader != null) {
+            URL url = classLoader.getResource(resourceName);
+            if (url != null) {
+                return url;
+            }
+        }
+        ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
+        if (currentThreadClassLoader != null && currentThreadClassLoader != classLoader) {
+            URL url = currentThreadClassLoader.getResource(resourceName);
+            if (url != null) {
+                return url;
+            }
+        }
+        return null;
+    }
+
+    public static InputStream getResourceAsStream(String resourceName) throws IOException {
+        return getResourceAsStream(resourceName, null);
+    }
+
+    public static InputStream getResourceAsStream(String resourceName, ClassLoader callingClass) throws IOException {
+        URL url = getResource(resourceName, callingClass);
+        if (url != null) {
+            return url.openStream();
+        }
+        return null;
+    }
+
+    public static InputStream getClassAsStream(Class<?> clazz) throws IOException {
+        return getResourceAsStream(getClassFileName(clazz), clazz.getClassLoader());
+    }
+
+    public static InputStream getClassAsStream(String className) throws IOException {
+        return getResourceAsStream(getClassFileName(className));
+    }
+
+    public static String getClassFileName(Class<?> clazz) {
+        if (clazz.isArray()) {
+            clazz = clazz.getComponentType();
+        }
+        return getClassFileName(clazz.getName());
+    }
+
+    public static String getClassFileName(String className) {
+        return className.replace('.', '/') + ".class";
     }
 
     static {
