@@ -143,6 +143,42 @@ public final class IoUtils {
         }
     }
 
+    public static void write(byte[] data, File file) {
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(file);
+            os.write(data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            IoUtils.closeQuietly(os);
+        }
+    }
+
+    public static void write(char[] data, File file, String encoding) {
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(file);
+            os.write(new String(data).getBytes(encoding));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            IoUtils.closeQuietly(os);
+        }
+    }
+
+    public static void write(String data, File file, String encoding) {
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(file);
+            os.write(data.getBytes(encoding));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            IoUtils.closeQuietly(os);
+        }
+    }
+
     public static long copy(InputStream input, OutputStream output) throws IOException {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0L;
