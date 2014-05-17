@@ -39,7 +39,7 @@ import jetbrick.web.mvc.action.Controller;
 import jetbrick.web.mvc.action.annotations.ArgumentGetter;
 import jetbrick.web.mvc.results.ResultHandler;
 import jetbrick.web.mvc.results.views.ViewHandler;
-import jetbrick.web.servlet.utils.ServletUtils;
+import jetbrick.web.servlet.ServletUtils;
 
 public class WebConfigBuilder {
 

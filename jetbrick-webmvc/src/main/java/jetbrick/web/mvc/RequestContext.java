@@ -27,7 +27,7 @@ import jetbrick.web.mvc.action.HttpMethod;
 import jetbrick.web.mvc.config.WebConfig;
 import jetbrick.web.mvc.multipart.*;
 import jetbrick.web.mvc.results.ResultHandler;
-import jetbrick.web.servlet.utils.RequestIntrospectUtils;
+import jetbrick.web.servlet.RequestIntrospectUtils;
 
 public class RequestContext {
     private final static ThreadLocal<RequestContext> threadContext = new InheritableThreadLocal<RequestContext>();

@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.web.servlet.utils;
+package jetbrick.web.servlet;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -29,7 +29,7 @@ public final class RequestUtils {
     /**
      * 获取相对 ContextPath 的 requestURI
      */
-    public static String getRequestPathInfo(HttpServletRequest request) {
+    public static String getPathInfo(HttpServletRequest request) {
         String path = request.getPathInfo();
         if (path == null) {
             path = request.getServletPath();
@@ -85,7 +85,7 @@ public final class RequestUtils {
             }
         }
         if (sb.length() > 0) sb.insert(0, '?');
-        sb.insert(0, request.getContextPath() + getRequestPathInfo(request));
+        sb.insert(0, request.getContextPath() + getPathInfo(request));
 
         return sb.toString();
     }

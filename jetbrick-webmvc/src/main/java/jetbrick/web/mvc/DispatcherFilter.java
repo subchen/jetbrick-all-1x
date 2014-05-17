@@ -32,7 +32,8 @@ import jetbrick.web.mvc.interceptor.Interceptor;
 import jetbrick.web.mvc.interceptor.InterceptorChainImpl;
 import jetbrick.web.mvc.plugin.Plugin;
 import jetbrick.web.mvc.results.ResultHandler;
-import jetbrick.web.servlet.utils.ServletUtils;
+import jetbrick.web.servlet.RequestUtils;
+import jetbrick.web.servlet.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,14 +111,14 @@ public final class DispatcherFilter implements Filter {
         request.setCharacterEncoding(encoding);
         response.setCharacterEncoding(encoding);
 
-        String path = ServletUtils.getRequestPathInfo(request);
+        String path = RequestUtils.getPathInfo(request);
         if (bypassUrls != null && bypassUrls.accept(request, path)) {
             chain.doFilter(request, response);
             return;
         }
 
         if (config.isHttpCache() == false) {
-            ServletUtils.setBufferOff(response);
+            ResponseUtils.setBufferOff(response);
         }
 
         RequestContext ctx = null;

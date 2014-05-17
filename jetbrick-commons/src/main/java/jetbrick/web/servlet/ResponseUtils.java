@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.web.servlet.utils;
+package jetbrick.web.servlet;
 
 import java.io.UnsupportedEncodingException;
 import javax.servlet.http.HttpServletResponse;
