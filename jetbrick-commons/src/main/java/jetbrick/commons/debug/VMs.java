@@ -23,9 +23,9 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import jetbrick.commons.JdkVersion;
-import jetbrick.commons.io.IoUtils;
 import jetbrick.commons.lang.StringUtils;
 import jetbrick.commons.lang.SystemUtils;
+import jetbrick.io.IoUtils;
 
 public class VMs {
 

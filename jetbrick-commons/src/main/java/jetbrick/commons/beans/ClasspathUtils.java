@@ -24,8 +24,8 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
-import jetbrick.commons.io.URLUtils;
 import jetbrick.commons.lang.StringUtils;
+import jetbrick.io.URLUtils;
 
 public final class ClasspathUtils {
     public static final String EXT_CLASS_LOADER_NAME = "sun.misc.Launcher$ExtClassLoader";

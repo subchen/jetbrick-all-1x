@@ -20,8 +20,8 @@ package jetbrick.commons.lang;
 
 import java.io.*;
 import java.util.Map;
-import jetbrick.commons.io.IoUtils;
-import jetbrick.commons.io.output.UnsafeByteArrayOutputStream;
+import jetbrick.io.IoUtils;
+import jetbrick.io.output.UnsafeByteArrayOutputStream;
 
 /**
  * Java 调用外部命令，并获取输出 (解决了 IO 阻塞问题).

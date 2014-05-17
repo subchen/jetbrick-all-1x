@@ -19,7 +19,7 @@
 package jetbrick.web.mvc.results;
 
 import java.io.*;
-import jetbrick.commons.io.input.UnsafeByteArrayInputStream;
+import jetbrick.io.input.UnsafeByteArrayInputStream;
 import jetbrick.ioc.annotations.ManagedWith;
 
 @ManagedWith(RawDataResultHandler.class)

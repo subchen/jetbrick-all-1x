@@ -19,8 +19,8 @@
 package jetbrick.web.mvc.multipart;
 
 import java.io.*;
-import jetbrick.commons.io.*;
 import jetbrick.commons.lang.builder.ToStringBuilder;
+import jetbrick.io.*;
 
 public final class FilePart {
     private static final String MESSAGE_FILE_MOVED = "File has been moved - cannot be read again";

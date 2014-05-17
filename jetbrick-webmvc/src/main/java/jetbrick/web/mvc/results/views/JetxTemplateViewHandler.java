@@ -20,7 +20,7 @@ package jetbrick.web.mvc.results.views;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import jetbrick.commons.io.ResourceNotFoundException;
+import jetbrick.io.ResourceNotFoundException;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.template.*;
 import jetbrick.template.web.JetWebContext;

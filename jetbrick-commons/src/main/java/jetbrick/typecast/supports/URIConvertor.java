@@ -22,7 +22,7 @@ import java.io.File;
 import java.net.*;
 import java.nio.file.Path;
 import jetbrick.commons.JdkVersion;
-import jetbrick.commons.io.resource.Resource;
+import jetbrick.io.resource.Resource;
 import jetbrick.typecast.Convertor;
 import jetbrick.typecast.TypeCastException;
 

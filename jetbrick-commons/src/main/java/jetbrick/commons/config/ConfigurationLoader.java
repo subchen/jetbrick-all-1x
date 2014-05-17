@@ -25,7 +25,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 import jetbrick.commons.beans.ClassLoaderUtils;
-import jetbrick.commons.io.IoUtils;
+import jetbrick.io.IoUtils;
 
 public final class ConfigurationLoader {
     private static final Pattern PLACE_HOLDER_PATTERN = Pattern.compile("\\$\\{([^}]*)\\}");

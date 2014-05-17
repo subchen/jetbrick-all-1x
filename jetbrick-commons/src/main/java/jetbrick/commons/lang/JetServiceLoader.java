@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 import jetbrick.commons.beans.ClassLoaderUtils;
-import jetbrick.commons.io.IoUtils;
+import jetbrick.io.IoUtils;
 
 /**
  * A simple service-provider loading facility.

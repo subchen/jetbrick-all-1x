@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import jetbrick.commons.io.IoUtils;
+import jetbrick.io.IoUtils;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.web.mvc.RequestContext;
 

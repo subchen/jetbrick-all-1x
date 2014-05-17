@@ -20,7 +20,7 @@ package jetbrick.ioc.loaders;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
-import jetbrick.commons.io.finder.ClassFinder;
+import jetbrick.io.finder.ClassFinder;
 import jetbrick.ioc.MutableIoc;
 import jetbrick.ioc.annotations.IocBean;
 import jetbrick.ioc.annotations.ValueConstants;

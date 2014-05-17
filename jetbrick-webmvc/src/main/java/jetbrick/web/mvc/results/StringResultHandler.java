@@ -18,8 +18,8 @@
  */
 package jetbrick.web.mvc.results;
 
-import jetbrick.commons.io.FilenameUtils;
-import jetbrick.commons.io.PathUtils;
+import jetbrick.io.FilenameUtils;
+import jetbrick.io.PathUtils;
 import jetbrick.ioc.annotations.*;
 import jetbrick.web.mvc.*;
 import jetbrick.web.mvc.results.views.ViewHandler;
