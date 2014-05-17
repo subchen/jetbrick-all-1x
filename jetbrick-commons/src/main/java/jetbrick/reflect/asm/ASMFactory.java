@@ -19,7 +19,7 @@
 package jetbrick.reflect.asm;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import jetbrick.io.IoUtils;
 import jetbrick.reflect.KlassInfo;
 import org.slf4j.LoggerFactory;
 
@@ -63,18 +63,12 @@ public final class ASMFactory {
             } catch (ClassNotFoundException e) {
                 byte[] code = byteCodeGenerator.generate(delegateKlass, generatedKlassName);
                 if (IS_ASM_DEBUG) {
-                    try {
-                        File dir = new File(System.getProperty("java.io.tmpdir"));
-                        File file = new File(dir, generatedKlassName.replace('.', '/') + ".class");
-                        LoggerFactory.getLogger(ASMFactory.class).info("ASMFactory generated {}", generatedKlassName);
+                    File dir = new File(System.getProperty("java.io.tmpdir"));
+                    File file = new File(dir, generatedKlassName.replace('.', '/') + ".class");
+                    file.getParentFile().mkdirs();
 
-                        file.getParentFile().mkdirs();
-                        FileOutputStream fos = new FileOutputStream(file);
-                        fos.write(code);
-                        fos.close();
-                    } catch (Exception ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    LoggerFactory.getLogger(ASMFactory.class).info("ASMFactory generated {}", file);
+                    IoUtils.write(code, file);
                 }
                 generatedKlass = loader.defineClass(generatedKlassName, code, delegateType.getProtectionDomain());
             }
