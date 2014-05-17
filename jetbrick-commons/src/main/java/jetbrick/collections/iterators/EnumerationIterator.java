@@ -16,24 +16,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.collections.multimap;
+package jetbrick.collections.iterators;
 
-import java.io.Serializable;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Iterator;
 
-public class MultiValueLinkedHashMap<K, V> extends AbstractMultiValueMap<K, V> implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class EnumerationIterator<T> implements Iterator<T> {
+    private final Enumeration<T> enumeration;
+    private T last;
 
-    public MultiValueLinkedHashMap() {
-        super(new LinkedHashMap<K, List<V>>());
+    public EnumerationIterator(Enumeration<T> enumeration) {
+        this.enumeration = enumeration;
     }
 
-    public MultiValueLinkedHashMap(int initialCapacity) {
-        super(new LinkedHashMap<K, List<V>>(initialCapacity));
+    @Override
+    public boolean hasNext() {
+        return enumeration.hasMoreElements();
     }
 
-    public MultiValueLinkedHashMap(Map<K, V> otherMap) {
-        super(new LinkedHashMap<K, List<V>>(otherMap.size()));
-        putAll(otherMap);
+    @Override
+    public T next() {
+        last = enumeration.nextElement();
+        return last;
+    }
+
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
+
+    public Enumeration<T> getEnumeration() {
+        return enumeration;
     }
 }

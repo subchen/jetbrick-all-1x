@@ -16,26 +16,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.collections.iterators;
+package jetbrick.collections.multimap;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.io.Serializable;
+import java.util.*;
 
-public class EmptyIterator implements Iterator<Object> {
-    public static final Iterator<?> INSTANCE = new EmptyIterator();
+public class MultiValueLinkedHashMap<K, V> extends AbstractMultiValueMap<K, V> implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    @Override
-    public boolean hasNext() {
-        return false;
+    public MultiValueLinkedHashMap() {
+        super(new LinkedHashMap<K, List<V>>());
     }
 
-    @Override
-    public Object next() {
-        throw new NoSuchElementException();
+    public MultiValueLinkedHashMap(int initialCapacity) {
+        super(new LinkedHashMap<K, List<V>>(initialCapacity));
     }
 
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
+    public MultiValueLinkedHashMap(Map<K, V> otherMap) {
+        super(new LinkedHashMap<K, List<V>>(otherMap.size()));
+        putAll(otherMap);
     }
 }

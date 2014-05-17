@@ -16,29 +16,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.collections;
+package jetbrick.collections.iterators;
 
-import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class EmptyEnumeration<T> implements Enumeration<T> {
-    @SuppressWarnings("rawtypes")
-    public static final Enumeration INSTANCE = new EmptyEnumeration();
-
-    @SuppressWarnings("unchecked")
-    public static <T> Enumeration<T> instance() {
-        return INSTANCE;
-    }
-
-    private EmptyEnumeration() {
-    }
+public class EmptyIterator implements Iterator<Object> {
+    public static final Iterator<?> INSTANCE = new EmptyIterator();
 
     @Override
-    public boolean hasMoreElements() {
+    public boolean hasNext() {
         return false;
     }
 
     @Override
-    public T nextElement() {
-        return null;
+    public Object next() {
+        throw new NoSuchElementException();
+    }
+
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException();
     }
 }

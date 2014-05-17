@@ -16,24 +16,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.collections.multimap;
+package jetbrick.collections;
 
-import java.io.Serializable;
-import java.util.*;
+import java.util.Enumeration;
 
-public class MultiValueHashMap<K, V> extends AbstractMultiValueMap<K, V> implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class EmptyEnumeration<T> implements Enumeration<T> {
+    @SuppressWarnings("rawtypes")
+    public static final Enumeration INSTANCE = new EmptyEnumeration();
 
-    public MultiValueHashMap() {
-        super(new HashMap<K, List<V>>());
+    @SuppressWarnings("unchecked")
+    public static <T> Enumeration<T> instance() {
+        return INSTANCE;
     }
 
-    public MultiValueHashMap(int initialCapacity) {
-        super(new HashMap<K, List<V>>(initialCapacity));
+    private EmptyEnumeration() {
     }
 
-    public MultiValueHashMap(Map<K, V> otherMap) {
-        super(new HashMap<K, List<V>>(otherMap.size()));
-        putAll(otherMap);
+    @Override
+    public boolean hasMoreElements() {
+        return false;
+    }
+
+    @Override
+    public T nextElement() {
+        return null;
     }
 }

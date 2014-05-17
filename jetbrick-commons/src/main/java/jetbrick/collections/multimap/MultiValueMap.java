@@ -16,16 +16,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.collections.bidimap;
+package jetbrick.collections.multimap;
 
-import java.util.Map;
+import java.util.*;
 
-public interface BidiMap<K, V> extends Map<K, V> {
+public interface MultiValueMap<K, V> extends Map<K, V> {
 
-    public K getKey(Object paramObject);
+    public boolean containsValue(Object key, Object value);
 
-    public K removeValue(Object paramObject);
+    public List<V> getList(Object key);
 
-    public BidiMap<V, K> inverse();
+    public Collection<List<V>> valuesList();
+
+    public Set<Entry<K, List<V>>> multiEntrySet();
 
 }

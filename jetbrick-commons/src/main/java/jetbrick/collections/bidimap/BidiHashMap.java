@@ -16,31 +16,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.collections.bidimap;
+package jetbrick.collections.bidimap;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-public class BidiTreeMap<K, V> extends AbstractBidiSortedMap<K, V> {
+public class BidiHashMap<K, V> extends AbstractBidiMap<K, V> {
 
-    public BidiTreeMap() {
-        super(new TreeMap<K, V>(), new TreeMap<V, K>(), null);
+    public BidiHashMap() {
+        super(new HashMap<K, V>(), new HashMap<V, K>(), null);
     }
 
-    public BidiTreeMap(Comparator<? super K> keyComparator, Comparator<? super V> valueComparator) {
-        super(new TreeMap<K, V>(keyComparator), new TreeMap<V, K>(valueComparator), null);
+    public BidiHashMap(int initialCapacity) {
+        super(new HashMap<K, V>(initialCapacity), new HashMap<V, K>(initialCapacity), null);
     }
 
-    public BidiTreeMap(Map<? extends K, ? extends V> map) {
-        super(new TreeMap<K, V>(), new TreeMap<V, K>(), null);
+    public BidiHashMap(Map<? extends K, ? extends V> map) {
+        super(new HashMap<K, V>(), new HashMap<V, K>(), null);
         putAll(map);
     }
 
-    private BidiTreeMap(SortedMap<K, V> normalMap, SortedMap<V, K> reverseMap, BidiMap<V, K> inverseBidiMap) {
+    private BidiHashMap(Map<K, V> normalMap, Map<V, K> reverseMap, BidiMap<V, K> inverseBidiMap) {
         super(normalMap, reverseMap, inverseBidiMap);
     }
 
     @Override
     protected BidiMap<V, K> createBidiMap(Map<V, K> normalMap, Map<K, V> reverseMap, BidiMap<K, V> inverseMap) {
-        return new BidiTreeMap<V, K>((SortedMap<V, K>) normalMap, (SortedMap<K, V>) reverseMap, inverseMap);
+        return new BidiHashMap<V, K>(normalMap, reverseMap, inverseMap);
     }
 }

@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.collections.iterators;
+package jetbrick.collections.iterators;
 
 import java.lang.reflect.Array;
 import java.util.Iterator;

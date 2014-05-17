@@ -19,7 +19,7 @@
 package jetbrick.commons.typecast.supports;
 
 import java.util.*;
-import jetbrick.commons.collections.ListUtils;
+import jetbrick.collections.ListUtils;
 import jetbrick.commons.lang.StringUtils;
 import jetbrick.commons.typecast.Convertor;
 

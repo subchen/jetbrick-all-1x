@@ -16,36 +16,49 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.collections.iterators;
+package jetbrick.collections;
 
-import java.util.Enumeration;
-import java.util.Iterator;
+import java.util.*;
 
-public class EnumerationIterator<T> implements Iterator<T> {
-    private final Enumeration<T> enumeration;
-    private T last;
+public class IdentityHashSet<E> extends AbstractSet<E> {
+    private final Map<E, E> map = new IdentityHashMap<E, E>();
 
-    public EnumerationIterator(Enumeration<T> enumeration) {
-        this.enumeration = enumeration;
+    public IdentityHashSet() {
+    }
+
+    public IdentityHashSet(Collection<? extends E> c) {
+        for (E o : c) {
+            add(o);
+        }
     }
 
     @Override
-    public boolean hasNext() {
-        return enumeration.hasMoreElements();
+    public int size() {
+        return map.size();
     }
 
     @Override
-    public T next() {
-        last = enumeration.nextElement();
-        return last;
+    public boolean contains(Object o) {
+        return map.containsKey(o);
     }
 
     @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
+    public Iterator<E> iterator() {
+        return map.keySet().iterator();
     }
 
-    public Enumeration<T> getEnumeration() {
-        return enumeration;
+    @Override
+    public boolean add(E o) {
+        return map.put(o, o) == null;
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        return map.remove(o) != null;
+    }
+
+    @Override
+    public void clear() {
+        map.clear();
     }
 }

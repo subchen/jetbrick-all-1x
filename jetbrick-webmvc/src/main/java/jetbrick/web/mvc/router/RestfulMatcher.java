@@ -19,9 +19,9 @@
 package jetbrick.web.mvc.router;
 
 import java.util.*;
-import jetbrick.commons.collections.SoftHashMap;
-import jetbrick.commons.collections.multimap.MultiValueHashMap;
-import jetbrick.commons.collections.multimap.MultiValueMap;
+import jetbrick.collections.SoftHashMap;
+import jetbrick.collections.multimap.MultiValueHashMap;
+import jetbrick.collections.multimap.MultiValueMap;
 import jetbrick.commons.lang.StringUtils;
 import jetbrick.web.mvc.RouteInfo;
 import jetbrick.web.mvc.action.ActionInfo;

@@ -19,7 +19,7 @@
 package jetbrick.commons.beans;
 
 import java.util.*;
-import jetbrick.commons.collections.IdentityHashSet;
+import jetbrick.collections.IdentityHashSet;
 import jetbrick.commons.lang.ArrayUtils;
 
 public class ClassUtils {

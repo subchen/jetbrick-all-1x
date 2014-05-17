@@ -20,7 +20,7 @@ package jetbrick.commons.typecast.supports;
 
 import java.lang.reflect.Array;
 import java.util.*;
-import jetbrick.commons.collections.ListUtils;
+import jetbrick.collections.ListUtils;
 import jetbrick.commons.lang.ArrayUtils;
 import jetbrick.commons.lang.StringUtils;
 import jetbrick.commons.typecast.Convertor;

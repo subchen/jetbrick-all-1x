@@ -16,18 +16,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.collections.multimap;
+package jetbrick.collections.multimap;
 
+import java.io.Serializable;
 import java.util.*;
 
-public interface MultiValueMap<K, V> extends Map<K, V> {
+public class MultiValueHashMap<K, V> extends AbstractMultiValueMap<K, V> implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    public boolean containsValue(Object key, Object value);
+    public MultiValueHashMap() {
+        super(new HashMap<K, List<V>>());
+    }
 
-    public List<V> getList(Object key);
+    public MultiValueHashMap(int initialCapacity) {
+        super(new HashMap<K, List<V>>(initialCapacity));
+    }
 
-    public Collection<List<V>> valuesList();
-
-    public Set<Entry<K, List<V>>> multiEntrySet();
-
+    public MultiValueHashMap(Map<K, V> otherMap) {
+        super(new HashMap<K, List<V>>(otherMap.size()));
+        putAll(otherMap);
+    }
 }

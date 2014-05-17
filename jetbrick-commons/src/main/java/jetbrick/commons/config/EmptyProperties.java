@@ -21,7 +21,7 @@ package jetbrick.commons.config;
 import java.io.*;
 import java.util.*;
 import java.util.Map.Entry;
-import jetbrick.commons.collections.EmptyEnumeration;
+import jetbrick.collections.EmptyEnumeration;
 
 @SuppressWarnings("serial")
 public class EmptyProperties extends Properties {

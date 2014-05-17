@@ -20,10 +20,10 @@ package jetbrick.commons.beans.introspectors;
 
 import java.lang.reflect.*;
 import java.util.*;
+import jetbrick.collections.SoftHashMap;
+import jetbrick.collections.multimap.MultiValueHashMap;
+import jetbrick.collections.multimap.MultiValueMap;
 import jetbrick.commons.beans.MethodLookupUtils;
-import jetbrick.commons.collections.SoftHashMap;
-import jetbrick.commons.collections.multimap.MultiValueHashMap;
-import jetbrick.commons.collections.multimap.MultiValueMap;
 
 public class ClassDescriptor {
     private static final Map<Class<?>, ClassDescriptor> beanCache = new SoftHashMap<Class<?>, ClassDescriptor>();
