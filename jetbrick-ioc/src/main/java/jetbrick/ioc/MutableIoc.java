@@ -20,7 +20,7 @@ package jetbrick.ioc;
 
 import java.lang.reflect.Modifier;
 import java.util.*;
-import jetbrick.commons.config.Configuration;
+import jetbrick.io.config.Configuration;
 import jetbrick.ioc.loaders.IocConfiguration;
 import jetbrick.ioc.loaders.IocLoader;
 import jetbrick.ioc.objects.*;

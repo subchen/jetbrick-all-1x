@@ -16,24 +16,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.debug;
+package jetbrick.lang;
 
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
 import jetbrick.beans.ClassLoaderUtils;
 import jetbrick.collections.ListUtils;
-import jetbrick.lang.StringUtils;
-import org.apache.log4j.*;
 
-public final class Log4jConfig {
+public final class Log4jConfigUtils {
 
     public static void resetConfiguration() {
-        LogManager.resetConfiguration();
+        org.apache.log4j.LogManager.resetConfiguration();
 
         URL config = ClassLoaderUtils.getDefault().getResource("/log4j.properties");
         if (config != null) {
-            PropertyConfigurator.configure(config);
+            org.apache.log4j.PropertyConfigurator.configure(config);
         }
     }
 
@@ -42,13 +40,13 @@ public final class Log4jConfig {
      *      OFF, FATAL, ERROR, WARN, INFO, DEBUG and ALL.
      */
     public static void setLevel(String logName, String level) {
-        Logger log = StringUtils.isEmpty(logName) ? Logger.getRootLogger() : Logger.getLogger(logName);
-        log.setLevel(Level.toLevel(level, Level.DEBUG));
+        org.apache.log4j.Logger log = StringUtils.isEmpty(logName) ? org.apache.log4j.Logger.getRootLogger() : org.apache.log4j.Logger.getLogger(logName);
+        log.setLevel(org.apache.log4j.Level.toLevel(level, org.apache.log4j.Level.DEBUG));
     }
 
     @SuppressWarnings("unchecked")
-    public static List<Logger> getLoggers() {
-        Enumeration<Logger> loggers = Logger.getRootLogger().getLoggerRepository().getCurrentLoggers();
+    public static List<org.apache.log4j.Logger> getLoggers() {
+        Enumeration<org.apache.log4j.Logger> loggers = org.apache.log4j.Logger.getRootLogger().getLoggerRepository().getCurrentLoggers();
         return ListUtils.asList(loggers);
     }
 }

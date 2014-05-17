@@ -18,7 +18,7 @@
  */
 package jetbrick.ioc.objects;
 
-import jetbrick.commons.config.Configuration;
+import jetbrick.io.config.Configuration;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.IocFactory;
 

@@ -16,16 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.debug;
+package jetbrick.lang;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import jetbrick.io.IoUtils;
-import jetbrick.lang.*;
 
-public class VMs {
+public class VMUtils {
 
     public static String getProcessId() {
         String name = ManagementFactory.getRuntimeMXBean().getName();
@@ -42,7 +41,7 @@ public class VMs {
         }
         try {
             File jstackFile = new File(System.getProperty("java.home"), jstack);
-            String command = jstackFile.getCanonicalPath() + " " + VMs.getProcessId();
+            String command = jstackFile.getCanonicalPath() + " " + getProcessId();
             Process process = Runtime.getRuntime().exec(command);
             return IoUtils.toString(process.getInputStream(), "ISO-8859-1");
         } catch (IOException e) {

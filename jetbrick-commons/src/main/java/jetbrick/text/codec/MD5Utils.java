@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.codec;
+package jetbrick.text.codec;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

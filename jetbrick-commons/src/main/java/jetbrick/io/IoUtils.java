@@ -22,9 +22,7 @@ import java.io.*;
 import java.net.*;
 import java.nio.channels.Selector;
 import java.util.zip.ZipFile;
-import jetbrick.io.input.ReaderInputStream;
-import jetbrick.io.output.UnsafeByteArrayOutputStream;
-import jetbrick.io.output.UnsafeCharArrayWriter;
+import jetbrick.io.streams.*;
 
 public final class IoUtils {
     private static final int DEFAULT_BUFFER_SIZE = 8192;

@@ -22,8 +22,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
-import jetbrick.commons.codec.Base64;
 import jetbrick.lang.*;
+import jetbrick.text.codec.Base64;
 
 public final class RequestUtils {
     /**

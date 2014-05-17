@@ -19,7 +19,7 @@
 package jetbrick.ioc;
 
 import java.util.List;
-import jetbrick.commons.config.Configuration;
+import jetbrick.io.config.Configuration;
 
 public interface Ioc {
 

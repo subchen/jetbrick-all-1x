@@ -40,6 +40,9 @@ public class ClassLoaderUtils {
         }
         if (loader == null) {
             loader = ClassLoaderUtils.class.getClassLoader();
+            if (loader == null) {
+                loader = ClassLoader.getSystemClassLoader();
+            }
         }
         return loader;
     }

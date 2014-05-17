@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.config;
+package jetbrick.io.config;
 
 import java.io.*;
 import java.util.*;
