@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.regex;
+package jetbrick.text.regex;
 
 import java.util.*;
 import java.util.regex.PatternSyntaxException;

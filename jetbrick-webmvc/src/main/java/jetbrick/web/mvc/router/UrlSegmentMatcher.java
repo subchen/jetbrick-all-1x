@@ -153,15 +153,15 @@ public abstract class UrlSegmentMatcher {
 
     // 正则表达式匹配(JDK6)
     static final class Jdk6RegexUrlSegmentMatcher extends RegexUrlSegmentMatcher {
-        private final jetbrick.commons.regex.Pattern pattern;
+        private final jetbrick.text.regex.Pattern pattern;
 
         public Jdk6RegexUrlSegmentMatcher(String urlSegment) {
-            this.pattern = jetbrick.commons.regex.Pattern.compile(toPattern(urlSegment, null));
+            this.pattern = jetbrick.text.regex.Pattern.compile(toPattern(urlSegment, null));
         }
 
         @Override
         public boolean match(String urlSegment, PathVariables pathVariables) {
-            jetbrick.commons.regex.Matcher matcher = pattern.matcher(urlSegment);
+            jetbrick.text.regex.Matcher matcher = pattern.matcher(urlSegment);
             if (matcher.matches()) {
                 for (String name : pattern.groupNames()) {
                     String value = matcher.group(name);

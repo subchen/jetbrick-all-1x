@@ -19,7 +19,7 @@
 /**
  * 由于 JDK6 不支持 namedGroup 的 Pattern，所以这个包提供给 JDK6 使用的兼容功能.<br/>
  *
- * 具体可以看 {@link jetbrick.commons.regex.Pattern}
+ * 具体可以看 {@link jetbrick.text.regex.Pattern}
  */
-package jetbrick.commons.regex;
+package jetbrick.text.regex;
 
