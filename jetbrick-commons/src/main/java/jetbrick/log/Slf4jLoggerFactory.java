@@ -16,12 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.log;
+package jetbrick.log;
 
-public class Log4jLoggerFactory extends LoggerFactory {
+public class Slf4jLoggerFactory extends LoggerFactory {
 
     @Override
     protected Logger doGetLogger(String name) {
-        return new Log4jLogger(org.apache.log4j.Logger.getLogger(name));
+        return new Slf4jLogger(org.slf4j.LoggerFactory.getLogger(name));
     }
 }

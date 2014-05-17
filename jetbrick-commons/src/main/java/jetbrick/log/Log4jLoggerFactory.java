@@ -16,14 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.log;
+package jetbrick.log;
 
-public class NopLoggerFactory extends LoggerFactory {
-    private static final Logger instance = new NopLogger();
+public class Log4jLoggerFactory extends LoggerFactory {
 
     @Override
     protected Logger doGetLogger(String name) {
-        return instance;
+        return new Log4jLogger(org.apache.log4j.Logger.getLogger(name));
     }
-
 }

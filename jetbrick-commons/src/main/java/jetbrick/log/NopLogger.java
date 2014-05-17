@@ -16,85 +16,66 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.log;
+package jetbrick.log;
 
-import org.apache.log4j.Level;
-
-public class Log4jLogger extends Logger {
-    private static final String callerFQCN = Log4jLogger.class.getName();
-    private final org.apache.log4j.Logger log;
-
-    protected Log4jLogger(org.apache.log4j.Logger log) {
-        this.log = log;
-    }
-
+public class NopLogger extends Logger {
     @Override
     public void debug(String message, Object... args) {
-        log.log(callerFQCN, Level.DEBUG, format(message, args), null);
     }
 
     @Override
     public void debug(Object message) {
-        log.log(callerFQCN, Level.DEBUG, format(message), null);
     }
 
     @Override
     public void info(String message, Object... args) {
-        log.log(callerFQCN, Level.INFO, format(message, args), null);
     }
 
     @Override
     public void info(Object message) {
-        log.log(callerFQCN, Level.INFO, format(message), null);
     }
 
     @Override
     public void warn(String message, Object... args) {
-        log.log(callerFQCN, Level.WARN, format(message, args), null);
     }
 
     @Override
     public void warn(Throwable e) {
-        log.log(callerFQCN, Level.WARN, e.getMessage(), e);
     }
 
     @Override
     public void warn(Throwable e, String message, Object... args) {
-        log.log(callerFQCN, Level.WARN, format(message, args), e);
     }
 
     @Override
     public void error(String message, Object... args) {
-        log.log(callerFQCN, Level.ERROR, format(message, args), null);
     }
 
     @Override
     public void error(Throwable e) {
-        log.log(callerFQCN, Level.ERROR, e.getMessage(), e);
     }
 
     @Override
     public void error(Throwable e, String message, Object... args) {
-        log.log(callerFQCN, Level.ERROR, format(message, args), e);
     }
 
     @Override
     public boolean isDebugEnabled() {
-        return log.isDebugEnabled();
+        return false;
     }
 
     @Override
     public boolean isInfoEnabled() {
-        return log.isInfoEnabled();
+        return false;
     }
 
     @Override
     public boolean isWarnEnabled() {
-        return log.isEnabledFor(Level.WARN);
+        return false;
     }
 
     @Override
     public boolean isErrorEnabled() {
-        return log.isEnabledFor(Level.ERROR);
+        return false;
     }
 }

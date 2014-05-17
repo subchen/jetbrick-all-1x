@@ -30,8 +30,8 @@ import jetbrick.io.IoUtils;
  *
  * <pre><code>
  * JetServiceLoader.load(LoggerFactory.class,
- *      "jetbrick.commons.log.Log4jLoggerFactory, org.apache.log4j.Logger",
- *      "jetbrick.commons.log.Jdk14LoggerFactory"
+ *      "jetbrick.log.Log4jLoggerFactory, org.apache.log4j.Logger",
+ *      "jetbrick.log.Jdk14LoggerFactory"
  * );
  * <code></pre>
  *

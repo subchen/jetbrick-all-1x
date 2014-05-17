@@ -16,90 +16,85 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.log;
+package jetbrick.log;
 
-import java.util.logging.Level;
+import org.apache.log4j.Level;
 
-public class Jdk14Logger extends Logger {
-    private final java.util.logging.Logger log;
-    private final String name;
+public class Log4jLogger extends Logger {
+    private static final String callerFQCN = Log4jLogger.class.getName();
+    private final org.apache.log4j.Logger log;
 
-    protected Jdk14Logger(java.util.logging.Logger log, String name) {
+    protected Log4jLogger(org.apache.log4j.Logger log) {
         this.log = log;
-        this.name = name;
     }
 
     @Override
     public void debug(String message, Object... args) {
-        log.logp(Level.FINE, name, getSourceMethod(), format(message, args));
+        log.log(callerFQCN, Level.DEBUG, format(message, args), null);
     }
 
     @Override
     public void debug(Object message) {
-        log.logp(Level.FINE, name, getSourceMethod(), (message == null ? null : message.toString()));
+        log.log(callerFQCN, Level.DEBUG, format(message), null);
     }
 
     @Override
     public void info(String message, Object... args) {
-        log.logp(Level.INFO, name, getSourceMethod(), format(message, args));
+        log.log(callerFQCN, Level.INFO, format(message, args), null);
     }
 
     @Override
     public void info(Object message) {
-        log.logp(Level.INFO, name, getSourceMethod(), (message == null ? null : message.toString()));
+        log.log(callerFQCN, Level.INFO, format(message), null);
     }
 
     @Override
     public void warn(String message, Object... args) {
-        log.logp(Level.WARNING, name, getSourceMethod(), format(message, args));
+        log.log(callerFQCN, Level.WARN, format(message, args), null);
     }
 
     @Override
     public void warn(Throwable e) {
-        log.logp(Level.WARNING, name, getSourceMethod(), e.getMessage(), e);
+        log.log(callerFQCN, Level.WARN, e.getMessage(), e);
     }
 
     @Override
     public void warn(Throwable e, String message, Object... args) {
-        log.logp(Level.WARNING, name, getSourceMethod(), format(message, args), e);
+        log.log(callerFQCN, Level.WARN, format(message, args), e);
     }
 
     @Override
     public void error(String message, Object... args) {
-        log.logp(Level.SEVERE, name, getSourceMethod(), format(message, args));
+        log.log(callerFQCN, Level.ERROR, format(message, args), null);
     }
 
     @Override
     public void error(Throwable e) {
-        log.logp(Level.SEVERE, name, getSourceMethod(), e.getMessage(), e);
+        log.log(callerFQCN, Level.ERROR, e.getMessage(), e);
     }
 
     @Override
     public void error(Throwable e, String message, Object... args) {
-        log.logp(Level.SEVERE, name, getSourceMethod(), format(message, args), e);
+        log.log(callerFQCN, Level.ERROR, format(message, args), e);
     }
 
     @Override
     public boolean isDebugEnabled() {
-        return log.isLoggable(Level.FINE);
+        return log.isDebugEnabled();
     }
 
     @Override
     public boolean isInfoEnabled() {
-        return log.isLoggable(Level.INFO);
+        return log.isInfoEnabled();
     }
 
     @Override
     public boolean isWarnEnabled() {
-        return log.isLoggable(Level.WARNING);
+        return log.isEnabledFor(Level.WARN);
     }
 
     @Override
     public boolean isErrorEnabled() {
-        return log.isLoggable(Level.SEVERE);
-    }
-
-    private String getSourceMethod() {
-        return Thread.currentThread().getStackTrace()[3].getMethodName();
+        return log.isEnabledFor(Level.ERROR);
     }
 }
