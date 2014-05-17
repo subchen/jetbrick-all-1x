@@ -21,8 +21,8 @@ package jetbrick.commons.config;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.Properties;
-import jetbrick.commons.lang.StringEscapeUtils;
 import jetbrick.io.IoUtils;
+import jetbrick.lang.StringEscapeUtils;
 
 // https://gist.github.com/subchen/8470940
 final class ExtendPropertiesLoader {

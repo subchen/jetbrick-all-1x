@@ -18,8 +18,8 @@
  */
 package jetbrick.web.mvc.action.annotations;
 
-import jetbrick.commons.lang.ExceptionUtils;
 import jetbrick.ioc.annotations.Managed;
+import jetbrick.lang.ExceptionUtils;
 import jetbrick.web.mvc.RequestContext;
 
 @Managed

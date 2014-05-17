@@ -20,7 +20,7 @@ package jetbrick.typecast.supports;
 
 import java.sql.Clob;
 import java.sql.SQLException;
-import jetbrick.commons.lang.ArrayUtils;
+import jetbrick.lang.ArrayUtils;
 import jetbrick.typecast.Convertor;
 import jetbrick.typecast.TypeCastException;
 

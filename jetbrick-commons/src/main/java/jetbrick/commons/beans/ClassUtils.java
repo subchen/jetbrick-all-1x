@@ -20,7 +20,7 @@ package jetbrick.commons.beans;
 
 import java.util.*;
 import jetbrick.collections.IdentityHashSet;
-import jetbrick.commons.lang.ArrayUtils;
+import jetbrick.lang.ArrayUtils;
 
 public class ClassUtils {
     private static final Set<Class<?>> boxed_class_set;

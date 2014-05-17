@@ -21,7 +21,7 @@ package jetbrick.reflect;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import jetbrick.commons.beans.TypeResolverUtils;
-import jetbrick.commons.lang.IdentifiedNameUtils;
+import jetbrick.lang.IdentifiedNameUtils;
 import jetbrick.reflect.asm.ASMFactory;
 
 public final class MethodInfo implements Executable, Comparable<MethodInfo> {

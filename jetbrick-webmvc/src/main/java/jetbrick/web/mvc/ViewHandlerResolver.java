@@ -20,10 +20,10 @@ package jetbrick.web.mvc;
 
 import java.util.HashMap;
 import java.util.Map;
-import jetbrick.commons.lang.Validate;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.Inject;
 import jetbrick.ioc.annotations.IocInit;
+import jetbrick.lang.Validate;
 import jetbrick.web.mvc.results.views.*;
 
 /**

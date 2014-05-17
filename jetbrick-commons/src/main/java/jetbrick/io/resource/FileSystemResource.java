@@ -20,7 +20,7 @@ package jetbrick.io.resource;
 
 import java.io.*;
 import java.net.*;
-import jetbrick.commons.lang.Validate;
+import jetbrick.lang.Validate;
 
 public class FileSystemResource extends Resource {
     private final File file;

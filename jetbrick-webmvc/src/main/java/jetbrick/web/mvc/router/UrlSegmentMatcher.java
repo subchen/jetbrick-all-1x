@@ -22,8 +22,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jetbrick.commons.JdkVersion;
-import jetbrick.commons.lang.StringEscapeUtils;
-import jetbrick.commons.lang.WildcharUtils;
+import jetbrick.lang.StringEscapeUtils;
+import jetbrick.lang.WildcharUtils;
 import jetbrick.web.mvc.action.PathVariables;
 
 /**

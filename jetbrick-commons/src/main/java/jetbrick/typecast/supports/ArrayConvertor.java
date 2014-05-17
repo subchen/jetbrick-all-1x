@@ -21,8 +21,8 @@ package jetbrick.typecast.supports;
 import java.lang.reflect.Array;
 import java.util.*;
 import jetbrick.collections.ListUtils;
-import jetbrick.commons.lang.ArrayUtils;
-import jetbrick.commons.lang.StringUtils;
+import jetbrick.lang.ArrayUtils;
+import jetbrick.lang.StringUtils;
 import jetbrick.typecast.Convertor;
 
 @SuppressWarnings("unchecked")

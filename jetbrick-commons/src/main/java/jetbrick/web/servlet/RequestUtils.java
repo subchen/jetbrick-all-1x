@@ -23,7 +23,7 @@ import java.net.URLEncoder;
 import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import jetbrick.commons.codec.Base64;
-import jetbrick.commons.lang.*;
+import jetbrick.lang.*;
 
 public final class RequestUtils {
     /**

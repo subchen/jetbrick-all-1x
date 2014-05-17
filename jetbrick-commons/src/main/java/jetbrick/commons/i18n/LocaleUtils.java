@@ -21,7 +21,7 @@ package jetbrick.commons.i18n;
 import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.util.*;
-import jetbrick.commons.lang.StringUtils;
+import jetbrick.lang.StringUtils;
 
 public final class LocaleUtils {
     private static Map<String, LocaleInfo> locales = new HashMap<String, LocaleInfo>();

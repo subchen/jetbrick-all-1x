@@ -21,8 +21,8 @@ package jetbrick.commons.beans.introspectors;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import jetbrick.commons.beans.TypeResolverUtils;
-import jetbrick.commons.lang.ArrayUtils;
-import jetbrick.commons.lang.IdentifiedNameUtils;
+import jetbrick.lang.ArrayUtils;
+import jetbrick.lang.IdentifiedNameUtils;
 
 public class MethodDescriptor {
     private final ClassDescriptor classDescriptor;

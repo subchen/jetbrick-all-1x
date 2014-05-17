@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
-import jetbrick.commons.lang.ExceptionUtils;
+import jetbrick.lang.ExceptionUtils;
 
 // jboss/wildfly vfs url
 public class JbossVfsResource extends Resource {

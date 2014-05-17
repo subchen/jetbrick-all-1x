@@ -22,8 +22,8 @@ import java.io.File;
 import java.lang.reflect.Array;
 import java.util.*;
 import jetbrick.commons.beans.ClassLoaderUtils;
-import jetbrick.commons.lang.StringUtils;
 import jetbrick.io.resource.Resource;
+import jetbrick.lang.StringUtils;
 import jetbrick.typecast.TypeCastUtils;
 
 public class Configuration extends HashMap<String, String> {

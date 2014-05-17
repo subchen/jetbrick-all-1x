@@ -18,7 +18,7 @@
  */
 package jetbrick.commons.log;
 
-import jetbrick.commons.lang.JetServiceLoader;
+import jetbrick.lang.JetServiceLoader;
 
 public abstract class LoggerFactory {
 

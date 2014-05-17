@@ -21,7 +21,7 @@ package jetbrick.io.finder;
 import java.lang.annotation.Annotation;
 import java.util.*;
 import jetbrick.commons.beans.ClassLoaderUtils;
-import jetbrick.commons.lang.ExceptionUtils;
+import jetbrick.lang.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

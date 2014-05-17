@@ -19,10 +19,10 @@
 package jetbrick.ioc.injectors;
 
 import java.lang.annotation.Annotation;
-import jetbrick.commons.lang.Validate;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.Config;
 import jetbrick.ioc.annotations.ValueConstants;
+import jetbrick.lang.Validate;
 
 // 注入 @Config 标注的参数
 public class ConfigParameterInjector implements ParameterInjector {

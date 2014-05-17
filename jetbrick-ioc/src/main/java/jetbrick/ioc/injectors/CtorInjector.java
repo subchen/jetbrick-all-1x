@@ -19,7 +19,7 @@
 package jetbrick.ioc.injectors;
 
 import java.lang.reflect.Constructor;
-import jetbrick.commons.lang.ArrayUtils;
+import jetbrick.lang.ArrayUtils;
 
 //注入 @Inject 标注的构造函数
 public class CtorInjector {

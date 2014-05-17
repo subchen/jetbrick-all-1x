@@ -23,8 +23,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import jetbrick.commons.lang.StringUtils;
-import jetbrick.commons.lang.Validate;
+import jetbrick.lang.StringUtils;
+import jetbrick.lang.Validate;
 
 public class ClassLoaderUtils {
     private static final Map<String, String> abbreviationMap;

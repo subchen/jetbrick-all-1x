@@ -23,7 +23,7 @@ import java.lang.reflect.Field;
 import java.net.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import jetbrick.commons.lang.*;
+import jetbrick.lang.*;
 
 public class ZipEntryResource extends Resource {
     private final URL url;

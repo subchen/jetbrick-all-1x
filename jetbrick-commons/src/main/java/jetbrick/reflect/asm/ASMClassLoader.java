@@ -21,7 +21,7 @@ package jetbrick.reflect.asm;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.List;
-import jetbrick.commons.lang.UnsafeUtils;
+import jetbrick.lang.UnsafeUtils;
 
 final class ASMClassLoader extends ClassLoader {
     private static final List<ASMClassLoader> asmClassLoaders = new ArrayList<ASMClassLoader>();

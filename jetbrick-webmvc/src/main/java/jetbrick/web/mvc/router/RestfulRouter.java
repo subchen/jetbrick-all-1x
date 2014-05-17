@@ -21,7 +21,7 @@ package jetbrick.web.mvc.router;
 import javax.servlet.http.HttpServletRequest;
 import jetbrick.commons.beans.introspectors.ClassDescriptor;
 import jetbrick.commons.beans.introspectors.MethodDescriptor;
-import jetbrick.commons.lang.*;
+import jetbrick.lang.*;
 import jetbrick.web.mvc.*;
 import jetbrick.web.mvc.action.*;
 import jetbrick.web.mvc.action.annotations.ValueConstants;

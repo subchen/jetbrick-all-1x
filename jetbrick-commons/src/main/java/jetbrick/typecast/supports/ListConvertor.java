@@ -20,7 +20,7 @@ package jetbrick.typecast.supports;
 
 import java.util.*;
 import jetbrick.collections.ListUtils;
-import jetbrick.commons.lang.StringUtils;
+import jetbrick.lang.StringUtils;
 import jetbrick.typecast.Convertor;
 
 public final class ListConvertor<T> implements Convertor<List<T>> {

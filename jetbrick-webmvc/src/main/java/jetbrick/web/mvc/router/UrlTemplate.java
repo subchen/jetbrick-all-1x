@@ -18,8 +18,8 @@
  */
 package jetbrick.web.mvc.router;
 
-import jetbrick.commons.lang.StringUtils;
-import jetbrick.commons.lang.Validate;
+import jetbrick.lang.StringUtils;
+import jetbrick.lang.Validate;
 import jetbrick.web.mvc.action.PathVariables;
 
 // 代表 Action 配置的 URL 模板

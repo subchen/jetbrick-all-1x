@@ -19,7 +19,7 @@
 package jetbrick.commons.beans;
 
 import java.lang.reflect.*;
-import jetbrick.commons.lang.ArrayUtils;
+import jetbrick.lang.ArrayUtils;
 
 public class TypeResolverUtils {
 

@@ -20,10 +20,10 @@ package jetbrick.ioc.injectors;
 
 import java.lang.annotation.Annotation;
 import javax.servlet.ServletContext;
-import jetbrick.commons.lang.Validate;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.SpringBean;
 import jetbrick.ioc.annotations.ValueConstants;
+import jetbrick.lang.Validate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 

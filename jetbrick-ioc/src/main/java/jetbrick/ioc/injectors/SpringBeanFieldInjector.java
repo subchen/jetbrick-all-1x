@@ -22,10 +22,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import javax.servlet.ServletContext;
 import jetbrick.commons.beans.introspectors.FieldDescriptor;
-import jetbrick.commons.lang.Validate;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.SpringBean;
 import jetbrick.ioc.annotations.ValueConstants;
+import jetbrick.lang.Validate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 

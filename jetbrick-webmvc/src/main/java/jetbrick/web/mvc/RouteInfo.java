@@ -18,7 +18,7 @@
  */
 package jetbrick.web.mvc;
 
-import jetbrick.commons.lang.builder.ToStringBuilder;
+import jetbrick.lang.builder.ToStringBuilder;
 import jetbrick.web.mvc.action.ActionInfo;
 import jetbrick.web.mvc.action.PathVariables;
 

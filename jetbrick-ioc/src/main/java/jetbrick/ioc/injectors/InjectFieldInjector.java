@@ -21,10 +21,10 @@ package jetbrick.ioc.injectors;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import jetbrick.commons.beans.introspectors.FieldDescriptor;
-import jetbrick.commons.lang.Validate;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.Inject;
 import jetbrick.ioc.annotations.ValueConstants;
+import jetbrick.lang.Validate;
 
 //注入 @Inject 标注的字段
 public class InjectFieldInjector implements FieldInjector {

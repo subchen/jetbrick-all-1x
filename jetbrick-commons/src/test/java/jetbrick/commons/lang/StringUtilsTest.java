@@ -20,6 +20,7 @@ package jetbrick.commons.lang;
 
 import java.util.ArrayList;
 import java.util.List;
+import jetbrick.lang.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 

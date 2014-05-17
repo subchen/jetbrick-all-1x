@@ -20,7 +20,7 @@ package jetbrick.commons.codec;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import jetbrick.commons.lang.CharsetUtils;
+import jetbrick.lang.CharsetUtils;
 
 public class MD5Utils {
     private static final MessageDigest md5 = getDigest("MD5");

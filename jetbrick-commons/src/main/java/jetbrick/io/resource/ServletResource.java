@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.*;
 import javax.servlet.ServletContext;
-import jetbrick.commons.lang.Validate;
+import jetbrick.lang.Validate;
 
 public class ServletResource extends Resource {
     private final ServletContext sc;

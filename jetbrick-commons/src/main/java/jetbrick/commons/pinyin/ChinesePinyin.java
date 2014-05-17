@@ -21,8 +21,8 @@ package jetbrick.commons.pinyin;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import jetbrick.commons.lang.StringUtils;
 import jetbrick.io.IoUtils;
+import jetbrick.lang.StringUtils;
 
 /**
  * 得到汉字的完整拼音 (支持GBK)

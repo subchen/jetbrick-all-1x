@@ -22,10 +22,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.List;
 import jetbrick.commons.beans.introspectors.FieldDescriptor;
-import jetbrick.commons.lang.Validate;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.Config;
 import jetbrick.ioc.annotations.ValueConstants;
+import jetbrick.lang.Validate;
 
 // 注入 @Config 标注的字段
 public class ConfigFieldInjector implements FieldInjector {

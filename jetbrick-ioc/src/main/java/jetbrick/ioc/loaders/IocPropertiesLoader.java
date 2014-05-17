@@ -22,10 +22,10 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import jetbrick.commons.beans.ClassLoaderUtils;
 import jetbrick.commons.config.Configuration;
-import jetbrick.commons.lang.StringUtils;
 import jetbrick.ioc.MutableIoc;
 import jetbrick.ioc.objects.ClassSingletonObject;
 import jetbrick.ioc.objects.IocObject;
+import jetbrick.lang.StringUtils;
 
 public class IocPropertiesLoader implements IocLoader {
     private Configuration config;

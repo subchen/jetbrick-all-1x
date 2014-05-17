@@ -21,8 +21,8 @@ package jetbrick.web.mvc.router;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
-import jetbrick.commons.lang.StringUtils;
 import jetbrick.ioc.annotations.IocInit;
+import jetbrick.lang.StringUtils;
 import jetbrick.web.mvc.BypassRequestUrls;
 
 // 用来过滤静态文件等非 mvc filter 需要处理的文件, 使用正则表达式匹配算法

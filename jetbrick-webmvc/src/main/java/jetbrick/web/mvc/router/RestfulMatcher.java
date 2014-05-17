@@ -22,7 +22,7 @@ import java.util.*;
 import jetbrick.collections.SoftHashMap;
 import jetbrick.collections.multimap.MultiValueHashMap;
 import jetbrick.collections.multimap.MultiValueMap;
-import jetbrick.commons.lang.StringUtils;
+import jetbrick.lang.StringUtils;
 import jetbrick.web.mvc.RouteInfo;
 import jetbrick.web.mvc.action.ActionInfo;
 import jetbrick.web.mvc.action.PathVariables;

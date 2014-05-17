@@ -22,8 +22,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.*;
 import jetbrick.commons.beans.ClassLoaderUtils;
-import jetbrick.commons.lang.StringUtils;
-import jetbrick.commons.lang.Validate;
+import jetbrick.lang.StringUtils;
+import jetbrick.lang.Validate;
 
 public class ClasspathResource extends Resource {
     private final ClassLoader loader;

@@ -18,7 +18,7 @@
  */
 package jetbrick.web.mvc.results.views;
 
-import jetbrick.commons.lang.StringUtils;
+import jetbrick.lang.StringUtils;
 import jetbrick.web.mvc.RequestContext;
 
 public abstract class AbstractTemplateViewHandler implements ViewHandler {

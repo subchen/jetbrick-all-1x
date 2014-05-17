@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import jetbrick.commons.lang.Validate;
+import jetbrick.lang.Validate;
 
 public class InputStreamResource extends Resource {
     private final InputStream is;

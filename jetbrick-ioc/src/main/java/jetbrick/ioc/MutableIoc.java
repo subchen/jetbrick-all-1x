@@ -21,10 +21,10 @@ package jetbrick.ioc;
 import java.lang.reflect.Modifier;
 import java.util.*;
 import jetbrick.commons.config.Configuration;
-import jetbrick.commons.lang.Validate;
 import jetbrick.ioc.loaders.IocConfiguration;
 import jetbrick.ioc.loaders.IocLoader;
 import jetbrick.ioc.objects.*;
+import jetbrick.lang.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

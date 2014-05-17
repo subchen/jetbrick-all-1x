@@ -23,7 +23,7 @@ import java.util.Enumeration;
 import java.util.List;
 import jetbrick.collections.ListUtils;
 import jetbrick.commons.beans.ClassLoaderUtils;
-import jetbrick.commons.lang.StringUtils;
+import jetbrick.lang.StringUtils;
 import org.apache.log4j.*;
 
 public final class Log4jConfig {

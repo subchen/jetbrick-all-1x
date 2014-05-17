@@ -23,10 +23,10 @@ import java.lang.reflect.Method;
 import java.util.*;
 import jetbrick.commons.beans.introspectors.*;
 import jetbrick.commons.config.Configuration;
-import jetbrick.commons.lang.ExceptionUtils;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.*;
 import jetbrick.ioc.injectors.*;
+import jetbrick.lang.ExceptionUtils;
 
 class IocObjectUtils {
 

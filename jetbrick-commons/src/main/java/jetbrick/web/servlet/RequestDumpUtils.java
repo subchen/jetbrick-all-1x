@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import jetbrick.commons.lang.StringUtils;
+import jetbrick.lang.StringUtils;
 
 public final class RequestDumpUtils {
 

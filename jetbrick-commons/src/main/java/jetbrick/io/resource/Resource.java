@@ -22,7 +22,7 @@ import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.util.zip.ZipFile;
-import jetbrick.commons.lang.Validate;
+import jetbrick.lang.Validate;
 
 public abstract class Resource {
     public static final String URL_PREFIX_CLASSPATH = "classpath:";

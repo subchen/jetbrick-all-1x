@@ -21,7 +21,7 @@ package jetbrick.commons.beans.introspectors;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import jetbrick.commons.beans.TypeResolverUtils;
-import jetbrick.commons.lang.ArrayUtils;
+import jetbrick.lang.ArrayUtils;
 
 public class ConstructorDescriptor {
     private final ClassDescriptor classDescriptor;
