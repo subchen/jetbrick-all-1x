@@ -20,8 +20,8 @@ package jetbrick.reflect.asm;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import jetbrick.commons.log.LoggerFactory;
 import jetbrick.reflect.KlassInfo;
+import org.slf4j.LoggerFactory;
 
 public final class ASMFactory {
     public static final boolean IS_ASM_ENABLED = System.getProperty("jetbrick.asm.enabled") != null;
@@ -61,12 +61,13 @@ public final class ASMFactory {
             try {
                 generatedKlass = loader.loadClass(generatedKlassName);
             } catch (ClassNotFoundException e) {
-                LoggerFactory.getLogger(ASMFactory.class).error(generatedKlassName);
                 byte[] code = byteCodeGenerator.generate(delegateKlass, generatedKlassName);
                 if (IS_ASM_DEBUG) {
                     try {
                         File dir = new File(System.getProperty("java.io.tmpdir"));
                         File file = new File(dir, generatedKlassName.replace('.', '/') + ".class");
+                        LoggerFactory.getLogger(ASMFactory.class).info("ASMFactory generated {}", generatedKlassName);
+
                         file.getParentFile().mkdirs();
                         FileOutputStream fos = new FileOutputStream(file);
                         fos.write(code);
