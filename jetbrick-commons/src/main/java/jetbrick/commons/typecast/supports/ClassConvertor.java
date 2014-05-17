@@ -31,7 +31,7 @@ public final class ClassConvertor implements Convertor<Class<?>> {
             return null;
         }
         try {
-            return ClassLoaderUtils.loadClass(value);
+            return ClassLoaderUtils.loadClassEx(value);
         } catch (ClassNotFoundException e) {
             throw TypeCastException.create(value, Class.class, e);
         }

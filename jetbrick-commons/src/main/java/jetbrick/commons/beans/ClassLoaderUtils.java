@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import jetbrick.commons.lang.StringUtils;
+import jetbrick.commons.lang.Validate;
 
 public class ClassLoaderUtils {
     private static final Map<String, String> abbreviationMap;
@@ -45,33 +46,51 @@ public class ClassLoaderUtils {
 
     /**
      * 使用默认的 ClassLoader 去载入类.
+     * @return null if class not found
+     */
+    public static Class<?> loadClass(final String qualifiedClassName) {
+        return loadClass(qualifiedClassName, null);
+    }
+
+    /**
+     * 使用默认的 ClassLoader 去载入类.
+     * @return null if class not found
+     */
+    public static Class<?> loadClass(final String qualifiedClassName, ClassLoader loader) {
+        try {
+            return loadClassEx(qualifiedClassName, loader);
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 使用默认的 ClassLoader 去载入类.
      * @throws ClassNotFoundException
      */
-    public static Class<?> loadClass(final String qualifiedClassName) throws ClassNotFoundException {
-        return loadClass(qualifiedClassName, null);
+    public static Class<?> loadClassEx(final String qualifiedClassName) throws ClassNotFoundException {
+        return loadClassEx(qualifiedClassName, null);
     }
 
     /**
      * 使用指定的 ClassLoader 去载入类.
      * @throws ClassNotFoundException
      */
-    public static Class<?> loadClass(final String qualifiedClassName, final ClassLoader classLoader) throws ClassNotFoundException {
-        if (qualifiedClassName == null) {
-            throw new NullPointerException("qualifiedClassName must not be null.");
-        }
+    public static Class<?> loadClassEx(final String qualifiedClassName, final ClassLoader classLoader) throws ClassNotFoundException {
+        Validate.notNull(qualifiedClassName, "qualifiedClassName must be not null");
 
         ClassLoader loader = (classLoader == null) ? getDefault() : classLoader;
 
         // 尝试基本类型
         if (abbreviationMap.containsKey(qualifiedClassName)) {
-            String klassName = '[' + abbreviationMap.get(qualifiedClassName);
-            return Class.forName(klassName, false, loader).getComponentType();
+            String className = '[' + abbreviationMap.get(qualifiedClassName);
+            return Class.forName(className, false, loader).getComponentType();
         }
 
         // 尝试用 Class.forName()
         try {
-            String klassName = getCanonicalClassName(qualifiedClassName);
-            return Class.forName(klassName, false, loader);
+            String className = getCanonicalClassName(qualifiedClassName);
+            return Class.forName(className, false, loader);
         } catch (ClassNotFoundException e) {
         }
 
@@ -80,15 +99,15 @@ public class ClassLoaderUtils {
             int ipos = qualifiedClassName.lastIndexOf('.');
             if (ipos > 0) {
                 try {
-                    String klassName = qualifiedClassName.substring(0, ipos) + '$' + qualifiedClassName.substring(ipos + 1);
-                    klassName = getCanonicalClassName(klassName);
-                    return Class.forName(klassName, false, loader);
+                    String className = qualifiedClassName.substring(0, ipos) + '$' + qualifiedClassName.substring(ipos + 1);
+                    className = getCanonicalClassName(className);
+                    return Class.forName(className, false, loader);
                 } catch (ClassNotFoundException e) {
                 }
             }
         }
 
-        throw new ClassNotFoundException("Class not found: " + qualifiedClassName);
+        throw new ClassNotFoundException(qualifiedClassName);
     }
 
     /**
@@ -101,9 +120,7 @@ public class ClassLoaderUtils {
      * </pre>
      */
     public static String getCanonicalClassName(String qualifiedClassName) {
-        if (qualifiedClassName == null) {
-            throw new NullPointerException("qualifiedClassName must not be null.");
-        }
+        Validate.notNull(qualifiedClassName, "qualifiedClassName must be not null");
 
         String name = StringUtils.deleteWhitespace(qualifiedClassName);
         if (name.endsWith("[]")) {
@@ -126,50 +143,78 @@ public class ClassLoaderUtils {
         return name;
     }
 
-    public static URL getResource(String resourceName) {
-        return getResource(resourceName, null);
+    /**
+     * Finds the resource with the given name.
+     * @param name - The resource name
+     * @return A URL object for reading the resource, or null if the resource could not be found
+     */
+    public static URL getResource(String name) {
+        return getResource(name, null);
     }
 
-    public static URL getResource(String resourceName, ClassLoader classLoader) {
-        if (resourceName.startsWith("/")) {
-            resourceName = resourceName.substring(1);
+    /**
+     * Finds the resource with the given name.
+     * @param name - The resource name
+     * @return A URL object for reading the resource, or null if the resource could not be found
+     */
+    public static URL getResource(String name, ClassLoader classLoader) {
+        Validate.notNull(name, "resourceName must be not null");
+
+        if (name.startsWith("/")) {
+            name = name.substring(1);
         }
         if (classLoader != null) {
-            URL url = classLoader.getResource(resourceName);
+            URL url = classLoader.getResource(name);
             if (url != null) {
                 return url;
             }
         }
-        ClassLoader currentThreadClassLoader = Thread.currentThread().getContextClassLoader();
-        if (currentThreadClassLoader != null && currentThreadClassLoader != classLoader) {
-            URL url = currentThreadClassLoader.getResource(resourceName);
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        if (loader != null && loader != classLoader) {
+            URL url = loader.getResource(name);
             if (url != null) {
                 return url;
             }
         }
+
         return null;
     }
 
-    public static InputStream getResourceAsStream(String resourceName) throws IOException {
-        return getResourceAsStream(resourceName, null);
+    /**
+     * Returns an input stream for reading the specified resource.
+     */
+    public static InputStream getResourceAsStream(String name) throws IOException {
+        return getResourceAsStream(name, null);
     }
 
-    public static InputStream getResourceAsStream(String resourceName, ClassLoader callingClass) throws IOException {
-        URL url = getResource(resourceName, callingClass);
+    /**
+     * Returns an input stream for reading the specified resource.
+     */
+    public static InputStream getResourceAsStream(String name, ClassLoader classLoader) throws IOException {
+        URL url = getResource(name, classLoader);
         if (url != null) {
             return url.openStream();
         }
         return null;
     }
 
+    /**
+     * Returns an input stream for reading the specified class.
+     */
     public static InputStream getClassAsStream(Class<?> clazz) throws IOException {
         return getResourceAsStream(getClassFileName(clazz), clazz.getClassLoader());
     }
 
-    public static InputStream getClassAsStream(String className) throws IOException {
-        return getResourceAsStream(getClassFileName(className));
+    /**
+     * Returns an input stream for reading the specified class.
+     */
+    public static InputStream getClassAsStream(String qualifiedClassName) throws IOException {
+        return getResourceAsStream(getClassFileName(qualifiedClassName));
     }
 
+    /**
+     * 获取一个 class 所代表的文件名
+     */
     public static String getClassFileName(Class<?> clazz) {
         if (clazz.isArray()) {
             clazz = clazz.getComponentType();
@@ -177,8 +222,11 @@ public class ClassLoaderUtils {
         return getClassFileName(clazz.getName());
     }
 
-    public static String getClassFileName(String className) {
-        return className.replace('.', '/') + ".class";
+    /**
+     * 获取一个 class 所代表的文件名
+     */
+    public static String getClassFileName(String qualifiedClassName) {
+        return qualifiedClassName.replace('.', '/') + ".class";
     }
 
     static {

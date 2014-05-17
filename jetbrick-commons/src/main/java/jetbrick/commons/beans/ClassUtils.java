@@ -38,14 +38,7 @@ public class ClassUtils {
      * 判断一个 Class 是否存在并且可用.
      */
     public static boolean available(String qualifiedClassName, ClassLoader loader) {
-        try {
-            ClassLoaderUtils.loadClass(qualifiedClassName, loader);
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        } catch (Throwable e) {
-            return false;
-        }
+        return ClassLoaderUtils.loadClass(qualifiedClassName, loader) != null;
     }
 
     /**

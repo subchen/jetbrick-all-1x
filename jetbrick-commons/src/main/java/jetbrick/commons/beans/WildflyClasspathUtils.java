@@ -28,7 +28,7 @@ import jetbrick.commons.io.URLUtils;
 /**
  * @author Guoqiang Chen
  */
-public class WildflyClasspathUtils {
+class WildflyClasspathUtils {
 
     @SuppressWarnings("unchecked")
     public static Set<URL> getClasspathURLs(final Object rootModuleClassLoader, boolean allModules) throws Exception {
@@ -90,14 +90,14 @@ public class WildflyClasspathUtils {
     }
 
     private static Object getFieldValue(Object object, String name) throws Exception {
-        Class<?> cls = object.getClass();
-        while (cls != Object.class) {
+        Class<?> clazz = object.getClass();
+        while (clazz != Object.class) {
             try {
-                Field field = cls.getDeclaredField(name);
+                Field field = clazz.getDeclaredField(name);
                 field.setAccessible(true);
                 return field.get(object);
             } catch (NoSuchFieldException e) {
-                cls = cls.getSuperclass();
+                clazz = clazz.getSuperclass();
             }
         }
         throw new NoSuchFieldException(object.getClass().getName() + '#' + name);

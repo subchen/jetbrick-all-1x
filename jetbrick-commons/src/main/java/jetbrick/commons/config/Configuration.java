@@ -299,7 +299,7 @@ public class Configuration extends HashMap<String, String> {
             return TypeCastUtils.convert(value, type);
         } catch (IllegalStateException e) {
             try {
-                Class<?> klass = ClassLoaderUtils.loadClass(value);
+                Class<?> klass = ClassLoaderUtils.loadClassEx(value);
                 return (T) klass.newInstance();
             } catch (ClassNotFoundException ex) {
                 throw e; // IllegalStateException

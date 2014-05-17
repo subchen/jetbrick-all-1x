@@ -38,15 +38,15 @@ public final class ClasspathUtils {
         Collection<URL> urls = new LinkedHashSet<URL>(32);
         ClassLoader loader = classLoader;
         while (loader != null) {
-            String klassName = loader.getClass().getName();
-            if (EXT_CLASS_LOADER_NAME.equals(klassName)) {
+            String className = loader.getClass().getName();
+            if (EXT_CLASS_LOADER_NAME.equals(className)) {
                 break;
             }
             if (loader instanceof URLClassLoader) {
                 for (URL url : ((URLClassLoader) loader).getURLs()) {
                     urls.add(url);
                 }
-            } else if (klassName.startsWith("weblogic.utils.classloaders.")) {
+            } else if (className.startsWith("weblogic.utils.classloaders.")) {
                 // 该死的 WebLogic，只能特殊处理
                 // GenericClassLoader, FilteringClassLoader, ChangeAwareClassLoader
                 try {
@@ -62,7 +62,7 @@ public final class ClasspathUtils {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-            } else if (klassName.startsWith("org.jboss.modules.ModuleClassLoader")) {
+            } else if (className.startsWith("org.jboss.modules.ModuleClassLoader")) {
                 // 该死的 Jboss/Wildfly 8，只能特殊处理
                 try {
                     Set<URL> urlSet = WildflyClasspathUtils.getClasspathURLs(loader, false);

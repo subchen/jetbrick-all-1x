@@ -45,7 +45,7 @@ public final class IocConfiguration extends Configuration {
                 return TypeCastUtils.convert(value, type);
             } catch (IllegalStateException e) {
                 try {
-                    Class<?> klass = ClassLoaderUtils.loadClass(value);
+                    Class<?> klass = ClassLoaderUtils.loadClassEx(value);
                     return (T) ioc.injectClass(klass);
                 } catch (ClassNotFoundException ex) {
                     throw e; // IllegalStateException

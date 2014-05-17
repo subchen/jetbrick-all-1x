@@ -51,7 +51,7 @@ public class IocPropertiesLoader implements IocLoader {
                     }
                     Class<?> beanClass;
                     try {
-                        beanClass = ClassLoaderUtils.loadClass(value);
+                        beanClass = ClassLoaderUtils.loadClassEx(value);
                     } catch (ClassNotFoundException e) {
                         throw new RuntimeException(e);
                     }
