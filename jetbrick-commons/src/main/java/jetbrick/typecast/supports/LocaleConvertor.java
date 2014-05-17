@@ -19,7 +19,7 @@
 package jetbrick.typecast.supports;
 
 import java.util.Locale;
-import jetbrick.commons.i18n.LocaleUtils;
+import jetbrick.lang.LocaleUtils;
 import jetbrick.typecast.Convertor;
 
 public final class LocaleConvertor implements Convertor<Locale> {

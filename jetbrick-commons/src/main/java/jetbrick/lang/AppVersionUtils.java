@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons;
+package jetbrick.lang;
 
 import java.security.CodeSource;
 import java.util.regex.Matcher;
@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 /**
  * 根据 class 所在的 jar 包，查找 MANIFEST.MF 来识别版本号。
  */
-public final class AppVersion {
+public final class AppVersionUtils {
     private static final String DEFAULT_VERSION = "1.0.0";
 
     public static String getVersion(Class<?> cls) {

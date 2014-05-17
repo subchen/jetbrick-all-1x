@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons;
+package jetbrick.lang;
 
 public final class JdkVersion {
     public static final String JAVA_VERSION;

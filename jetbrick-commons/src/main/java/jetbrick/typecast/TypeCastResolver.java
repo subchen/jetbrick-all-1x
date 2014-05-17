@@ -26,8 +26,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.time.*;
 import java.util.*;
-import jetbrick.commons.JdkVersion;
 import jetbrick.io.resource.Resource;
+import jetbrick.lang.JdkVersion;
 import jetbrick.typecast.supports.*;
 
 @SuppressWarnings("unchecked")

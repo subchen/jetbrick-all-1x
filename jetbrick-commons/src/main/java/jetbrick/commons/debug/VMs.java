@@ -22,10 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
-import jetbrick.commons.JdkVersion;
 import jetbrick.io.IoUtils;
-import jetbrick.lang.StringUtils;
-import jetbrick.lang.SystemUtils;
+import jetbrick.lang.*;
 
 public class VMs {
 
@@ -36,7 +34,7 @@ public class VMs {
 
     public static String getThreadDump() {
         if (JdkVersion.IS_AT_LEAST_JAVA_6) {
-            return "Java AppVersion must be equal or larger than 1.6";
+            return "Java AppVersionUtils must be equal or larger than 1.6";
         }
         String jstack = "../bin/jstack";
         if (SystemUtils.IS_OS_WINDOWS) {

@@ -21,8 +21,8 @@ package jetbrick.typecast.supports;
 import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
-import jetbrick.commons.JdkVersion;
 import jetbrick.lang.DateUtils;
+import jetbrick.lang.JdkVersion;
 import jetbrick.typecast.Convertor;
 import jetbrick.typecast.TypeCastException;
 

@@ -16,12 +16,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.i18n;
+package jetbrick.lang;
 
 import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.util.*;
-import jetbrick.lang.StringUtils;
 
 public final class LocaleUtils {
     private static Map<String, LocaleInfo> locales = new HashMap<String, LocaleInfo>();
