@@ -16,33 +16,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.web.mvc.action.annotations;
+package jetbrick.typecast.supports;
 
-import jetbrick.ioc.annotations.Managed;
+import java.util.TimeZone;
 import jetbrick.typecast.Convertor;
-import jetbrick.typecast.TypeCastUtils;
-import jetbrick.web.mvc.RequestContext;
 
-@Managed
-public class PathVariableArgumentGetter implements AnnotatedArgumentGetter<PathVariable, Object> {
-    private String name;
-    private Convertor<?> typeConvertor;
+public final class TimeZoneConvertor implements Convertor<TimeZone> {
+    public static final TimeZoneConvertor INSTANCE = new TimeZoneConvertor();
 
     @Override
-    public void initialize(Class<?> type, PathVariable annotation) {
-        this.name = annotation.value();
-        this.typeConvertor = TypeCastUtils.lookup(type);
-    }
-
-    @Override
-    public Object get(RequestContext ctx) {
-        String value = ctx.getRouteInfo().getPathVariable(name);
+    public TimeZone convert(String value) {
         if (value == null) {
             return null;
         }
-        if (typeConvertor != null) {
-            return typeConvertor.convert(value);
+        return TimeZone.getTimeZone(value);
+    }
+
+    @Override
+    public TimeZone convert(Object value) {
+        if (value == null) {
+            return null;
         }
-        return value;
+        if (value instanceof TimeZone) {
+            return (TimeZone) value;
+        }
+        return TimeZone.getTimeZone(value.toString());
     }
 }

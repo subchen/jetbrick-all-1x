@@ -16,33 +16,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.web.mvc.action.annotations;
+package jetbrick.typecast.supports;
 
-import jetbrick.ioc.annotations.Managed;
 import jetbrick.typecast.Convertor;
-import jetbrick.typecast.TypeCastUtils;
-import jetbrick.web.mvc.RequestContext;
+import jetbrick.typecast.TypeCastException;
 
-@Managed
-public class PathVariableArgumentGetter implements AnnotatedArgumentGetter<PathVariable, Object> {
-    private String name;
-    private Convertor<?> typeConvertor;
+public final class FloatConvertor implements Convertor<Float> {
+    public static final FloatConvertor INSTANCE = new FloatConvertor();
 
     @Override
-    public void initialize(Class<?> type, PathVariable annotation) {
-        this.name = annotation.value();
-        this.typeConvertor = TypeCastUtils.lookup(type);
-    }
-
-    @Override
-    public Object get(RequestContext ctx) {
-        String value = ctx.getRouteInfo().getPathVariable(name);
+    public Float convert(String value) {
         if (value == null) {
             return null;
         }
-        if (typeConvertor != null) {
-            return typeConvertor.convert(value);
+        try {
+            return Float.valueOf(value);
+        } catch (NumberFormatException e) {
+            throw TypeCastException.create(value, Float.class, e);
         }
-        return value;
+    }
+
+    @Override
+    public Float convert(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value.getClass() == Float.class) {
+            return (Float) value;
+        }
+        if (value instanceof Number) {
+            return Float.valueOf(((Number) value).floatValue());
+        }
+        return convert(value.toString());
     }
 }

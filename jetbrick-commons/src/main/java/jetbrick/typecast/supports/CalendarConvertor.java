@@ -16,33 +16,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.web.mvc.action.annotations;
+package jetbrick.typecast.supports;
 
-import jetbrick.ioc.annotations.Managed;
+import java.util.Calendar;
 import jetbrick.typecast.Convertor;
-import jetbrick.typecast.TypeCastUtils;
-import jetbrick.web.mvc.RequestContext;
 
-@Managed
-public class PathVariableArgumentGetter implements AnnotatedArgumentGetter<PathVariable, Object> {
-    private String name;
-    private Convertor<?> typeConvertor;
+public final class CalendarConvertor implements Convertor<Calendar> {
+    public static final CalendarConvertor INSTANCE = new CalendarConvertor();
 
     @Override
-    public void initialize(Class<?> type, PathVariable annotation) {
-        this.name = annotation.value();
-        this.typeConvertor = TypeCastUtils.lookup(type);
-    }
-
-    @Override
-    public Object get(RequestContext ctx) {
-        String value = ctx.getRouteInfo().getPathVariable(name);
+    public Calendar convert(String value) {
         if (value == null) {
             return null;
         }
-        if (typeConvertor != null) {
-            return typeConvertor.convert(value);
+        long millis = DateConvertor.toMilliseconds(value, Calendar.class);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(millis);
+        return cal;
+    }
+
+    @Override
+    public Calendar convert(Object value) {
+        if (value == null) {
+            return null;
         }
-        return value;
+        if (value instanceof Calendar) {
+            return (Calendar) value;
+        }
+        long millis = DateConvertor.toMilliseconds(value, Calendar.class);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(millis);
+        return cal;
     }
 }

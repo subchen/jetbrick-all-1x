@@ -24,7 +24,7 @@ import java.util.*;
 import jetbrick.commons.beans.ClassLoaderUtils;
 import jetbrick.commons.io.resource.Resource;
 import jetbrick.commons.lang.StringUtils;
-import jetbrick.commons.typecast.TypeCastUtils;
+import jetbrick.typecast.TypeCastUtils;
 
 public class Configuration extends HashMap<String, String> {
     private static final long serialVersionUID = 1L;

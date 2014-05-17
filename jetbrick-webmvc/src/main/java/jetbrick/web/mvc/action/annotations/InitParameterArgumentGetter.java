@@ -18,8 +18,8 @@
  */
 package jetbrick.web.mvc.action.annotations;
 
-import jetbrick.commons.typecast.Convertor;
 import jetbrick.ioc.annotations.Managed;
+import jetbrick.typecast.Convertor;
 import jetbrick.web.mvc.RequestContext;
 import jetbrick.web.mvc.action.ArgumentGetterResolver;
 

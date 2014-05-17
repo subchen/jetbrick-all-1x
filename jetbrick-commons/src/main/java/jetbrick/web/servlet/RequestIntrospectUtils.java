@@ -23,7 +23,7 @@ import javax.servlet.ServletRequest;
 import jetbrick.commons.beans.introspectors.ClassDescriptor;
 import jetbrick.commons.beans.introspectors.PropertyDescriptor;
 import jetbrick.commons.lang.StringUtils;
-import jetbrick.commons.typecast.TypeCastUtils;
+import jetbrick.typecast.TypeCastUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -19,8 +19,8 @@
 package jetbrick.web.mvc.action.annotations;
 
 import javax.servlet.http.Cookie;
-import jetbrick.commons.typecast.Convertor;
 import jetbrick.ioc.annotations.Managed;
+import jetbrick.typecast.Convertor;
 import jetbrick.web.mvc.RequestContext;
 import jetbrick.web.mvc.action.ArgumentGetterResolver;
 

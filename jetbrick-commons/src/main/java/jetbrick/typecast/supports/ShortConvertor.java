@@ -16,33 +16,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.web.mvc.action.annotations;
+package jetbrick.typecast.supports;
 
-import jetbrick.ioc.annotations.Managed;
 import jetbrick.typecast.Convertor;
-import jetbrick.typecast.TypeCastUtils;
-import jetbrick.web.mvc.RequestContext;
+import jetbrick.typecast.TypeCastException;
 
-@Managed
-public class PathVariableArgumentGetter implements AnnotatedArgumentGetter<PathVariable, Object> {
-    private String name;
-    private Convertor<?> typeConvertor;
+public final class ShortConvertor implements Convertor<Short> {
+    public static final ShortConvertor INSTANCE = new ShortConvertor();
 
     @Override
-    public void initialize(Class<?> type, PathVariable annotation) {
-        this.name = annotation.value();
-        this.typeConvertor = TypeCastUtils.lookup(type);
-    }
-
-    @Override
-    public Object get(RequestContext ctx) {
-        String value = ctx.getRouteInfo().getPathVariable(name);
+    public Short convert(String value) {
         if (value == null) {
             return null;
         }
-        if (typeConvertor != null) {
-            return typeConvertor.convert(value);
+        try {
+            return Short.valueOf(value);
+        } catch (NumberFormatException e) {
+            throw TypeCastException.create(value, Short.class, e);
         }
-        return value;
+    }
+
+    @Override
+    public Short convert(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value.getClass() == Short.class) {
+            return (Short) value;
+        }
+        if (value instanceof Number) {
+            return Short.valueOf(((Number) value).shortValue());
+        }
+        return convert(value.toString());
     }
 }

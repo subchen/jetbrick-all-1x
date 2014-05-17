@@ -16,33 +16,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.web.mvc.action.annotations;
+package jetbrick.typecast.supports;
 
-import jetbrick.ioc.annotations.Managed;
 import jetbrick.typecast.Convertor;
-import jetbrick.typecast.TypeCastUtils;
-import jetbrick.web.mvc.RequestContext;
+import jetbrick.typecast.TypeCastException;
 
-@Managed
-public class PathVariableArgumentGetter implements AnnotatedArgumentGetter<PathVariable, Object> {
-    private String name;
-    private Convertor<?> typeConvertor;
+public final class ByteConvertor implements Convertor<Byte> {
+    public static final ByteConvertor INSTANCE = new ByteConvertor();
 
     @Override
-    public void initialize(Class<?> type, PathVariable annotation) {
-        this.name = annotation.value();
-        this.typeConvertor = TypeCastUtils.lookup(type);
-    }
-
-    @Override
-    public Object get(RequestContext ctx) {
-        String value = ctx.getRouteInfo().getPathVariable(name);
+    public Byte convert(String value) {
         if (value == null) {
             return null;
         }
-        if (typeConvertor != null) {
-            return typeConvertor.convert(value);
+        try {
+            return Byte.valueOf(value);
+        } catch (NumberFormatException e) {
+            throw TypeCastException.create(value, Byte.class, e);
         }
-        return value;
+    }
+
+    @Override
+    public Byte convert(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (value.getClass() == Byte.class) {
+            return (Byte) value;
+        }
+        if (value instanceof Number) {
+            return Byte.valueOf(((Number) value).byteValue());
+        }
+        return convert(value.toString());
     }
 }

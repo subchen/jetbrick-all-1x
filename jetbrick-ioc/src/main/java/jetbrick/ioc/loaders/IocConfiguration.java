@@ -20,8 +20,8 @@ package jetbrick.ioc.loaders;
 
 import jetbrick.commons.beans.ClassLoaderUtils;
 import jetbrick.commons.config.Configuration;
-import jetbrick.commons.typecast.TypeCastUtils;
 import jetbrick.ioc.Ioc;
+import jetbrick.typecast.TypeCastUtils;
 
 public final class IocConfiguration extends Configuration {
     private static final long serialVersionUID = 1L;

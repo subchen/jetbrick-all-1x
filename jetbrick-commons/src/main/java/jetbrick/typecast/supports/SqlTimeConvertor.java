@@ -16,33 +16,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.web.mvc.action.annotations;
+package jetbrick.typecast.supports;
 
-import jetbrick.ioc.annotations.Managed;
 import jetbrick.typecast.Convertor;
-import jetbrick.typecast.TypeCastUtils;
-import jetbrick.web.mvc.RequestContext;
 
-@Managed
-public class PathVariableArgumentGetter implements AnnotatedArgumentGetter<PathVariable, Object> {
-    private String name;
-    private Convertor<?> typeConvertor;
+public final class SqlTimeConvertor implements Convertor<java.sql.Time> {
+    public static final SqlTimeConvertor INSTANCE = new SqlTimeConvertor();
 
     @Override
-    public void initialize(Class<?> type, PathVariable annotation) {
-        this.name = annotation.value();
-        this.typeConvertor = TypeCastUtils.lookup(type);
-    }
-
-    @Override
-    public Object get(RequestContext ctx) {
-        String value = ctx.getRouteInfo().getPathVariable(name);
+    public java.sql.Time convert(String value) {
         if (value == null) {
             return null;
         }
-        if (typeConvertor != null) {
-            return typeConvertor.convert(value);
+        return new java.sql.Time(DateConvertor.toMilliseconds(value, java.sql.Time.class));
+    }
+
+    @Override
+    public java.sql.Time convert(Object value) {
+        if (value == null) {
+            return null;
         }
-        return value;
+        if (value instanceof java.sql.Time) {
+            return (java.sql.Time) value;
+        }
+        return new java.sql.Time(DateConvertor.toMilliseconds(value, java.sql.Time.class));
     }
 }
