@@ -20,6 +20,7 @@ package jetbrick.commons.beans;
 
 import java.util.*;
 import jetbrick.commons.collections.IdentityHashSet;
+import jetbrick.commons.lang.ArrayUtils;
 
 public class ClassUtils {
     private static final Set<Class<?>> boxed_class_set;
@@ -39,6 +40,58 @@ public class ClassUtils {
      */
     public static boolean available(String qualifiedClassName, ClassLoader loader) {
         return ClassLoaderUtils.loadClass(qualifiedClassName, loader) != null;
+    }
+
+    public static boolean isPrimitiveOrWrapper(Class<?> clazz) {
+        if (clazz == null) return false;
+        return (clazz.isPrimitive()) || (isPrimitiveWrapper(clazz));
+    }
+
+    public static boolean isPrimitiveWrapper(Class<?> clazz) {
+        return boxed_class_set.contains(clazz);
+    }
+
+    public static Class<?> primitiveToWrapper(Class<?> clazz) {
+        if (clazz != null && clazz.isPrimitive()) {
+            return boxed_class_map.get(clazz);
+        }
+        return clazz;
+    }
+
+    public static Class<?>[] primitivesToWrappers(Class<?>... classes) {
+        if (classes == null) {
+            return ArrayUtils.EMPTY_CLASS_ARRAY;
+        }
+        if (classes.length == 0) {
+            return classes;
+        }
+        Class<?>[] convertedClasses = new Class[classes.length];
+        for (int i = 0; i < classes.length; i++) {
+            convertedClasses[i] = primitiveToWrapper(classes[i]);
+        }
+        return convertedClasses;
+    }
+
+    public static Class<?> wrapperToPrimitive(Class<?> cls) {
+        return unboxed_class_map.get(cls);
+    }
+
+    public static Class<?>[] wrappersToPrimitives(Class<?>... classes) {
+        if (classes == null) {
+            return null;
+        }
+        if (classes.length == 0) {
+            return classes;
+        }
+        Class<?>[] convertedClasses = new Class[classes.length];
+        for (int i = 0; i < classes.length; i++) {
+            convertedClasses[i] = wrapperToPrimitive(classes[i]);
+        }
+        return convertedClasses;
+    }
+
+    public static boolean isInnerClass(Class<?> clazz) {
+        return (clazz != null) && (clazz.getEnclosingClass() != null);
     }
 
     /**
