@@ -76,7 +76,7 @@ final class ASMBuilder {
         mv.visitVarInsn(ALOAD, 2);
         mv.visitJumpInsn(IFNONNULL, labelStep2);
 
-        throwNullPointerException(mv, "args is NULL");
+        throwIllegalArgumentException(mv, "arguments must be not null");
 
         // step2: if (which < 0 || which >= argumentsLength.length)
         mv.visitLabel(labelStep2);
@@ -89,7 +89,7 @@ final class ASMBuilder {
         mv.visitJumpInsn(IF_ICMPLT, labelStep3);
 
         mv.visitLabel(labelError2);
-        throwIllegalArgumentException(mv, "invalid offset: ", 1);
+        throwIllegalArgumentException(mv, "wrong offset of member");
 
         // step3: if (args.length != argumentsLength[which]) {
         mv.visitLabel(labelStep3);
@@ -100,7 +100,7 @@ final class ASMBuilder {
         mv.visitInsn(IALOAD);
         mv.visitJumpInsn(IF_ICMPEQ, labelSucc);
 
-        throwIllegalArgumentException(mv, "argument length is not match : ", 1);
+        throwIllegalArgumentException(mv, "wrong number of arguments");
 
         //
         mv.visitLabel(labelSucc);
@@ -178,7 +178,7 @@ final class ASMBuilder {
             mv.visitLabel(defaultLabel);
             mv.visitFrame(F_SAME, 0, null, 0, null);
         }
-        throwIllegalArgumentException(mv, "cannot find constructor, index is ", 1);
+        throwIllegalArgumentException(mv, "wrong offset of constructors");
 
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -243,7 +243,7 @@ final class ASMBuilder {
             mv.visitLabel(defaultLabel);
             mv.visitFrame(F_SAME, 0, null, 0, null);
         }
-        throwIllegalArgumentException(mv, "cannot find method, index is ", 2);
+        throwIllegalArgumentException(mv, "wrong offset of method");
 
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -282,7 +282,7 @@ final class ASMBuilder {
             mv.visitLabel(defaultLabel);
             mv.visitFrame(F_SAME, 0, null, 0, null);
         }
-        throwIllegalArgumentException(mv, "cannot find field, index is ", 2);
+        throwIllegalArgumentException(mv, "wrong offset of fields");
 
         int maxStack = fields.isEmpty() ? 5 : 6;
         mv.visitMaxs(maxStack, 3);
@@ -322,28 +322,17 @@ final class ASMBuilder {
             mv.visitLabel(defaultLabel);
             mv.visitFrame(F_SAME, 0, null, 0, null);
         }
-        throwIllegalArgumentException(mv, "cannot find field, index is ", 2);
+        throwIllegalArgumentException(mv, "wrong offset of fields");
 
         int maxStack = fields.isEmpty() ? 5 : 6;
         mv.visitMaxs(maxStack, 4);
         mv.visitEnd();
     }
 
-    private static void throwNullPointerException(MethodVisitor mv, String message) {
-        mv.visitTypeInsn(NEW, "java/lang/NullPointerException");
-        mv.visitInsn(DUP);
-        mv.visitLdcInsn("args is null");
-        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/NullPointerException", "<init>", "(Ljava/lang/String;)V", false);
-        mv.visitInsn(ATHROW);
-    }
-
-    private static void throwIllegalArgumentException(MethodVisitor mv, String message, int indexPosition) {
+    private static void throwIllegalArgumentException(MethodVisitor mv, String message) {
         mv.visitTypeInsn(NEW, "java/lang/IllegalArgumentException");
         mv.visitInsn(DUP);
         mv.visitLdcInsn(message);
-        mv.visitVarInsn(ILOAD, indexPosition); // index type must be "int"
-        mv.visitMethodInsn(INVOKESTATIC, "java/lang/String", "valueOf", "(I)Ljava/lang/String;", false);
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/String", "concat", "(Ljava/lang/String;)Ljava/lang/String;", false);
         mv.visitMethodInsn(INVOKESPECIAL, "java/lang/IllegalArgumentException", "<init>", "(Ljava/lang/String;)V", false);
         mv.visitInsn(ATHROW);
     }
