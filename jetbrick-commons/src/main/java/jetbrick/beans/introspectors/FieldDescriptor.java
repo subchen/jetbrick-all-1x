@@ -16,12 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.beans.introspectors;
+package jetbrick.beans.introspectors;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import jetbrick.commons.beans.TypeResolverUtils;
+import jetbrick.beans.TypeResolverUtils;
 
 public class FieldDescriptor {
     private final ClassDescriptor classDescriptor;

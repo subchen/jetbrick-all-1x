@@ -24,7 +24,7 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
-import jetbrick.commons.beans.ClassLoaderUtils;
+import jetbrick.beans.ClassLoaderUtils;
 import jetbrick.io.IoUtils;
 
 public final class ConfigurationLoader {

@@ -21,8 +21,8 @@ package jetbrick.commons.debug;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
+import jetbrick.beans.ClassLoaderUtils;
 import jetbrick.collections.ListUtils;
-import jetbrick.commons.beans.ClassLoaderUtils;
 import jetbrick.lang.StringUtils;
 import org.apache.log4j.*;
 

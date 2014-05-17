@@ -18,7 +18,7 @@
  */
 package jetbrick.ioc.loaders;
 
-import jetbrick.commons.beans.ClassLoaderUtils;
+import jetbrick.beans.ClassLoaderUtils;
 import jetbrick.commons.config.Configuration;
 import jetbrick.ioc.Ioc;
 import jetbrick.typecast.TypeCastUtils;

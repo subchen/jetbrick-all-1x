@@ -20,7 +20,7 @@ package jetbrick.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import jetbrick.commons.beans.TypeResolverUtils;
+import jetbrick.beans.TypeResolverUtils;
 import jetbrick.reflect.asm.ASMFactory;
 
 public final class FieldInfo implements Comparable<FieldInfo>, Getter, Setter {

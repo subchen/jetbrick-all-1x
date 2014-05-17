@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
-import jetbrick.commons.beans.ClassLoaderUtils;
+import jetbrick.beans.ClassLoaderUtils;
 import jetbrick.io.IoUtils;
 
 /**

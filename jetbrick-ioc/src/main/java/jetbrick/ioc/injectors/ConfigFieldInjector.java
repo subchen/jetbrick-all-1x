@@ -21,7 +21,7 @@ package jetbrick.ioc.injectors;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.List;
-import jetbrick.commons.beans.introspectors.FieldDescriptor;
+import jetbrick.beans.introspectors.FieldDescriptor;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.Config;
 import jetbrick.ioc.annotations.ValueConstants;

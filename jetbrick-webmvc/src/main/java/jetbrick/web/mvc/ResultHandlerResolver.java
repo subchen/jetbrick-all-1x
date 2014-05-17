@@ -20,7 +20,7 @@ package jetbrick.web.mvc;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
-import jetbrick.commons.beans.ClassUtils;
+import jetbrick.beans.ClassUtils;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.*;
 import jetbrick.lang.Validate;

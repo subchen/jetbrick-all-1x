@@ -21,7 +21,7 @@ package jetbrick.commons.config;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.*;
-import jetbrick.commons.beans.ClassLoaderUtils;
+import jetbrick.beans.ClassLoaderUtils;
 import jetbrick.io.resource.Resource;
 import jetbrick.lang.StringUtils;
 import jetbrick.typecast.TypeCastUtils;

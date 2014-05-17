@@ -18,7 +18,7 @@
  */
 package jetbrick.typecast.supports;
 
-import jetbrick.commons.beans.ClassLoaderUtils;
+import jetbrick.beans.ClassLoaderUtils;
 import jetbrick.typecast.Convertor;
 import jetbrick.typecast.TypeCastException;
 

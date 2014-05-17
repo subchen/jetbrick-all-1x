@@ -18,7 +18,7 @@
  */
 package jetbrick.web.mvc.action;
 
-import jetbrick.commons.beans.introspectors.MethodDescriptor;
+import jetbrick.beans.introspectors.MethodDescriptor;
 import jetbrick.web.mvc.RequestContext;
 import jetbrick.web.mvc.ResultInfo;
 import jetbrick.web.mvc.router.UrlTemplate;

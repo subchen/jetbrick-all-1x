@@ -20,7 +20,7 @@ package jetbrick.web.mvc.action;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import jetbrick.commons.beans.introspectors.MethodDescriptor;
+import jetbrick.beans.introspectors.MethodDescriptor;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.ManagedWith;
 import jetbrick.lang.ArrayUtils;

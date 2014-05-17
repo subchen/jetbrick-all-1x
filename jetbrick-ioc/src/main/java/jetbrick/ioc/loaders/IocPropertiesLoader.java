@@ -20,7 +20,7 @@ package jetbrick.ioc.loaders;
 
 import java.util.Iterator;
 import java.util.Map.Entry;
-import jetbrick.commons.beans.ClassLoaderUtils;
+import jetbrick.beans.ClassLoaderUtils;
 import jetbrick.commons.config.Configuration;
 import jetbrick.ioc.MutableIoc;
 import jetbrick.ioc.objects.ClassSingletonObject;

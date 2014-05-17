@@ -20,7 +20,7 @@ package jetbrick.ioc.objects;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import jetbrick.commons.beans.introspectors.ClassDescriptor;
+import jetbrick.beans.introspectors.ClassDescriptor;
 import jetbrick.commons.config.Configuration;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.injectors.*;

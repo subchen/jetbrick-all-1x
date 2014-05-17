@@ -21,7 +21,7 @@ package jetbrick.ioc.objects;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
-import jetbrick.commons.beans.introspectors.*;
+import jetbrick.beans.introspectors.*;
 import jetbrick.commons.config.Configuration;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.*;

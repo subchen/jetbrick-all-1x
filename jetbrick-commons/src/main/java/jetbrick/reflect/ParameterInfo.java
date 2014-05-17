@@ -23,8 +23,8 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import jetbrick.asm.*;
-import jetbrick.commons.beans.ClassLoaderUtils;
-import jetbrick.commons.beans.TypeResolverUtils;
+import jetbrick.beans.ClassLoaderUtils;
+import jetbrick.beans.TypeResolverUtils;
 
 public final class ParameterInfo {
     public static final ParameterInfo[] EMPTY_ARRAY = new ParameterInfo[0];

@@ -20,8 +20,8 @@ package jetbrick.web.servlet;
 
 import java.util.*;
 import javax.servlet.ServletRequest;
-import jetbrick.commons.beans.introspectors.ClassDescriptor;
-import jetbrick.commons.beans.introspectors.PropertyDescriptor;
+import jetbrick.beans.introspectors.ClassDescriptor;
+import jetbrick.beans.introspectors.PropertyDescriptor;
 import jetbrick.lang.StringUtils;
 import jetbrick.typecast.TypeCastUtils;
 import org.slf4j.Logger;

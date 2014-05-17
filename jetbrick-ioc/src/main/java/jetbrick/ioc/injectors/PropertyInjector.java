@@ -18,7 +18,7 @@
  */
 package jetbrick.ioc.injectors;
 
-import jetbrick.commons.beans.introspectors.PropertyDescriptor;
+import jetbrick.beans.introspectors.PropertyDescriptor;
 
 // 注入配置文件中的属性
 public class PropertyInjector {

@@ -16,14 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.beans;
+package jetbrick.beans;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
-import jetbrick.commons.beans.introspectors.ConstructorDescriptor;
-import jetbrick.commons.beans.introspectors.MethodDescriptor;
+import jetbrick.beans.introspectors.ConstructorDescriptor;
+import jetbrick.beans.introspectors.MethodDescriptor;
 
 public class MethodLookupUtils {
     /**

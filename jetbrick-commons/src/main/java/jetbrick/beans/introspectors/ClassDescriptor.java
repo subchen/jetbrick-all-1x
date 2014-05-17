@@ -16,14 +16,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.beans.introspectors;
+package jetbrick.beans.introspectors;
 
 import java.lang.reflect.*;
 import java.util.*;
+import jetbrick.beans.MethodLookupUtils;
 import jetbrick.collections.SoftHashMap;
 import jetbrick.collections.multimap.MultiValueHashMap;
 import jetbrick.collections.multimap.MultiValueMap;
-import jetbrick.commons.beans.MethodLookupUtils;
 
 public class ClassDescriptor {
     private static final Map<Class<?>, ClassDescriptor> beanCache = new SoftHashMap<Class<?>, ClassDescriptor>();

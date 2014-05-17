@@ -22,7 +22,7 @@ import java.lang.annotation.Annotation;
 import java.util.*;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
-import jetbrick.commons.beans.TypeResolverUtils;
+import jetbrick.beans.TypeResolverUtils;
 import jetbrick.commons.config.Configuration;
 import jetbrick.commons.config.ConfigurationLoader;
 import jetbrick.io.finder.ClassFinder;

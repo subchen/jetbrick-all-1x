@@ -19,7 +19,7 @@
 package jetbrick.ioc.injectors;
 
 import java.lang.annotation.Annotation;
-import jetbrick.commons.beans.introspectors.FieldDescriptor;
+import jetbrick.beans.introspectors.FieldDescriptor;
 import jetbrick.ioc.Ioc;
 
 // 负责注入字段

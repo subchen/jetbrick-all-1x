@@ -21,7 +21,7 @@ package jetbrick.io.resource;
 import java.io.File;
 import java.io.InputStream;
 import java.net.*;
-import jetbrick.commons.beans.ClassLoaderUtils;
+import jetbrick.beans.ClassLoaderUtils;
 import jetbrick.lang.StringUtils;
 import jetbrick.lang.Validate;
 

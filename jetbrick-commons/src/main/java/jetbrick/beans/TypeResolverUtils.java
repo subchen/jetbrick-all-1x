@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.commons.beans;
+package jetbrick.beans;
 
 import java.lang.reflect.*;
 import jetbrick.lang.ArrayUtils;
