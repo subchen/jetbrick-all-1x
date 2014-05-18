@@ -158,6 +158,10 @@ public final class MethodInfo implements Executable, Comparable<MethodInfo> {
         return Modifier.isPublic(getModifiers());
     }
 
+    public boolean isFinal() {
+        return Modifier.isFinal(getModifiers());
+    }
+
     public boolean isReadMethod() {
         Class<?> resultType = method.getReturnType();
         if (method.getParameterTypes().length == 0 && resultType != Void.TYPE) {

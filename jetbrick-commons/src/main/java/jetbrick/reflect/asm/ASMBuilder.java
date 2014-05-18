@@ -234,7 +234,17 @@ final class ASMBuilder {
                 }
                 buffer.append(')');
                 buffer.append(Type.getDescriptor(returnType));
-                int opcode = isInterface ? INVOKEINTERFACE : (isStatic ? INVOKESTATIC : INVOKEVIRTUAL);
+
+                int opcode;
+                if (isInterface) {
+                    opcode = INVOKEINTERFACE;
+                } else if (isStatic) {
+                    opcode = INVOKESTATIC;
+                } else if (method.isPrivate() || method.isFinal()) {
+                    opcode = INVOKESPECIAL;
+                } else {
+                    opcode = INVOKEVIRTUAL;
+                }
                 mv.visitMethodInsn(opcode, delegateKlassNameInternal, methodName, buffer.toString(), isInterface);
 
                 insertBox(mv, Type.getType(returnType));
