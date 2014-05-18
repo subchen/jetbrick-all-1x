@@ -20,13 +20,12 @@ package jetbrick.lang.tuple;
 
 import java.io.Serializable;
 
-public final class Tuple2<T1, T2> implements Serializable {
+public class Tuple2<T1, T2> implements Serializable {
     private static final long serialVersionUID = 1L;
-    public final T1 v1;
-    public final T2 v2;
+    private T1 v1;
+    private T2 v2;
 
-    public static <T1, T2> Tuple2<T1, T2> create(T1 v1, T2 v2) {
-        return new Tuple2<T1, T2>(v1, v2);
+    public Tuple2() {
     }
 
     public Tuple2(T1 v1, T2 v2) {
@@ -40,6 +39,29 @@ public final class Tuple2<T1, T2> implements Serializable {
 
     public T2 v2() {
         return v2;
+    }
+
+    public void v1(T1 value) {
+        this.v1 = value;
+    }
+
+    public void v2(T2 value) {
+        this.v2 = value;
+    }
+
+    @SuppressWarnings("serial")
+    public Tuple2<T1, T2> unmodifiedTuple2() {
+        return new Tuple2<T1, T2>(v1, v2) {
+            @Override
+            public void v1(T1 value) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void v2(T2 value) {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 
     @Override
