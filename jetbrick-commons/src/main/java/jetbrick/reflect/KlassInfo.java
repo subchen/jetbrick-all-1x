@@ -22,6 +22,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import jetbrick.lang.concurrent.ConcurrentInitializer;
+import jetbrick.lang.concurrent.LazyInitializer;
 import jetbrick.reflect.Filters.FieldFilter;
 import jetbrick.reflect.Filters.MethodFilter;
 import jetbrick.reflect.asm.*;
@@ -115,34 +117,32 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private List<ConstructorInfo> declaredConstructors;
-
-    public List<ConstructorInfo> getDeclaredConstructors() {
-        if (declaredConstructors == null) {
-            synchronized (this) {
-                if (declaredConstructors == null) {
-                    Constructor<?>[] constructors = type.getDeclaredConstructors();
-                    if (constructors.length == 0) {
-                        declaredConstructors = Collections.emptyList();
-                    } else {
-                        List<ConstructorInfo> results = new ArrayList<ConstructorInfo>(constructors.length);
-                        for (int i = 0; i < constructors.length; i++) {
-                            results.add(new ConstructorInfo(this, constructors[i], i));
-                        }
-                        declaredConstructors = Collections.unmodifiableList(results);
-                    }
+    private ConcurrentInitializer<List<ConstructorInfo>> declaredConstructorsGet = new LazyInitializer<List<ConstructorInfo>>() {
+        @Override
+        protected List<ConstructorInfo> initialize() {
+            Constructor<?>[] constructors = type.getDeclaredConstructors();
+            if (constructors.length == 0) {
+                return Collections.emptyList();
+            } else {
+                List<ConstructorInfo> results = new ArrayList<ConstructorInfo>(constructors.length);
+                for (int i = 0; i < constructors.length; i++) {
+                    results.add(new ConstructorInfo(KlassInfo.this, constructors[i], i));
                 }
+                return Collections.unmodifiableList(results);
             }
         }
-        return declaredConstructors;
+    };
+
+    public List<ConstructorInfo> getDeclaredConstructors() {
+        return declaredConstructorsGet.get();
     }
 
     public ConstructorInfo getDeclaredConstructor(Class<?>... parameterTypes) {
-        return searchExecutable(getDeclaredConstructors(), "<init>", parameterTypes);
+        return searchExecutable(declaredConstructorsGet.get(), "<init>", parameterTypes);
     }
 
     public ConstructorInfo getDeclaredConstructor(Constructor<?> constructor) {
-        for (ConstructorInfo info : getDeclaredConstructors()) {
+        for (ConstructorInfo info : declaredConstructorsGet.get()) {
             if (info.getConstructor() == constructor) {
                 return info;
             }
@@ -151,7 +151,7 @@ public final class KlassInfo {
     }
 
     public ConstructorInfo getDefaultConstructor() {
-        for (ConstructorInfo info : getDeclaredConstructors()) {
+        for (ConstructorInfo info : declaredConstructorsGet.get()) {
             if (info.isDefault()) {
                 return info;
             }
@@ -160,30 +160,28 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private List<MethodInfo> declaredMethods;
-
-    public List<MethodInfo> getDeclaredMethods() {
-        if (declaredMethods == null) {
-            synchronized (this) {
-                if (declaredMethods == null) {
-                    Method[] methods = type.getDeclaredMethods();
-                    if (methods.length == 0) {
-                        declaredMethods = Collections.emptyList();
-                    } else {
-                        List<MethodInfo> results = new ArrayList<MethodInfo>(methods.length);
-                        for (int i = 0; i < methods.length; i++) {
-                            results.add(new MethodInfo(this, methods[i], i));
-                        }
-                        declaredMethods = Collections.unmodifiableList(results);
-                    }
+    private ConcurrentInitializer<List<MethodInfo>> declaredMethodsGet = new LazyInitializer<List<MethodInfo>>() {
+        @Override
+        protected List<MethodInfo> initialize() {
+            Method[] methods = type.getDeclaredMethods();
+            if (methods.length == 0) {
+                return Collections.emptyList();
+            } else {
+                List<MethodInfo> results = new ArrayList<MethodInfo>(methods.length);
+                for (int i = 0; i < methods.length; i++) {
+                    results.add(new MethodInfo(KlassInfo.this, methods[i], i));
                 }
+                return Collections.unmodifiableList(results);
             }
         }
-        return declaredMethods;
+    };
+
+    public List<MethodInfo> getDeclaredMethods() {
+        return declaredMethodsGet.get();
     }
 
     public List<MethodInfo> getDeclaredMethods(MethodFilter filter) {
-        List<MethodInfo> methods = getDeclaredMethods();
+        List<MethodInfo> methods = declaredMethodsGet.get();
         if (methods.size() == 0) {
             return methods;
         }
@@ -197,11 +195,11 @@ public final class KlassInfo {
     }
 
     public MethodInfo getDeclaredMethod(String name, Class<?>... parameterTypes) {
-        return searchExecutable(getDeclaredMethods(), name, parameterTypes);
+        return searchExecutable(declaredMethodsGet.get(), name, parameterTypes);
     }
 
     public MethodInfo getDeclaredMethod(Method method) {
-        for (MethodInfo info : getDeclaredMethods()) {
+        for (MethodInfo info : declaredMethodsGet.get()) {
             if (info.getMethod() == method) {
                 return info;
             }
@@ -209,27 +207,25 @@ public final class KlassInfo {
         return null;
     }
 
-    private List<MethodInfo> methods;
+    private ConcurrentInitializer<List<MethodInfo>> methodsGet = new LazyInitializer<List<MethodInfo>>() {
+        @Override
+        protected List<MethodInfo> initialize() {
+            List<MethodInfo> results = new ArrayList<MethodInfo>();
+            KlassInfo klass = KlassInfo.this;
+            while (klass != null) {
+                results.addAll(klass.getDeclaredMethods());
+                klass = klass.getSuperKlass();
+            }
+            return Collections.unmodifiableList(results);
+        }
+    };
 
     public List<MethodInfo> getMethods() {
-        if (methods == null) {
-            synchronized (this) {
-                if (methods == null) {
-                    List<MethodInfo> results = new ArrayList<MethodInfo>();
-                    KlassInfo klass = this;
-                    while (klass != null) {
-                        results.addAll(klass.getDeclaredMethods());
-                        klass = klass.getSuperKlass();
-                    }
-                    methods = Collections.unmodifiableList(results);
-                }
-            }
-        }
-        return methods;
+        return methodsGet.get();
     }
 
     public List<MethodInfo> getMethods(MethodFilter filter) {
-        List<MethodInfo> methods = getMethods();
+        List<MethodInfo> methods = methodsGet.get();
         if (methods.size() == 0) {
             return methods;
         }
@@ -243,7 +239,7 @@ public final class KlassInfo {
     }
 
     public MethodInfo getMethod(String name, Class<?>... parameterTypes) {
-        return searchExecutable(getMethods(), name, parameterTypes);
+        return searchExecutable(methodsGet.get(), name, parameterTypes);
     }
 
     private <T extends Executable> T searchExecutable(List<T> list, String name, Class<?>... parameterTypes) {
@@ -268,30 +264,27 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private List<FieldInfo> declaredFields;
+    private ConcurrentInitializer<List<FieldInfo>> declaredFieldsGet = new LazyInitializer<List<FieldInfo>>() {
+        @Override
+        protected List<FieldInfo> initialize() {
+            Field[] fields = type.getDeclaredFields();
+            if (fields.length == 0) {
+                return Collections.emptyList();
+            }
+            List<FieldInfo> results = new ArrayList<FieldInfo>(fields.length);
+            for (int i = 0; i < fields.length; i++) {
+                results.add(new FieldInfo(KlassInfo.this, fields[i], i));
+            }
+            return Collections.unmodifiableList(results);
+        }
+    };
 
     public List<FieldInfo> getDeclaredFields() {
-        if (declaredFields == null) {
-            synchronized (this) {
-                if (declaredFields == null) {
-                    Field[] fields = type.getDeclaredFields();
-                    if (fields.length == 0) {
-                        declaredFields = Collections.emptyList();
-                    } else {
-                        List<FieldInfo> results = new ArrayList<FieldInfo>(fields.length);
-                        for (int i = 0; i < fields.length; i++) {
-                            results.add(new FieldInfo(this, fields[i], i));
-                        }
-                        declaredFields = Collections.unmodifiableList(results);
-                    }
-                }
-            }
-        }
-        return declaredFields;
+        return declaredFieldsGet.get();
     }
 
     public List<FieldInfo> getDeclaredFields(FieldFilter filter) {
-        List<FieldInfo> fields = getDeclaredFields();
+        List<FieldInfo> fields = declaredFieldsGet.get();
         if (fields.size() == 0) {
             return fields;
         }
@@ -305,7 +298,7 @@ public final class KlassInfo {
     }
 
     public FieldInfo getDeclaredField(String name) {
-        for (FieldInfo field : getDeclaredFields()) {
+        for (FieldInfo field : declaredFieldsGet.get()) {
             if (field.getName().equals(name)) {
                 return field;
             }
@@ -314,7 +307,7 @@ public final class KlassInfo {
     }
 
     public FieldInfo getDeclaredField(Field field) {
-        for (FieldInfo info : getDeclaredFields()) {
+        for (FieldInfo info : declaredFieldsGet.get()) {
             if (info.getField() == field) {
                 return info;
             }
@@ -322,27 +315,25 @@ public final class KlassInfo {
         return null;
     }
 
-    private List<FieldInfo> fields;
+    private ConcurrentInitializer<List<FieldInfo>> fieldsGet = new LazyInitializer<List<FieldInfo>>() {
+        @Override
+        protected List<FieldInfo> initialize() {
+            List<FieldInfo> results = new ArrayList<FieldInfo>();
+            KlassInfo klass = KlassInfo.this;
+            while (klass != null) {
+                results.addAll(klass.getDeclaredFields());
+                klass = klass.getSuperKlass();
+            }
+            return Collections.unmodifiableList(results);
+        }
+    };
 
     public List<FieldInfo> getFields() {
-        if (fields == null) {
-            synchronized (this) {
-                if (fields == null) {
-                    List<FieldInfo> results = new ArrayList<FieldInfo>();
-                    KlassInfo klass = this;
-                    while (klass != null) {
-                        results.addAll(klass.getDeclaredFields());
-                        klass = klass.getSuperKlass();
-                    }
-                    fields = Collections.unmodifiableList(results);
-                }
-            }
-        }
-        return fields;
+        return fieldsGet.get();
     }
 
     public List<FieldInfo> getFields(FieldFilter filter) {
-        List<FieldInfo> fields = getFields();
+        List<FieldInfo> fields = fieldsGet.get();
         if (fields.size() == 0) {
             return fields;
         }
@@ -356,9 +347,57 @@ public final class KlassInfo {
     }
 
     public FieldInfo getField(String name) {
-        for (FieldInfo field : getFields()) {
+        for (FieldInfo field : fieldsGet.get()) {
             if (field.getName().equals(name)) {
                 return field;
+            }
+        }
+        return null;
+    }
+
+    // ------------------------------------------------------------------
+    private ConcurrentInitializer<List<PropertyInfo>> propertiesGet = new LazyInitializer<List<PropertyInfo>>() {
+        @Override
+        protected List<PropertyInfo> initialize() {
+            List<MethodInfo> methods = methodsGet.get();
+            Map<String, PropertyInfo> map = new HashMap<String, PropertyInfo>(methods.size());
+            for (MethodInfo method : methods) {
+                if (method.isStatic()) continue;
+                if (method.isAbstract()) continue;
+                if (!method.isPublic()) continue;
+
+                if (method.isReadMethod()) {
+                    String name = method.getPropertyName();
+                    PropertyInfo propertyInfo = map.get(name);
+                    if (propertyInfo == null) {
+                        propertyInfo = new PropertyInfo(KlassInfo.this, name);
+                    }
+                    propertyInfo.setGetter(method);
+                }
+                if (method.isWriteMethod()) {
+                    String name = method.getPropertyName();
+                    PropertyInfo propertyInfo = map.get(name);
+                    if (propertyInfo == null) {
+                        propertyInfo = new PropertyInfo(KlassInfo.this, name);
+                    }
+                    propertyInfo.setSetter(method);
+                }
+            }
+            if (map.size() == 0) {
+                return Collections.emptyList();
+            }
+            return Collections.unmodifiableList(new ArrayList<PropertyInfo>(map.values()));
+        }
+    };
+
+    public List<PropertyInfo> getProperties() {
+        return propertiesGet.get();
+    }
+
+    public PropertyInfo getProperty(String name) {
+        for (PropertyInfo prop : propertiesGet.get()) {
+            if (prop.getName().equals(name)) {
+                return prop;
             }
         }
         return null;
