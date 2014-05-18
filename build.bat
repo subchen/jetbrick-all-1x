@@ -16,6 +16,7 @@ cd /d %~dp0
 call ant -buildfile jetbrick-commons/build.xml deploy
 call ant -buildfile jetbrick-ioc/build.xml deploy
 call ant -buildfile jetbrick-webmvc/build.xml deploy
+call ant -buildfile jetbrick-orm/build.xml deploy
 call ant -buildfile jetbrick-all/build.xml deploy
 
 pause &
