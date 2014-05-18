@@ -442,6 +442,91 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
+    public Map<String, Object> asBeanMap(final Object object) {
+        return new Map<String, Object>() {
+
+            @Override
+            public int size() {
+                return KlassInfo.this.getProperties().size();
+            }
+
+            @Override
+            public boolean isEmpty() {
+                return KlassInfo.this.getProperties().isEmpty();
+            }
+
+            @Override
+            public boolean containsKey(Object key) {
+                if (key instanceof String) {
+                    return KlassInfo.this.getProperty((String) key) != null;
+                }
+                return false;
+            }
+
+            @Override
+            public Object get(Object key) {
+                if (key instanceof String) {
+                    PropertyInfo prop = KlassInfo.this.getProperty((String) key);
+                    if (prop != null) {
+                        return prop.get(object);
+                    }
+                }
+                return null;
+            }
+
+            @Override
+            public Object put(String key, Object value) {
+                PropertyInfo prop = KlassInfo.this.getProperty(key);
+                if (prop != null) {
+                    Object old = prop.get(object);
+                    prop.set(object, value);
+                    return old;
+                }
+                return null;
+            }
+
+            @Override
+            public Set<java.util.Map.Entry<String, Object>> entrySet() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public boolean containsValue(Object value) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public Object remove(Object key) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void putAll(Map<? extends String, ? extends Object> m) {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public void clear() {
+                throw new UnsupportedOperationException();
+            }
+
+            @Override
+            public Set<String> keySet() {
+                Set<String> set = new HashSet<String>();
+                for (PropertyInfo prop : KlassInfo.this.getProperties()) {
+                    set.add(prop.getName());
+                }
+                return set;
+            }
+
+            @Override
+            public Collection<Object> values() {
+                throw new UnsupportedOperationException();
+            }
+        };
+    }
+
+    // ------------------------------------------------------------------
     @Override
     public String toString() {
         return type.toString();
