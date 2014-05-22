@@ -19,16 +19,18 @@
 package jetbrick.web.mvc.results.views;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.web.mvc.RequestContext;
-import jetbrick.web.mvc.WebException;
 
 @Managed
-public class HttpStatusViewHandler implements ViewHandler {
+public class JavaScriptViewHandler implements ViewHandler {
 
     @Override
     public String getType() {
-        return "status";
+        return "js";
     }
 
     @Override
@@ -37,32 +39,18 @@ public class HttpStatusViewHandler implements ViewHandler {
     }
 
     @Override
-    public boolean render(RequestContext ctx, String value) {
-        String code = value;
-        String message = null;
+    public boolean render(RequestContext ctx, String value) throws IOException {
+        HttpServletRequest request = ctx.getRequest();
+        HttpServletResponse response = ctx.getResponse();
 
-        int ipos = value.indexOf(':');
-        if (ipos > 0) {
-            code = value.substring(0, ipos);
-            message = value.substring(ipos + 1);
-        }
+        String characterEncoding = request.getCharacterEncoding();
+        response.setCharacterEncoding(characterEncoding);
+        response.setContentType("text/javascript;charset=" + characterEncoding);
 
-        int status = Integer.valueOf(code);
-        if (status >= 400) {
-            try {
-                if (message == null) {
-                    ctx.getResponse().sendError(status);
-                } else {
-                    ctx.getResponse().sendError(status, message);
-                }
-            } catch (IOException e) {
-                throw WebException.uncheck(e);
-            }
-        } else {
-            ctx.getResponse().setStatus(status);
-        }
+        PrintWriter out = response.getWriter();
+        out.write(value);
+        out.flush();
 
         return true;
     }
-
 }

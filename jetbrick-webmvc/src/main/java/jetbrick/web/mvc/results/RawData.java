@@ -21,6 +21,8 @@ package jetbrick.web.mvc.results;
 import java.io.*;
 import jetbrick.io.streams.UnsafeByteArrayInputStream;
 import jetbrick.ioc.annotations.ManagedWith;
+import jetbrick.lang.StringUtils;
+import jetbrick.web.mvc.RequestContext;
 
 @ManagedWith(RawDataResultHandler.class)
 public final class RawData {
@@ -48,6 +50,32 @@ public final class RawData {
         this.is = new UnsafeByteArrayInputStream(data);
         this.contentType = contentType;
         this.contentLength = data.length;
+    }
+
+    public RawData(String data, String contentType) {
+        this(data, null, contentType);
+    }
+
+    public RawData(String data, String encoding, String contentType) {
+        if (encoding == null) {
+            if (contentType != null) {
+                String charset = StringUtils.substringAfter(contentType, "charset=");
+                if (StringUtils.isNotEmpty(charset)) {
+                    encoding = charset;
+                }
+            }
+            if (encoding == null) {
+                encoding = RequestContext.getCurrent().getRequest().getCharacterEncoding();
+            }
+        }
+        try {
+            byte[] bytes = data.getBytes(encoding);
+            this.is = new UnsafeByteArrayInputStream(bytes);
+            this.contentType = contentType;
+            this.contentLength = bytes.length;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public InputStream getInputStream() {

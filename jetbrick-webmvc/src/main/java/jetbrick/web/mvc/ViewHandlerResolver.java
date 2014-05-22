@@ -41,6 +41,8 @@ public class ViewHandlerResolver {
         register(ServletForwardViewHandler.class);
         register(ServletRedirectViewHandler.class);
         register(HttpStatusViewHandler.class);
+        register(PlainTextViewHandler.class);
+        register(JavaScriptViewHandler.class);
         register(JspTemplateViewHandler.class);
         register(JetxTemplateViewHandler.class);
     }
