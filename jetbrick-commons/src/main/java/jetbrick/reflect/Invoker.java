@@ -16,10 +16,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.reflect.asm;
+package jetbrick.reflect;
 
-public interface ASMMethodAccessor {
+public interface Invoker {
 
-    public Object invoke(Object object, int which, Object... args);
+    public Object invoke(Object object, Object... args);
 
 }

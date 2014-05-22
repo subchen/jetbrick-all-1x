@@ -16,12 +16,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.reflect.asm;
+package jetbrick.reflect;
 
-public interface ASMConstructorAccessor {
+public interface Creater {
 
-    public Object newInstance();
-
-    public Object newInstance(int which, Object... args);
+    public Object newInstance(Object... args);
 
 }

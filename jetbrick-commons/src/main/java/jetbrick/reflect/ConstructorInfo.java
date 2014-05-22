@@ -20,9 +20,9 @@ package jetbrick.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import jetbrick.reflect.asm.ASMFactory;
+import jetbrick.reflect.asm.ASMAccessor;
 
-public final class ConstructorInfo implements Executable, Comparable<ConstructorInfo> {
+public final class ConstructorInfo implements Executable, Creater, Comparable<ConstructorInfo> {
     private final KlassInfo declaringKlass;
     private final Constructor<?> constructor;
     private final int offset;
@@ -136,15 +136,17 @@ public final class ConstructorInfo implements Executable, Comparable<Constructor
         return Modifier.isPublic(getModifiers());
     }
 
+    @Override
     public Object newInstance(Object... args) {
-        if (ASMFactory.IS_ASM_ENABLED) {
-            return declaringKlass.getConstructorAccessor().newInstance(offset, args);
-        } else {
+        ASMAccessor accessor = declaringKlass.getASMAccessor();
+        if (accessor == null) {
             try {
                 return constructor.newInstance(args);
             } catch (ReflectiveOperationException e) {
                 throw new RuntimeException(e);
             }
+        } else {
+            return accessor.newInstance(offset, args);
         }
     }
 

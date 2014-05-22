@@ -26,7 +26,8 @@ import jetbrick.lang.concurrent.ConcurrentInitializer;
 import jetbrick.lang.concurrent.LazyInitializer;
 import jetbrick.reflect.Filters.FieldFilter;
 import jetbrick.reflect.Filters.MethodFilter;
-import jetbrick.reflect.asm.*;
+import jetbrick.reflect.asm.ASMAccessor;
+import jetbrick.reflect.asm.ASMFactory;
 
 public final class KlassInfo {
     private static final ConcurrentHashMap<Class<?>, KlassInfo> pool = new ConcurrentHashMap<Class<?>, KlassInfo>(128);
@@ -117,7 +118,7 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private ConcurrentInitializer<List<ConstructorInfo>> declaredConstructorsGet = new LazyInitializer<List<ConstructorInfo>>() {
+    private final ConcurrentInitializer<List<ConstructorInfo>> declaredConstructorsGet = new LazyInitializer<List<ConstructorInfo>>() {
         @Override
         protected List<ConstructorInfo> initialize() {
             Constructor<?>[] constructors = type.getDeclaredConstructors();
@@ -160,7 +161,7 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private ConcurrentInitializer<List<MethodInfo>> declaredMethodsGet = new LazyInitializer<List<MethodInfo>>() {
+    private final ConcurrentInitializer<List<MethodInfo>> declaredMethodsGet = new LazyInitializer<List<MethodInfo>>() {
         @Override
         protected List<MethodInfo> initialize() {
             Method[] methods = type.getDeclaredMethods();
@@ -207,7 +208,7 @@ public final class KlassInfo {
         return null;
     }
 
-    private ConcurrentInitializer<List<MethodInfo>> methodsGet = new LazyInitializer<List<MethodInfo>>() {
+    private final ConcurrentInitializer<List<MethodInfo>> methodsGet = new LazyInitializer<List<MethodInfo>>() {
         @Override
         protected List<MethodInfo> initialize() {
             List<MethodInfo> results = new ArrayList<MethodInfo>();
@@ -264,7 +265,7 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private ConcurrentInitializer<List<FieldInfo>> declaredFieldsGet = new LazyInitializer<List<FieldInfo>>() {
+    private final ConcurrentInitializer<List<FieldInfo>> declaredFieldsGet = new LazyInitializer<List<FieldInfo>>() {
         @Override
         protected List<FieldInfo> initialize() {
             Field[] fields = type.getDeclaredFields();
@@ -315,7 +316,7 @@ public final class KlassInfo {
         return null;
     }
 
-    private ConcurrentInitializer<List<FieldInfo>> fieldsGet = new LazyInitializer<List<FieldInfo>>() {
+    private final ConcurrentInitializer<List<FieldInfo>> fieldsGet = new LazyInitializer<List<FieldInfo>>() {
         @Override
         protected List<FieldInfo> initialize() {
             List<FieldInfo> results = new ArrayList<FieldInfo>();
@@ -356,7 +357,7 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private ConcurrentInitializer<List<PropertyInfo>> propertiesGet = new LazyInitializer<List<PropertyInfo>>() {
+    private final ConcurrentInitializer<List<PropertyInfo>> propertiesGet = new LazyInitializer<List<PropertyInfo>>() {
         @Override
         protected List<PropertyInfo> initialize() {
             List<MethodInfo> methods = methodsGet.get();
@@ -374,8 +375,7 @@ public final class KlassInfo {
                         map.put(name, propertyInfo);
                     }
                     propertyInfo.setGetter(method);
-                }
-                if (method.isWriteMethod()) {
+                } else if (method.isWriteMethod()) {
                     String name = method.getPropertyName();
                     PropertyInfo propertyInfo = map.get(name);
                     if (propertyInfo == null) {
@@ -406,40 +406,30 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private ASMConstructorAccessor constructorAccessor;
-    private ASMMethodAccessor methodAccessor;
-    private ASMFieldAccessor fieldAccessor;
+    private ASMAccessor asmAccessor;
+    private int asmCallNumber = 0;
 
-    public ASMConstructorAccessor getConstructorAccessor() {
-        if (constructorAccessor == null) {
-            constructorAccessor = ASMFactory.generateConstructorAccessor(this);
+    protected ASMAccessor getASMAccessor() {
+        if (asmAccessor == null) {
+            if (asmCallNumber >= ASMFactory.ASM_THRESHOLD_VALUE) {
+                asmAccessor = ASMFactory.generateAccessor(this);
+            } else {
+                asmCallNumber++;
+            }
         }
-        return constructorAccessor;
-    }
-
-    public ASMMethodAccessor getMethodAccessor() {
-        if (methodAccessor == null) {
-            methodAccessor = ASMFactory.generateMethodAccessor(this);
-        }
-        return methodAccessor;
-    }
-
-    public ASMFieldAccessor getFieldAccessor() {
-        if (fieldAccessor == null) {
-            fieldAccessor = ASMFactory.generateFieldAccessor(this);
-        }
-        return fieldAccessor;
+        return asmAccessor;
     }
 
     public Object newInstance() {
-        if (ASMFactory.IS_ASM_ENABLED) {
-            return getConstructorAccessor().newInstance();
-        } else {
+        ASMAccessor accessor = getASMAccessor();
+        if (accessor == null) {
             try {
                 return type.newInstance();
             } catch (ReflectiveOperationException e) {
                 throw new RuntimeException(e);
             }
+        } else {
+            return accessor.newInstance();
         }
     }
 

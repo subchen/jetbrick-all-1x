@@ -26,7 +26,8 @@ import jetbrick.reflect.*;
 
 final class ASMBuilder {
     private static final String SUN_MAGIC_ACCESSOR_KLASS = "sun/reflect/MagicAccessorImpl";
-    private static final String FIELD_ARGUMENTS_LENGTH = "argumentsLength";
+    private static final String FIELD_EXPECTED_CONSTRUCTOR_ARGUMENT_LENGTHS = "ctors";
+    private static final String FIELD_EXPECTED_METHOD_ARGUMENT_LENGTHS = "methods";
     private static final String METHOD_CHECK_ARGUMENTS = "checkArguments";
 
     private final ClassWriter cw;
@@ -42,29 +43,60 @@ final class ASMBuilder {
         cw.visit(V1_1, ACC_PUBLIC + ACC_SUPER + ACC_FINAL, generatedKlassNameInternal, null, SUN_MAGIC_ACCESSOR_KLASS, interfaces);
     }
 
-    public void insertArgumentsLengthField(List<? extends Executable> executables) {
-        FieldVisitor fv = cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, FIELD_ARGUMENTS_LENGTH, "[I", null, null);
-        fv.visitEnd();
+    public static byte[] create(String generatedKlassName, KlassInfo delegateKlass) {
+        ASMBuilder builder = new ASMBuilder(generatedKlassName, delegateKlass.getName(), ASMAccessor.class);
+        builder.insertArgumentsLengthField(delegateKlass.getDeclaredConstructors(), delegateKlass.getDeclaredMethods());
+        builder.insertCheckArgumentsMethod();
+        builder.insertConstructor();
+        builder.insertNewInstance();
+        builder.insertNewInstance(delegateKlass.getDeclaredConstructors());
+        builder.insertInvoke(delegateKlass.getDeclaredMethods());
+        builder.insertGetField(delegateKlass.getDeclaredFields());
+        builder.insertSetField(delegateKlass.getDeclaredFields());
+        return builder.asByteCode();
+    }
 
-        int size = executables.size();
+    public void insertArgumentsLengthField(List<? extends Executable> constructors, List<? extends Executable> methods) {
+        cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, FIELD_EXPECTED_CONSTRUCTOR_ARGUMENT_LENGTHS, "[I", null, null).visitEnd();
+        cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, FIELD_EXPECTED_METHOD_ARGUMENT_LENGTHS, "[I", null, null).visitEnd();
+
         MethodVisitor mv = cw.visitMethod(ACC_STATIC, "<clinit>", "()V", null, null);
         mv.visitCode();
+
+        int size;
+
+        // constructors
+        size = constructors.size();
         mv.visitIntInsn(BIPUSH, size);
         mv.visitIntInsn(NEWARRAY, T_INT);
         for (int i = 0; i < size; i++) {
             mv.visitInsn(DUP);
             mv.visitIntInsn(BIPUSH, i);
-            mv.visitIntInsn(BIPUSH, executables.get(i).getParameterCount());
+            mv.visitIntInsn(BIPUSH, constructors.get(i).getParameterCount());
             mv.visitInsn(IASTORE);
         }
-        mv.visitFieldInsn(PUTSTATIC, generatedKlassNameInternal, FIELD_ARGUMENTS_LENGTH, "[I");
+        mv.visitFieldInsn(PUTSTATIC, generatedKlassNameInternal, FIELD_EXPECTED_CONSTRUCTOR_ARGUMENT_LENGTHS, "[I");
+
+        //  methods
+        size = methods.size();
+        mv.visitIntInsn(BIPUSH, size);
+        mv.visitIntInsn(NEWARRAY, T_INT);
+        for (int i = 0; i < size; i++) {
+            mv.visitInsn(DUP);
+            mv.visitIntInsn(BIPUSH, i);
+            mv.visitIntInsn(BIPUSH, methods.get(i).getParameterCount());
+            mv.visitInsn(IASTORE);
+        }
+        mv.visitFieldInsn(PUTSTATIC, generatedKlassNameInternal, FIELD_EXPECTED_METHOD_ARGUMENT_LENGTHS, "[I");
+
         mv.visitInsn(RETURN);
         mv.visitMaxs(size > 0 ? 4 : 1, 0);
         mv.visitEnd();
     }
 
     public void insertCheckArgumentsMethod() {
-        MethodVisitor mv = cw.visitMethod(ACC_PRIVATE, METHOD_CHECK_ARGUMENTS, "(I[Ljava/lang/Object;)V", null, null);
+        // private static final void checkArguments(int[] argumentsLength, int offset, Object[] args);
+        MethodVisitor mv = cw.visitMethod(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, METHOD_CHECK_ARGUMENTS, "([II[Ljava/lang/Object;)V", null, null);
         mv.visitCode();
 
         Label labelStep2 = new Label();
@@ -78,13 +110,13 @@ final class ASMBuilder {
 
         throwIllegalArgumentException(mv, "arguments must be not null");
 
-        // step2: if (which < 0 || which >= argumentsLength.length)
+        // step2: if (offset < 0 || offset >= argumentsLength.length)
         mv.visitLabel(labelStep2);
         mv.visitVarInsn(ILOAD, 1);
         mv.visitJumpInsn(IFLT, labelError2);
 
         mv.visitVarInsn(ILOAD, 1);
-        mv.visitFieldInsn(GETSTATIC, generatedKlassNameInternal, FIELD_ARGUMENTS_LENGTH, "[I");
+        mv.visitVarInsn(ALOAD, 0);
         mv.visitInsn(ARRAYLENGTH);
         mv.visitJumpInsn(IF_ICMPLT, labelStep3);
 
@@ -95,7 +127,7 @@ final class ASMBuilder {
         mv.visitLabel(labelStep3);
         mv.visitVarInsn(ALOAD, 2);
         mv.visitInsn(ARRAYLENGTH);
-        mv.visitFieldInsn(GETSTATIC, generatedKlassNameInternal, FIELD_ARGUMENTS_LENGTH, "[I");
+        mv.visitVarInsn(ALOAD, 0);
         mv.visitVarInsn(ILOAD, 1);
         mv.visitInsn(IALOAD);
         mv.visitJumpInsn(IF_ICMPEQ, labelSucc);
@@ -135,11 +167,11 @@ final class ASMBuilder {
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC + ACC_VARARGS, "newInstance", "(I[Ljava/lang/Object;)Ljava/lang/Object;", null, null);
         mv.visitCode();
 
-        // check arguments
-        mv.visitVarInsn(ALOAD, 0);
+        // checkArgument(expectedArgumentLengths, offset, arguments);
+        mv.visitFieldInsn(GETSTATIC, generatedKlassNameInternal, FIELD_EXPECTED_CONSTRUCTOR_ARGUMENT_LENGTHS, "[I");
         mv.visitVarInsn(ILOAD, 1);
         mv.visitVarInsn(ALOAD, 2);
-        mv.visitMethodInsn(INVOKESPECIAL, generatedKlassNameInternal, METHOD_CHECK_ARGUMENTS, "(I[Ljava/lang/Object;)V", false);
+        mv.visitMethodInsn(INVOKESTATIC, generatedKlassNameInternal, METHOD_CHECK_ARGUMENTS, "([II[Ljava/lang/Object;)V", false);
 
         int n = constructors.size();
         if (n != 0) {
@@ -188,11 +220,11 @@ final class ASMBuilder {
         MethodVisitor mv = cw.visitMethod(ACC_PUBLIC + ACC_VARARGS, "invoke", "(Ljava/lang/Object;I[Ljava/lang/Object;)Ljava/lang/Object;", null, null);
         mv.visitCode();
 
-        // check arguments
-        mv.visitVarInsn(ALOAD, 0);
+        // checkArgument(expectedArgumentLengths, offset, arguments);
+        mv.visitFieldInsn(GETSTATIC, generatedKlassNameInternal, FIELD_EXPECTED_METHOD_ARGUMENT_LENGTHS, "[I");
         mv.visitVarInsn(ILOAD, 2);
         mv.visitVarInsn(ALOAD, 3);
-        mv.visitMethodInsn(INVOKESPECIAL, generatedKlassNameInternal, METHOD_CHECK_ARGUMENTS, "(I[Ljava/lang/Object;)V", false);
+        mv.visitMethodInsn(INVOKESTATIC, generatedKlassNameInternal, METHOD_CHECK_ARGUMENTS, "([II[Ljava/lang/Object;)V", false);
 
         int n = methods.size();
         if (n != 0) {
@@ -259,8 +291,8 @@ final class ASMBuilder {
         mv.visitEnd();
     }
 
-    public void insertGetObject(List<FieldInfo> fields) {
-        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "get", "(Ljava/lang/Object;I)Ljava/lang/Object;", null, null);
+    public void insertGetField(List<FieldInfo> fields) {
+        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "getField", "(Ljava/lang/Object;I)Ljava/lang/Object;", null, null);
         mv.visitCode();
 
         int n = fields.size();
@@ -299,8 +331,8 @@ final class ASMBuilder {
         mv.visitEnd();
     }
 
-    public void insertSetObject(List<FieldInfo> fields) {
-        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "set", "(Ljava/lang/Object;ILjava/lang/Object;)V", null, null);
+    public void insertSetField(List<FieldInfo> fields) {
+        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "setField", "(Ljava/lang/Object;ILjava/lang/Object;)V", null, null);
         mv.visitCode();
 
         int n = fields.size();

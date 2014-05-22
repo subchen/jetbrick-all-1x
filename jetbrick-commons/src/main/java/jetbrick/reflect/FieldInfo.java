@@ -21,7 +21,7 @@ package jetbrick.reflect;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import jetbrick.beans.TypeResolverUtils;
-import jetbrick.reflect.asm.ASMFactory;
+import jetbrick.reflect.asm.ASMAccessor;
 
 public final class FieldInfo implements Comparable<FieldInfo>, Getter, Setter {
     private final KlassInfo declaringKlass;
@@ -114,27 +114,29 @@ public final class FieldInfo implements Comparable<FieldInfo>, Getter, Setter {
 
     @Override
     public Object get(Object object) {
-        if (ASMFactory.IS_ASM_ENABLED) {
-            return declaringKlass.getFieldAccessor().get(object, offset);
-        } else {
+        ASMAccessor accessor = declaringKlass.getASMAccessor();
+        if (accessor == null) {
             try {
                 return field.get(object);
             } catch (ReflectiveOperationException e) {
                 throw new RuntimeException(e);
             }
+        } else {
+            return accessor.getField(object, offset);
         }
     }
 
     @Override
     public void set(Object object, Object value) {
-        if (ASMFactory.IS_ASM_ENABLED) {
-            declaringKlass.getFieldAccessor().set(object, offset, value);
-        } else {
+        ASMAccessor accessor = declaringKlass.getASMAccessor();
+        if (accessor == null) {
             try {
                 field.set(object, value);
             } catch (ReflectiveOperationException e) {
                 throw new RuntimeException(e);
             }
+        } else {
+            accessor.setField(object, offset, value);
         }
     }
 

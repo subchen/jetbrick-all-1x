@@ -24,6 +24,7 @@ import java.util.List;
 import jetbrick.lang.UnsafeUtils;
 
 final class ASMClassLoader extends ClassLoader {
+    private static final String ASMAccessor_KLASS_NAME = ASMAccessor.class.getName();
     private static final List<ASMClassLoader> asmClassLoaders = new ArrayList<ASMClassLoader>();
 
     // Fast-path for classes loaded in the same ClassLoader as this class.
@@ -57,9 +58,7 @@ final class ASMClassLoader extends ClassLoader {
     @Override
     protected synchronized java.lang.Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         // These classes come from the class loader that loaded AccessClassLoader.
-        if (name.equals(ASMFieldAccessor.class.getName())) return ASMFieldAccessor.class;
-        if (name.equals(ASMMethodAccessor.class.getName())) return ASMMethodAccessor.class;
-        if (name.equals(ASMConstructorAccessor.class.getName())) return ASMConstructorAccessor.class;
+        if (name.equals(ASMAccessor_KLASS_NAME)) return ASMAccessor.class;
 
         // All other classes come from the class loader that loaded the type we are accessing.
         return super.loadClass(name, resolve);

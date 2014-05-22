@@ -22,9 +22,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import jetbrick.beans.TypeResolverUtils;
 import jetbrick.lang.IdentifiedNameUtils;
-import jetbrick.reflect.asm.ASMFactory;
+import jetbrick.reflect.asm.ASMAccessor;
 
-public final class MethodInfo implements Executable, Comparable<MethodInfo> {
+public final class MethodInfo implements Executable, Invoker, Comparable<MethodInfo> {
     private final KlassInfo declaringKlass;
     private final Method method;
     private final int offset;
@@ -203,15 +203,17 @@ public final class MethodInfo implements Executable, Comparable<MethodInfo> {
         return IdentifiedNameUtils.decapitalize(name);
     }
 
+    @Override
     public Object invoke(Object object, Object... args) {
-        if (ASMFactory.IS_ASM_ENABLED) {
-            return declaringKlass.getMethodAccessor().invoke(object, offset, args);
-        } else {
+        ASMAccessor accessor = declaringKlass.getASMAccessor();
+        if (accessor == null) {
             try {
                 return method.invoke(object, args);
             } catch (ReflectiveOperationException e) {
                 throw new RuntimeException(e);
             }
+        } else {
+            return accessor.invoke(object, offset, args);
         }
     }
 
