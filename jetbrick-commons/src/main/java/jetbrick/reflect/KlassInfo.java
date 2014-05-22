@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import jetbrick.lang.ExceptionUtils;
 import jetbrick.lang.concurrent.ConcurrentInitializer;
 import jetbrick.lang.concurrent.LazyInitializer;
 import jetbrick.reflect.Filters.FieldFilter;
@@ -425,8 +426,8 @@ public final class KlassInfo {
         if (accessor == null) {
             try {
                 return type.newInstance();
-            } catch (ReflectiveOperationException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw ExceptionUtils.unchecked(e);
             }
         } else {
             return accessor.newInstance();

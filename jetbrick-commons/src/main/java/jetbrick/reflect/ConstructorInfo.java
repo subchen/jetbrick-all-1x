@@ -20,6 +20,7 @@ package jetbrick.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import jetbrick.lang.ExceptionUtils;
 import jetbrick.reflect.asm.ASMAccessor;
 
 public final class ConstructorInfo implements Executable, Creater, Comparable<ConstructorInfo> {
@@ -142,8 +143,8 @@ public final class ConstructorInfo implements Executable, Creater, Comparable<Co
         if (accessor == null) {
             try {
                 return constructor.newInstance(args);
-            } catch (ReflectiveOperationException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw ExceptionUtils.unchecked(e);
             }
         } else {
             return accessor.newInstance(offset, args);

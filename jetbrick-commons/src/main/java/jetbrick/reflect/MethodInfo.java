@@ -21,6 +21,7 @@ package jetbrick.reflect;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import jetbrick.beans.TypeResolverUtils;
+import jetbrick.lang.ExceptionUtils;
 import jetbrick.lang.IdentifiedNameUtils;
 import jetbrick.reflect.asm.ASMAccessor;
 
@@ -209,8 +210,8 @@ public final class MethodInfo implements Executable, Invoker, Comparable<MethodI
         if (accessor == null) {
             try {
                 return method.invoke(object, args);
-            } catch (ReflectiveOperationException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw ExceptionUtils.unchecked(e);
             }
         } else {
             return accessor.invoke(object, offset, args);

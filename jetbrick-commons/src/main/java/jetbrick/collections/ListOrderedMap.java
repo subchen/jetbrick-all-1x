@@ -77,7 +77,7 @@ public class ListOrderedMap<K, V> extends AbstractMap<K, V> implements Serializa
         boolean before = false;
         for (int i = 0; i < index; i++) {
             old = old.next;
-            if (Objects.equals(key, old.key)) before = true;
+            if (key == old.key || (key != null && key.equals(old.key))) before = true;
         }
         if (before) old = old.next;
         LinkedEntry<K, V> entry = map.get(key);

@@ -21,6 +21,7 @@ package jetbrick.reflect;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import jetbrick.beans.TypeResolverUtils;
+import jetbrick.lang.ExceptionUtils;
 import jetbrick.reflect.asm.ASMAccessor;
 
 public final class FieldInfo implements Comparable<FieldInfo>, Getter, Setter {
@@ -118,8 +119,8 @@ public final class FieldInfo implements Comparable<FieldInfo>, Getter, Setter {
         if (accessor == null) {
             try {
                 return field.get(object);
-            } catch (ReflectiveOperationException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw ExceptionUtils.unchecked(e);
             }
         } else {
             return accessor.getField(object, offset);
@@ -132,8 +133,8 @@ public final class FieldInfo implements Comparable<FieldInfo>, Getter, Setter {
         if (accessor == null) {
             try {
                 field.set(object, value);
-            } catch (ReflectiveOperationException e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw ExceptionUtils.unchecked(e);
             }
         } else {
             accessor.setField(object, offset, value);
