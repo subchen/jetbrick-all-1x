@@ -371,6 +371,7 @@ public final class KlassInfo {
                     PropertyInfo propertyInfo = map.get(name);
                     if (propertyInfo == null) {
                         propertyInfo = new PropertyInfo(KlassInfo.this, name);
+                        map.put(name, propertyInfo);
                     }
                     propertyInfo.setGetter(method);
                 }
@@ -379,6 +380,7 @@ public final class KlassInfo {
                     PropertyInfo propertyInfo = map.get(name);
                     if (propertyInfo == null) {
                         propertyInfo = new PropertyInfo(KlassInfo.this, name);
+                        map.put(name, propertyInfo);
                     }
                     propertyInfo.setSetter(method);
                 }
