@@ -19,15 +19,15 @@ Maven
 Documents
 =============
 
-jetbrick-all-1.0.1-userguide.pdf 
-
-见 QQ 群内文件 (交流群：346313780)
-
+http://subchen.github.io/jetbrick/
 
 Downloads
 ==============
 
-[jetbrick-all-1.0.1.jar](http://search.maven.org/remotecontent?filepath=com/github/subchen/jetbrick-all/1.0.1/jetbrick-all-1.0.1.jar)
+* [jetbrick-all-1.0.1.jar](http://search.maven.org/remotecontent?filepath=com/github/subchen/jetbrick-all/1.0.1/jetbrick-all-1.0.1.jar)
+* [jetbrick-all-1.0.1-sources.jar](http://search.maven.org/remotecontent?filepath=com/github/subchen/jetbrick-all/1.0.1/jetbrick-all-1.0.1-sources.jar)
+* [jetbrick-all-1.0.1-javadoc.jar](http://search.maven.org/remotecontent?filepath=com/github/subchen/jetbrick-all/1.0.1/jetbrick-all-1.0.1-javadoc.jar)
+
 
 
 Support
@@ -50,7 +50,7 @@ License
 
 Copyright 2013-2014 Guoqiang Chen, Shanghai, China. All rights reserved.
 
-Email: subchen@gmail.com
+Email: subchen@gmail.com  
 URL: http://subchen.github.io/
 
 Licensed under the Apache License, Version 2.0 (the "License");
