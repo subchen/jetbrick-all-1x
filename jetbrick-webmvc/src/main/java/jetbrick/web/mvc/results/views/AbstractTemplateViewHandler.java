@@ -22,26 +22,8 @@ import jetbrick.lang.StringUtils;
 import jetbrick.web.mvc.RequestContext;
 
 public abstract class AbstractTemplateViewHandler implements ViewHandler {
-    protected String prefix;
-    protected String suffix;
 
-    @Override
-    public String getViewPrefix() {
-        return prefix;
-    }
-
-    @Override
-    public String getViewSuffix() {
-        return suffix;
-    }
-
-    public void setViewPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    public void setViewSuffix(String suffix) {
-        this.suffix = suffix;
-    }
+    public abstract String getPrefix();
 
     @Override
     public boolean render(RequestContext ctx, String viewPathName) throws Throwable {
@@ -51,7 +33,12 @@ public abstract class AbstractTemplateViewHandler implements ViewHandler {
         } else {
             view = viewPathName;
         }
-        view = StringUtils.suffix(view, suffix);
+
+        String prefix = getPrefix();
+        if (prefix != null) {
+            view = StringUtils.prefix(view, prefix);
+        }
+        view = StringUtils.suffix(view, getSuffix());
 
         return doRender(ctx, view);
     }

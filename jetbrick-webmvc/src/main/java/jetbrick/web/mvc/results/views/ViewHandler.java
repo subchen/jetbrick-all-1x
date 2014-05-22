@@ -24,14 +24,14 @@ import jetbrick.web.mvc.RequestContext;
 public interface ViewHandler {
 
     /**
-     * 返回 ViewHandler 默认的前缀.
+     * 返回 ViewHandler 的类型.
      */
-    public String getViewPrefix();
+    public String getType();
 
     /**
      * 返回 ViewHandler 默认的扩展名.
      */
-    public String getViewSuffix();
+    public String getSuffix();
 
     /**
      * 如果 Resource 不存在，那么返回 false.

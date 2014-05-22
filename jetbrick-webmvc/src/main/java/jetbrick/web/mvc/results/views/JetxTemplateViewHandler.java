@@ -21,6 +21,7 @@ package jetbrick.web.mvc.results.views;
 import java.io.IOException;
 import java.io.OutputStream;
 import jetbrick.io.ResourceNotFoundException;
+import jetbrick.ioc.annotations.Config;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.template.*;
 import jetbrick.template.web.JetWebContext;
@@ -29,11 +30,26 @@ import jetbrick.web.mvc.RequestContext;
 
 @Managed
 public class JetxTemplateViewHandler extends AbstractTemplateViewHandler {
+    @Config(value = "web.view.jetx.prefix", required = false)
+    private String prefix;
+    @Config(value = "web.view.jetx.suffix", defaultValue = ".jetx")
+    private String suffix;
+
     private JetEngine engine = null;
 
-    public JetxTemplateViewHandler() {
-        prefix = "jetx";
-        suffix = "jetx";
+    @Override
+    public String getType() {
+        return "jetx";
+    }
+
+    @Override
+    public String getPrefix() {
+        return prefix;
+    }
+
+    @Override
+    public String getSuffix() {
+        return suffix;
     }
 
     @Override

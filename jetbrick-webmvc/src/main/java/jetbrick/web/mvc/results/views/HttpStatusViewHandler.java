@@ -27,12 +27,12 @@ import jetbrick.web.mvc.WebException;
 public class HttpStatusViewHandler implements ViewHandler {
 
     @Override
-    public String getViewPrefix() {
+    public String getType() {
         return "status";
     }
 
     @Override
-    public String getViewSuffix() {
+    public String getSuffix() {
         return null;
     }
 

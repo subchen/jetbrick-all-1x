@@ -23,6 +23,7 @@ import java.util.Map;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.Inject;
 import jetbrick.ioc.annotations.IocInit;
+import jetbrick.lang.StringUtils;
 import jetbrick.lang.Validate;
 import jetbrick.web.mvc.results.views.*;
 
@@ -49,9 +50,10 @@ public class ViewHandlerResolver {
 
         ViewHandler viewHandler = (ViewHandler) ioc.injectClass(viewHandlerClass);
 
-        mapping.put(viewHandler.getViewPrefix(), viewHandler);
-        String suffix = viewHandler.getViewSuffix();
+        mapping.put(viewHandler.getType(), viewHandler);
+        String suffix = viewHandler.getSuffix();
         if (suffix != null) {
+            suffix = StringUtils.removeStart(suffix, ".");
             mapping.put(suffix, viewHandler);
         }
     }

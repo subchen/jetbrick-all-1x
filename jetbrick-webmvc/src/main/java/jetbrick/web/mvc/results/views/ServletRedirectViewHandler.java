@@ -26,12 +26,12 @@ import jetbrick.web.mvc.RequestContext;
 public class ServletRedirectViewHandler implements ViewHandler {
 
     @Override
-    public String getViewPrefix() {
+    public String getType() {
         return "redirect";
     }
 
     @Override
-    public String getViewSuffix() {
+    public String getSuffix() {
         return null;
     }
 

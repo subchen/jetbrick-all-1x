@@ -21,15 +21,28 @@ package jetbrick.web.mvc.results.views;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import jetbrick.ioc.annotations.Config;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.web.mvc.RequestContext;
 
 @Managed
 public class JspTemplateViewHandler extends AbstractTemplateViewHandler {
+    @Config(value = "web.view.jsp.prefix", required = false)
+    private String prefix;
 
-    public JspTemplateViewHandler() {
-        prefix = "jsp";
-        suffix = "jsp";
+    @Override
+    public String getType() {
+        return "jsp";
+    }
+
+    @Override
+    public String getPrefix() {
+        return prefix;
+    }
+
+    @Override
+    public String getSuffix() {
+        return ".jsp";
     }
 
     @Override

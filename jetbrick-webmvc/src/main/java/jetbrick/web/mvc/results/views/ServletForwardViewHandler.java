@@ -27,12 +27,12 @@ import jetbrick.web.mvc.RequestContext;
 public class ServletForwardViewHandler implements ViewHandler {
 
     @Override
-    public String getViewPrefix() {
+    public String getType() {
         return "forward";
     }
 
     @Override
-    public String getViewSuffix() {
+    public String getSuffix() {
         return null;
     }
 
