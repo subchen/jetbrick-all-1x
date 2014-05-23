@@ -20,7 +20,6 @@ package jetbrick.web.mvc.results.views;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import jetbrick.io.ResourceNotFoundException;
 import jetbrick.ioc.annotations.Config;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.template.*;
@@ -53,7 +52,7 @@ public class JetxTemplateViewHandler extends AbstractTemplateViewHandler {
     }
 
     @Override
-    protected boolean doRender(RequestContext ctx, String viewPathName) throws IOException {
+    protected void doRender(RequestContext ctx, String viewPathName) throws IOException {
         if (engine == null) {
             if (JetWebEngineLoader.unavailable()) {
                 JetWebEngineLoader.setServletContext(ctx.getServletContext());
@@ -68,11 +67,10 @@ public class JetxTemplateViewHandler extends AbstractTemplateViewHandler {
         try {
             JetTemplate template = engine.getTemplate(viewPathName);
             template.render(context, out);
-        } catch (ResourceNotFoundException e) {
-            return false;
+        } catch (jetbrick.template.ResourceNotFoundException e) {
+            throw new jetbrick.io.ResourceNotFoundException(viewPathName);
         }
 
         out.flush();
-        return true;
     }
 }

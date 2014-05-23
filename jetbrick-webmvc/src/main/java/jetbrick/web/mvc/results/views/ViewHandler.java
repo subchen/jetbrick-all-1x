@@ -34,8 +34,8 @@ public interface ViewHandler {
     public String getSuffix();
 
     /**
-     * 如果 Resource 不存在，那么返回 false.
+     * 如果 Resource 不存在，那么 throw java.io.ResourceNotFoundException.
      */
-    public boolean render(RequestContext ctx, String viewPathName) throws Throwable;
+    public void render(RequestContext ctx, String viewPathName) throws Throwable;
 
 }

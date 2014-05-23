@@ -18,33 +18,21 @@
  */
 package jetbrick.web.mvc.results.views;
 
-import java.io.IOException;
-import jetbrick.io.PathUtils;
+import javax.servlet.http.HttpServletRequest;
 import jetbrick.ioc.annotations.Managed;
-import jetbrick.web.mvc.RequestContext;
+import jetbrick.web.mvc.results.MimetypeUtils;
 
 @Managed
-public class ServletRedirectViewHandler implements ViewHandler {
+public class JsDataViewHandler extends AbstractDataViewHandler {
 
     @Override
     public String getType() {
-        return "redirect";
+        return "js";
     }
 
     @Override
-    public String getSuffix() {
-        return null;
+    public String getMimetype(HttpServletRequest request) {
+        return MimetypeUtils.getJavaScriptMimetype(request);
     }
 
-    @Override
-    public void render(RequestContext ctx, String viewPathName) throws IOException {
-        // 转换相对路径为绝对路径
-        viewPathName = PathUtils.getRelativePath(ctx.getPathInfo(), viewPathName);
-
-        if (viewPathName.charAt(0) == '/') {
-            // 添加 context path
-            viewPathName = ctx.getContextPath() + viewPathName;
-        }
-        ctx.getResponse().sendRedirect(viewPathName);
-    }
 }

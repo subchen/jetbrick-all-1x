@@ -19,7 +19,6 @@
 package jetbrick.web.mvc.results;
 
 import jetbrick.io.FilenameUtils;
-import jetbrick.io.PathUtils;
 import jetbrick.ioc.annotations.*;
 import jetbrick.web.mvc.*;
 import jetbrick.web.mvc.results.views.ViewHandler;
@@ -63,8 +62,6 @@ public class StringResultHandler implements ResultHandler<String> {
             } else {
                 url = result;
             }
-            // 转换相对路径为绝对路径
-            url = PathUtils.getRelativePath(ctx.getPathInfo(), url);
         }
 
         if (viewHandler == null) {

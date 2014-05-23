@@ -32,7 +32,7 @@ import com.google.gson.JsonElement;
  * 全局 ResultHandler 管理器
  */
 public class ResultHandlerResolver {
-    private Map<Class<?>, ResultHandler<?>> mapping = new IdentityHashMap<Class<?>, ResultHandler<?>>();
+    private final Map<Class<?>, ResultHandler<?>> mapping = new IdentityHashMap<Class<?>, ResultHandler<?>>();
 
     @Inject
     private Ioc ioc;
@@ -42,6 +42,7 @@ public class ResultHandlerResolver {
         register(Void.TYPE, VoidResultHandler.class);
         register(String.class, StringResultHandler.class);
         register(HttpStatus.class, HttpStatusResultHandler.class);
+        register(RawData.class, RawDataResultHandler.class);
         register(RawDownload.class, RawDownloadResultHandler.class);
 
         if (ClassUtils.available("com.alibaba.fastjson.JSONAware")) {

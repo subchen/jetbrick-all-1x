@@ -18,39 +18,20 @@
  */
 package jetbrick.web.mvc.results.views;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import jetbrick.ioc.annotations.Managed;
-import jetbrick.web.mvc.RequestContext;
 
 @Managed
-public class JavaScriptViewHandler implements ViewHandler {
+public class XmlDataViewHandler extends AbstractDataViewHandler {
 
     @Override
     public String getType() {
-        return "js";
+        return "xml";
     }
 
     @Override
-    public String getSuffix() {
-        return null;
+    public String getMimetype(HttpServletRequest request) {
+        return "text/xml";
     }
 
-    @Override
-    public boolean render(RequestContext ctx, String value) throws IOException {
-        HttpServletRequest request = ctx.getRequest();
-        HttpServletResponse response = ctx.getResponse();
-
-        String characterEncoding = request.getCharacterEncoding();
-        response.setCharacterEncoding(characterEncoding);
-        response.setContentType("text/javascript;charset=" + characterEncoding);
-
-        PrintWriter out = response.getWriter();
-        out.write(value);
-        out.flush();
-
-        return true;
-    }
 }

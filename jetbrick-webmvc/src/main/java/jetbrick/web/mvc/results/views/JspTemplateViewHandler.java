@@ -21,6 +21,7 @@ package jetbrick.web.mvc.results.views;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import jetbrick.io.ResourceNotFoundException;
 import jetbrick.ioc.annotations.Config;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.web.mvc.RequestContext;
@@ -46,9 +47,9 @@ public class JspTemplateViewHandler extends AbstractTemplateViewHandler {
     }
 
     @Override
-    protected boolean doRender(RequestContext ctx, String viewPathName) throws Exception {
+    protected void doRender(RequestContext ctx, String viewPathName) throws Exception {
         if (ctx.getServletContext().getResource(viewPathName) == null) {
-            return false;
+            throw new ResourceNotFoundException(viewPathName);
         }
 
         HttpServletRequest request = ctx.getRequest();
@@ -59,8 +60,6 @@ public class JspTemplateViewHandler extends AbstractTemplateViewHandler {
         }
 
         request.getRequestDispatcher(viewPathName).forward(request, response);
-
-        return true;
     }
 
 }

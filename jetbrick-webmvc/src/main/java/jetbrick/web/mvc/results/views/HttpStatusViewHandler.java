@@ -37,7 +37,7 @@ public class HttpStatusViewHandler implements ViewHandler {
     }
 
     @Override
-    public boolean render(RequestContext ctx, String value) {
+    public void render(RequestContext ctx, String value) {
         String code = value;
         String message = null;
 
@@ -61,8 +61,6 @@ public class HttpStatusViewHandler implements ViewHandler {
         } else {
             ctx.getResponse().setStatus(status);
         }
-
-        return true;
     }
 
 }

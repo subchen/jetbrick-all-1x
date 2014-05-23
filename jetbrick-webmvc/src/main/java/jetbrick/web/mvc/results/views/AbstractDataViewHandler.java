@@ -16,48 +16,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.web.mvc.results;
+package jetbrick.web.mvc.results.views;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import jetbrick.ioc.annotations.Managed;
 import jetbrick.web.mvc.RequestContext;
-import com.alibaba.fastjson.JSONAware;
-import com.alibaba.fastjson.JSONObject;
 
-@Managed(JSONAware.class)
-public class FastJSONResultHandler implements ResultHandler<JSONAware> {
+// 所有子类都是单例
+public abstract class AbstractDataViewHandler implements ViewHandler {
 
     @Override
-    public void handle(RequestContext ctx, JSONAware result) throws IOException {
+    public String getSuffix() {
+        return null;
+    }
+
+    public abstract String getMimetype(HttpServletRequest request);
+
+    @Override
+    public void render(RequestContext ctx, String value) throws IOException {
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
 
-        if (result == null) {
-            JSONObject json = new JSONObject();
-            Enumeration<String> e = request.getAttributeNames();
-            while (e.hasMoreElements()) {
-                String name = e.nextElement();
-                json.put(name, request.getAttribute(name));
-            }
-            for (Map.Entry<String, Object> entry : ctx.getModel().entrySet()) {
-                json.put(entry.getKey(), entry.getValue());
-            }
-            result = json;
-        }
-
         String characterEncoding = request.getCharacterEncoding();
         response.setCharacterEncoding(characterEncoding);
-
-        String mimetype = MimetypeUtils.getJsonMimetype(request);
-        response.setContentType(mimetype + "; charset=" + characterEncoding);
+        response.setContentType(getMimetype(request) + "; charset=" + characterEncoding);
 
         PrintWriter out = response.getWriter();
-        out.write(result.toJSONString());
+        out.write(value);
         out.flush();
     }
 

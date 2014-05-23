@@ -20,6 +20,7 @@ package jetbrick.web.mvc.results.views;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import jetbrick.io.PathUtils;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.web.mvc.RequestContext;
 
@@ -37,12 +38,13 @@ public class ServletForwardViewHandler implements ViewHandler {
     }
 
     @Override
-    public boolean render(RequestContext ctx, String viewPathName) throws Exception {
+    public void render(RequestContext ctx, String viewPathName) throws Exception {
         HttpServletRequest request = ctx.getRequest();
         HttpServletResponse response = ctx.getResponse();
-        request.getRequestDispatcher(viewPathName).forward(request, response);
 
-        return true;
+        // 转换相对路径为绝对路径
+        viewPathName = PathUtils.getRelativePath(ctx.getPathInfo(), viewPathName);
+        request.getRequestDispatcher(viewPathName).forward(request, response);
     }
 
 }

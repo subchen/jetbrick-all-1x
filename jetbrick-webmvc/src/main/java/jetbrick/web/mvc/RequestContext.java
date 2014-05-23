@@ -170,11 +170,11 @@ public class RequestContext {
 
     //---- model ------------------------------------------------
     public Model getModel() {
-    	Model model = (Model) request.getAttribute(Model.NAME_IN_REQUEST);
-    	if (model == null) {
-    		model = new Model();
+        Model model = (Model) request.getAttribute(Model.NAME_IN_REQUEST);
+        if (model == null) {
+            model = new Model();
             request.setAttribute(Model.NAME_IN_REQUEST, model);
-    	}
+        }
         return model;
     }
 

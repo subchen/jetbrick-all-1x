@@ -31,7 +31,7 @@ import jetbrick.web.mvc.results.views.*;
  * 全局 ViewHandler 管理器
  */
 public class ViewHandlerResolver {
-    private Map<String, ViewHandler> mapping = new HashMap<String, ViewHandler>();
+    private final Map<String, ViewHandler> mapping = new HashMap<String, ViewHandler>();
 
     @Inject
     private Ioc ioc;
@@ -41,8 +41,12 @@ public class ViewHandlerResolver {
         register(ServletForwardViewHandler.class);
         register(ServletRedirectViewHandler.class);
         register(HttpStatusViewHandler.class);
-        register(PlainTextViewHandler.class);
-        register(JavaScriptViewHandler.class);
+        register(PlainDataViewHandler.class);
+        register(HtmlDataViewHandler.class);
+        register(XmlDataViewHandler.class);
+        register(JsDataViewHandler.class);
+        register(CssDataViewHandler.class);
+        register(JsonDataViewHandler.class);
         register(JspTemplateViewHandler.class);
         register(JetxTemplateViewHandler.class);
     }

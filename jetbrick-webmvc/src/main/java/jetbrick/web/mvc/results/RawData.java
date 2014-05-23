@@ -21,7 +21,6 @@ package jetbrick.web.mvc.results;
 import java.io.*;
 import jetbrick.io.streams.UnsafeByteArrayInputStream;
 import jetbrick.ioc.annotations.ManagedWith;
-import jetbrick.lang.StringUtils;
 import jetbrick.web.mvc.RequestContext;
 
 @ManagedWith(RawDataResultHandler.class)
@@ -29,6 +28,59 @@ public final class RawData {
     private final InputStream is;
     private final String contentType;
     private final int contentLength;
+
+    public static RawData html(String data) {
+        return raw(data, "text/html", null);
+    }
+
+    public static RawData html(String data, String encoding) {
+        return raw(data, "text/html", encoding);
+    }
+
+    public static RawData text(String data) {
+        return raw(data, "text/plain", null);
+    }
+
+    public static RawData text(String data, String encoding) {
+        return raw(data, "text/plain", encoding);
+    }
+
+    public static RawData xml(String data) {
+        return raw(data, "text/xml", null);
+    }
+
+    public static RawData xml(String data, String encoding) {
+        return raw(data, "text/xml", encoding);
+    }
+
+    public static RawData js(String data) {
+        return raw(data, "text/javascript", null);
+    }
+
+    public static RawData js(String data, String encoding) {
+        return raw(data, "text/javascript", encoding);
+    }
+
+    public static RawData css(String data) {
+        return raw(data, "text/css", null);
+    }
+
+    public static RawData css(String data, String encoding) {
+        return raw(data, "text/css", encoding);
+    }
+
+    public static RawData raw(String data, String mimetype, String encoding) {
+        if (encoding == null) {
+            encoding = RequestContext.getCurrent().getResponse().getCharacterEncoding();
+        }
+        String contentType = mimetype + "; charset=" + encoding;
+
+        try {
+            return new RawData(data.getBytes(encoding), contentType);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public RawData(InputStream is, String contentType) {
         this.is = is;
@@ -50,32 +102,6 @@ public final class RawData {
         this.is = new UnsafeByteArrayInputStream(data);
         this.contentType = contentType;
         this.contentLength = data.length;
-    }
-
-    public RawData(String data, String contentType) {
-        this(data, null, contentType);
-    }
-
-    public RawData(String data, String encoding, String contentType) {
-        if (encoding == null) {
-            if (contentType != null) {
-                String charset = StringUtils.substringAfter(contentType, "charset=");
-                if (StringUtils.isNotEmpty(charset)) {
-                    encoding = charset;
-                }
-            }
-            if (encoding == null) {
-                encoding = RequestContext.getCurrent().getRequest().getCharacterEncoding();
-            }
-        }
-        try {
-            byte[] bytes = data.getBytes(encoding);
-            this.is = new UnsafeByteArrayInputStream(bytes);
-            this.contentType = contentType;
-            this.contentLength = bytes.length;
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public InputStream getInputStream() {

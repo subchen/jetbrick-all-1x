@@ -64,30 +64,12 @@ public class GSONResultHandler implements ResultHandler<JsonElement> {
 
         String characterEncoding = request.getCharacterEncoding();
         response.setCharacterEncoding(characterEncoding);
-        if (isOldIeBrowser(request)) {
-            response.setContentType("text/html;charset=" + characterEncoding);
-        } else {
-            response.setContentType("application/json;charset=" + characterEncoding);
-        }
+
+        String mimetype = MimetypeUtils.getJsonMimetype(request);
+        response.setContentType(mimetype + "; charset=" + characterEncoding);
+
         PrintWriter out = response.getWriter();
         out.write(result.toString());
         out.flush();
-    }
-
-    // IE 10 以下的版本不支持 application/json
-    private boolean isOldIeBrowser(HttpServletRequest request) {
-        try {
-            String agent = request.getHeader("user-agent");
-            int ipos = agent.indexOf("MSIE");
-            if (ipos > 0) {
-                ipos = ipos + 4;
-                int jpos = agent.indexOf(';', ipos);
-                String version = agent.substring(ipos, jpos);
-                return Float.parseFloat(version) < 10;
-            }
-        } catch (Throwable e) {
-            return false;
-        }
-        return false;
     }
 }

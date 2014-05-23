@@ -18,39 +18,21 @@
  */
 package jetbrick.web.mvc.results.views;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import jetbrick.ioc.annotations.Managed;
-import jetbrick.web.mvc.RequestContext;
+import jetbrick.web.mvc.results.MimetypeUtils;
 
 @Managed
-public class PlainTextViewHandler implements ViewHandler {
+public class JsonDataViewHandler extends AbstractDataViewHandler {
 
     @Override
     public String getType() {
-        return "text";
+        return "json";
     }
 
     @Override
-    public String getSuffix() {
-        return null;
+    public String getMimetype(HttpServletRequest request) {
+        return MimetypeUtils.getJsonMimetype(request);
     }
 
-    @Override
-    public boolean render(RequestContext ctx, String value) throws IOException {
-        HttpServletRequest request = ctx.getRequest();
-        HttpServletResponse response = ctx.getResponse();
-
-        String characterEncoding = request.getCharacterEncoding();
-        response.setCharacterEncoding(characterEncoding);
-        response.setContentType("text/plain;charset=" + characterEncoding);
-
-        PrintWriter out = response.getWriter();
-        out.write(value);
-        out.flush();
-
-        return true;
-    }
 }

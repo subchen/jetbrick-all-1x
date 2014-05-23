@@ -18,6 +18,7 @@
  */
 package jetbrick.web.mvc.results.views;
 
+import jetbrick.io.PathUtils;
 import jetbrick.lang.StringUtils;
 import jetbrick.web.mvc.RequestContext;
 
@@ -26,12 +27,12 @@ public abstract class AbstractTemplateViewHandler implements ViewHandler {
     public abstract String getPrefix();
 
     @Override
-    public boolean render(RequestContext ctx, String viewPathName) throws Throwable {
-        String view;
-        if (viewPathName.endsWith("/")) {
-            view = viewPathName.concat("index");
-        } else {
-            view = viewPathName;
+    public void render(RequestContext ctx, String viewPathName) throws Throwable {
+        // 转换相对路径为绝对路径
+        String view = PathUtils.getRelativePath(ctx.getPathInfo(), viewPathName);
+
+        if (view.endsWith("/")) {
+            view = view.concat("index");
         }
 
         String prefix = getPrefix();
@@ -40,9 +41,9 @@ public abstract class AbstractTemplateViewHandler implements ViewHandler {
         }
         view = StringUtils.suffix(view, getSuffix());
 
-        return doRender(ctx, view);
+        doRender(ctx, view);
     }
 
-    protected abstract boolean doRender(RequestContext ctx, String viewPathName) throws Throwable;
+    protected abstract void doRender(RequestContext ctx, String viewPathName) throws Throwable;
 
 }
