@@ -40,7 +40,7 @@ public class InjectFieldInjector implements FieldInjector {
         Inject inject = (Inject) annotation;
         this.ioc = ioc;
         this.field = field;
-        this.name = ValueConstants.defaultValue(inject.value(), field.getRawType(declaringKlass.getType()).getName());
+        this.name = ValueConstants.defaultValue(inject.value(), field.getRawType(declaringKlass).getName());
         this.required = inject.required();
     }
 

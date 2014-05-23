@@ -42,7 +42,7 @@ public class ConfigFieldInjector implements FieldInjector {
         this.required = config.required();
 
         // 类型转换
-        Class<?> type = field.getRawType(declaringKlass.getType());
+        Class<?> type = field.getRawType(declaringKlass);
         if (List.class == type) {
             Class<?> elementType = field.getRawComponentType(declaringKlass.getType(), 0);
             value = ioc.getConfigAsList(config.value(), elementType);

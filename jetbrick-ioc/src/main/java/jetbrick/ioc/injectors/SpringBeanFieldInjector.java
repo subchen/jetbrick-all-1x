@@ -43,7 +43,7 @@ public class SpringBeanFieldInjector implements FieldInjector {
         SpringBean inject = (SpringBean) annotation;
         this.appctx = getApplicationContext(ioc);
         this.field = field;
-        this.name = ValueConstants.defaultValue(inject.value(), field.getRawType(declaringKlass.getType()).getName());
+        this.name = ValueConstants.defaultValue(inject.value(), field.getRawType(declaringKlass).getName());
         this.required = inject.required();
     }
 

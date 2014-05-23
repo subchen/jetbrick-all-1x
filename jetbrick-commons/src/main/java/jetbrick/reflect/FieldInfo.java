@@ -26,7 +26,7 @@ import jetbrick.reflect.asm.ASMAccessor;
 
 /**
  * 代表一个字段.
- * 
+ *
  * @author Guoqiang Chen
  */
 public final class FieldInfo implements Comparable<FieldInfo>, Getter, Setter {
@@ -68,6 +68,10 @@ public final class FieldInfo implements Comparable<FieldInfo>, Getter, Setter {
 
     public Type getGenericType() {
         return field.getGenericType();
+    }
+
+    public Class<?> getRawType(KlassInfo declaringKlass) {
+        return getRawType(declaringKlass.getType());
     }
 
     public Class<?> getRawType(Class<?> declaringClass) {
