@@ -135,6 +135,14 @@ public final class TypeCastResolver {
     // -------- convert string -----------------------------------------------------------
 
     public <T> T convert(String value, Class<T> type) {
+        // fast-path
+        if (value == null) {
+            return null;
+        }
+        if (type == String.class) {
+            return (T) value;
+        }
+        // normal-path
         Convertor<T> c = (Convertor<T>) pool.get(type);
         if (c != null) {
             return c.convert(value);
@@ -171,6 +179,14 @@ public final class TypeCastResolver {
     // ------ convert object -------------------------------------------------------------
 
     public <T> T convert(Object value, Class<T> type) {
+        // fast-path
+        if (value == null) {
+            return null;
+        }
+        if (type.isInstance(value)) {
+            return (T) value;
+        }
+        // normal-path
         Convertor<T> c = (Convertor<T>) pool.get(type);
         if (c != null) {
             return c.convert(value);
