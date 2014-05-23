@@ -21,10 +21,28 @@ package jetbrick.web.servlet.map;
 import java.util.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import jetbrick.lang.concurrent.ConcurrentInitializer;
+import jetbrick.lang.concurrent.LazyInitializer;
 
 public class RequestCookieMap implements Map<String, Cookie> {
     private final HttpServletRequest request;
-    private Map<String, Cookie> map;
+
+    private final ConcurrentInitializer<Map<String, Cookie>> map = new LazyInitializer<Map<String, Cookie>>() {
+        @Override
+        protected Map<String, Cookie> initialize() {
+            Cookie[] cookies = request.getCookies();
+            if (cookies == null) {
+                return Collections.emptyMap();
+            } else {
+                Map<String, Cookie> map = new HashMap<String, Cookie>();
+                for (Cookie cookie : cookies) {
+                    String name = cookie.getName();
+                    map.put(name, cookie);
+                }
+                return map;
+            }
+        }
+    };
 
     public RequestCookieMap(HttpServletRequest request) {
         this.request = request;
@@ -32,42 +50,42 @@ public class RequestCookieMap implements Map<String, Cookie> {
 
     @Override
     public boolean containsKey(Object key) {
-        return getAsMap().containsKey(key);
+        return map.get().containsKey(key);
     }
 
     @Override
     public boolean containsValue(Object value) {
-        return getAsMap().containsValue(value);
+        return map.get().containsValue(value);
     }
 
     @Override
     public Cookie get(Object key) {
-        return getAsMap().get(key);
+        return map.get().get(key);
     }
 
     @Override
     public boolean isEmpty() {
-        return getAsMap().isEmpty();
+        return map.get().isEmpty();
     }
 
     @Override
     public int size() {
-        return getAsMap().size();
+        return map.get().size();
     }
 
     @Override
     public Set<Map.Entry<String, Cookie>> entrySet() {
-        return getAsMap().entrySet();
+        return map.get().entrySet();
     }
 
     @Override
     public Set<String> keySet() {
-        return getAsMap().keySet();
+        return map.get().keySet();
     }
 
     @Override
     public Collection<Cookie> values() {
-        return getAsMap().values();
+        return map.get().values();
     }
 
     @Override
@@ -90,24 +108,4 @@ public class RequestCookieMap implements Map<String, Cookie> {
         throw new UnsupportedOperationException();
     }
 
-    protected Map<String, Cookie> getAsMap() {
-        if (map == null) {
-            synchronized (this) {
-                if (map == null) {
-                    Cookie[] cookies = request.getCookies();
-                    if (cookies == null) {
-                        map = Collections.emptyMap();
-                    } else {
-                        Map<String, Cookie> result = new HashMap<String, Cookie>();
-                        for (Cookie cookie : cookies) {
-                            String name = cookie.getName();
-                            result.put(name, cookie);
-                        }
-                        map = result;
-                    }
-                }
-            }
-        }
-        return map;
-    }
 }

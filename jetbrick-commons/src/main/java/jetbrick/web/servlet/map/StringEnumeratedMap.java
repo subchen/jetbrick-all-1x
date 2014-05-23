@@ -21,7 +21,7 @@ package jetbrick.web.servlet.map;
 import java.util.*;
 
 public abstract class StringEnumeratedMap<V> implements Map<String, V> {
-    private Map<String, V> map;
+    private volatile Map<String, V> map;
 
     @Override
     public boolean containsKey(Object key) {
@@ -104,19 +104,26 @@ public abstract class StringEnumeratedMap<V> implements Map<String, V> {
 
     protected abstract void removeAttribute(String name);
 
+    // double check for map
     protected Map<String, V> getAsMap() {
-        if (map == null) {
+        Map<String, V> result = map;
+        if (result == null) {
             synchronized (this) {
-                if (map == null) {
-                    Map<String, V> result = new HashMap<String, V>();
-                    for (Enumeration<String> e = getAttributeNames(); e.hasMoreElements();) {
-                        String key = e.nextElement();
-                        V value = getAttribute(key);
-                        result.put(key, value);
-                    }
-                    map = result;
+                result = map;
+                if (result == null) {
+                    map = (result = initialize());
                 }
             }
+        }
+        return result;
+    }
+
+    private Map<String, V> initialize() {
+        Map<String, V> map = new HashMap<String, V>();
+        for (Enumeration<String> e = getAttributeNames(); e.hasMoreElements();) {
+            String key = e.nextElement();
+            V value = getAttribute(key);
+            map.put(key, value);
         }
         return map;
     }
