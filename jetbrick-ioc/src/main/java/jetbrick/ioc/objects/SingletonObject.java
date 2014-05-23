@@ -24,7 +24,7 @@ import jetbrick.ioc.Ioc;
 public abstract class SingletonObject implements IocObject {
     protected final Ioc ioc;
     private boolean initializing;
-    private Object object;
+    private volatile Object object;
 
     public SingletonObject(Ioc ioc) {
         this.ioc = ioc;
@@ -33,15 +33,17 @@ public abstract class SingletonObject implements IocObject {
 
     @Override
     public Object getObject() {
-        if (object == null) {
+        Object result = object;
+        if (result == null) {
             synchronized (this) {
-                if (object == null) {
+                result = object;
+                if (result == null) {
                     if (initializing) {
                         throw new IllegalStateException("Cycle dependencies on singleton bean detected: " + toString());
                     }
                     try {
                         initializing = true;
-                        object = doGetObject();
+                        object = (result = doGetObject());
                         initializing = false;
                     } catch (RuntimeException e) {
                         throw e;
@@ -51,7 +53,7 @@ public abstract class SingletonObject implements IocObject {
                 }
             }
         }
-        return object;
+        return result;
     }
 
     protected abstract Object doGetObject() throws Exception;
