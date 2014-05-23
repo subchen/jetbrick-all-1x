@@ -19,6 +19,8 @@
 package jetbrick.web.mvc.action.annotations;
 
 import java.lang.annotation.Annotation;
+import jetbrick.reflect.KlassInfo;
+import jetbrick.reflect.ParameterInfo;
 
 /**
  * 根据 annotation 来注入参数
@@ -28,6 +30,6 @@ import java.lang.annotation.Annotation;
  */
 public interface AnnotatedArgumentGetter<A extends Annotation, T> extends ArgumentGetter<T> {
 
-    public void initialize(Class<?> type, A annotation);
+    public void initialize(KlassInfo declaringKlass, ParameterInfo parameter, A annotation);
 
 }

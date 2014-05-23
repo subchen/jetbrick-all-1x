@@ -21,8 +21,10 @@ package jetbrick.ioc.injectors;
 import java.lang.annotation.Annotation;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.Inject;
-import jetbrick.ioc.annotations.ValueConstants;
 import jetbrick.lang.Validate;
+import jetbrick.lang.annotations.ValueConstants;
+import jetbrick.reflect.KlassInfo;
+import jetbrick.reflect.ParameterInfo;
 
 //注入 @Inject 标注的参数
 public class InjectParameterInjector implements ParameterInjector {
@@ -31,10 +33,12 @@ public class InjectParameterInjector implements ParameterInjector {
     private boolean required;
 
     @Override
-    public void initialize(Ioc ioc, Class<?> parameterType, Annotation anno) {
-        Validate.isInstanceOf(Inject.class, anno);
+    public void initialize(Ioc ioc, KlassInfo declaringKlass, ParameterInfo parameter, Annotation annotation) {
+        Validate.isInstanceOf(Inject.class, annotation);
 
-        Inject inject = (Inject) anno;
+        Class<?> parameterType = parameter.getRawType(declaringKlass);
+
+        Inject inject = (Inject) annotation;
         this.ioc = ioc;
         this.name = ValueConstants.defaultValue(inject.value(), parameterType.getName());
         this.required = inject.required();

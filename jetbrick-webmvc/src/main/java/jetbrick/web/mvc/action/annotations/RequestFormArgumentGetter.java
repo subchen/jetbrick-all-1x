@@ -20,6 +20,8 @@ package jetbrick.web.mvc.action.annotations;
 
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.lang.ExceptionUtils;
+import jetbrick.reflect.KlassInfo;
+import jetbrick.reflect.ParameterInfo;
 import jetbrick.web.mvc.RequestContext;
 
 @Managed
@@ -27,8 +29,8 @@ public class RequestFormArgumentGetter implements AnnotatedArgumentGetter<Reques
     private Class<?> type;
 
     @Override
-    public void initialize(Class<?> type, RequestForm annotation) {
-        this.type = type;
+    public void initialize(KlassInfo declaringKlass, ParameterInfo parameter, RequestForm annotation) {
+        this.type = parameter.getRawType(declaringKlass);
     }
 
     @Override

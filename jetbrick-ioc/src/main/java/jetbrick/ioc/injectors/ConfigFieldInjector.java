@@ -19,32 +19,32 @@
 package jetbrick.ioc.injectors;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.List;
-import jetbrick.beans.introspectors.FieldDescriptor;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.Config;
-import jetbrick.ioc.annotations.ValueConstants;
 import jetbrick.lang.Validate;
+import jetbrick.lang.annotations.ValueConstants;
+import jetbrick.reflect.FieldInfo;
+import jetbrick.reflect.KlassInfo;
 
 // 注入 @Config 标注的字段
 public class ConfigFieldInjector implements FieldInjector {
-    private Field field;
+    private FieldInfo field;
     private boolean required;
     private Object value;
 
     @Override
-    public void initialize(Ioc ioc, FieldDescriptor fd, Annotation anno) {
-        Validate.isInstanceOf(Config.class, anno);
+    public void initialize(Ioc ioc, KlassInfo declaringKlass, FieldInfo field, Annotation annotation) {
+        Validate.isInstanceOf(Config.class, annotation);
 
-        Config config = (Config) anno;
-        field = fd.getField();
-        required = config.required();
+        Config config = (Config) annotation;
+        this.field = field;
+        this.required = config.required();
 
         // 类型转换
-        Class<?> type = fd.getRawType();
+        Class<?> type = field.getRawType(declaringKlass.getType());
         if (List.class == type) {
-            Class<?> elementType = fd.getRawComponentType(0);
+            Class<?> elementType = field.getRawComponentType(declaringKlass.getType(), 0);
             value = ioc.getConfigAsList(config.value(), elementType);
         } else if (type.isArray()) {
             Class<?> elementType = type.getComponentType();

@@ -20,6 +20,9 @@ package jetbrick.web.mvc.action.annotations;
 
 import javax.servlet.http.Cookie;
 import jetbrick.ioc.annotations.Managed;
+import jetbrick.lang.annotations.ValueConstants;
+import jetbrick.reflect.KlassInfo;
+import jetbrick.reflect.ParameterInfo;
 import jetbrick.typecast.Convertor;
 import jetbrick.web.mvc.RequestContext;
 import jetbrick.web.mvc.action.ArgumentGetterResolver;
@@ -32,11 +35,11 @@ public class RequestCookieArgumentGetter implements AnnotatedArgumentGetter<Requ
     private Convertor<?> typeConvertor;
 
     @Override
-    public void initialize(Class<?> type, RequestCookie annotation) {
+    public void initialize(KlassInfo declaringKlass, ParameterInfo parameter, RequestCookie annotation) {
         name = annotation.value();
         required = annotation.required();
-        defaultValue = ValueConstants.defaultIfNull(annotation.defaultValue());
-        typeConvertor = ArgumentGetterResolver.getTypeConvertor(type);
+        defaultValue = ValueConstants.trimToNull(annotation.defaultValue());
+        typeConvertor = ArgumentGetterResolver.getTypeConvertor(parameter.getRawType(declaringKlass));
     }
 
     @Override

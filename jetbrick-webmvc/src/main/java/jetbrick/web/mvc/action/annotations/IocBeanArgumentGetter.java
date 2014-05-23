@@ -24,6 +24,8 @@ import jetbrick.ioc.annotations.*;
 import jetbrick.ioc.injectors.ParameterInjector;
 import jetbrick.lang.ExceptionUtils;
 import jetbrick.lang.Validate;
+import jetbrick.reflect.KlassInfo;
+import jetbrick.reflect.ParameterInfo;
 import jetbrick.web.mvc.RequestContext;
 
 @Managed
@@ -34,13 +36,13 @@ public class IocBeanArgumentGetter implements AnnotatedArgumentGetter<Annotation
     private ParameterInjector injector;
 
     @Override
-    public void initialize(Class<?> type, Annotation annotation) {
+    public void initialize(KlassInfo declaringKlass, ParameterInfo parameter, Annotation annotation) {
         InjectParameterWith with = annotation.annotationType().getAnnotation(InjectParameterWith.class);
         Validate.notNull(with, "@InjectParameterWith not found.");
 
         try {
             injector = with.value().newInstance();
-            injector.initialize(ioc, type, annotation);
+            injector.initialize(ioc, declaringKlass, parameter, annotation);
         } catch (Exception e) {
             throw ExceptionUtils.unchecked(e);
         }

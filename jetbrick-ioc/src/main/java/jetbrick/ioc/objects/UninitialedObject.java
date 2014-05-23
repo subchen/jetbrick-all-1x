@@ -20,11 +20,11 @@ package jetbrick.ioc.objects;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import jetbrick.beans.introspectors.ClassDescriptor;
 import jetbrick.io.config.Configuration;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.injectors.FieldInjector;
 import jetbrick.ioc.injectors.PropertyInjector;
+import jetbrick.reflect.KlassInfo;
 
 public class UninitialedObject implements IocObject {
     private final Ioc ioc;
@@ -49,10 +49,10 @@ public class UninitialedObject implements IocObject {
     }
 
     private Object doGetObject() throws Exception {
-        ClassDescriptor meta = ClassDescriptor.lookup(object.getClass());
-        List<FieldInjector> fieldInjectors = IocObjectUtils.doGetFieldInjectors(ioc, meta);
-        List<PropertyInjector> propertyInjectors = IocObjectUtils.doGetPropertyInjectors(ioc, meta, properties);
-        Method initializeMethod = IocObjectUtils.doGetInitializeMethod(meta);
+        KlassInfo klass = KlassInfo.create(object.getClass());
+        List<FieldInjector> fieldInjectors = IocObjectUtils.doGetFieldInjectors(ioc, klass);
+        List<PropertyInjector> propertyInjectors = IocObjectUtils.doGetPropertyInjectors(ioc, klass, properties);
+        Method initializeMethod = IocObjectUtils.doGetInitializeMethod(klass);
         properties = null;
 
         for (PropertyInjector injector : propertyInjectors) {

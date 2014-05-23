@@ -21,8 +21,10 @@ package jetbrick.ioc.injectors;
 import java.lang.annotation.Annotation;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.Config;
-import jetbrick.ioc.annotations.ValueConstants;
 import jetbrick.lang.Validate;
+import jetbrick.lang.annotations.ValueConstants;
+import jetbrick.reflect.KlassInfo;
+import jetbrick.reflect.ParameterInfo;
 
 // 注入 @Config 标注的参数
 public class ConfigParameterInjector implements ParameterInjector {
@@ -30,13 +32,14 @@ public class ConfigParameterInjector implements ParameterInjector {
     private Object value;
 
     @Override
-    public void initialize(Ioc ioc, Class<?> parameterType, Annotation anno) {
-        Validate.isInstanceOf(Config.class, anno);
+    public void initialize(Ioc ioc, KlassInfo declaringKlass, ParameterInfo parameter, Annotation annotation) {
+        Validate.isInstanceOf(Config.class, annotation);
 
-        Config config = (Config) anno;
+        Config config = (Config) annotation;
         required = config.required();
 
         String defaultValue = ValueConstants.defaultValue(config.defaultValue(), null);
+        Class<?> parameterType = parameter.getRawType(declaringKlass);
         value = ioc.getConfig(config.value(), parameterType, defaultValue);
     }
 

@@ -19,6 +19,8 @@
 package jetbrick.web.mvc.action.annotations;
 
 import jetbrick.ioc.annotations.Managed;
+import jetbrick.reflect.KlassInfo;
+import jetbrick.reflect.ParameterInfo;
 import jetbrick.web.mvc.RequestContext;
 
 @Managed
@@ -27,7 +29,7 @@ public class SessionAttributeArgumentGetter implements AnnotatedArgumentGetter<S
     private boolean required;
 
     @Override
-    public void initialize(Class<?> type, SessionAttribute annotation) {
+    public void initialize(KlassInfo declaringKlass, ParameterInfo parameter, SessionAttribute annotation) {
         name = annotation.value();
         required = annotation.required();
     }

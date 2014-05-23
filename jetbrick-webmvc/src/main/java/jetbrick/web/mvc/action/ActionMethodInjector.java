@@ -20,36 +20,36 @@ package jetbrick.web.mvc.action;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import jetbrick.beans.introspectors.MethodDescriptor;
+import java.util.List;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.ManagedWith;
 import jetbrick.lang.ArrayUtils;
+import jetbrick.reflect.*;
 import jetbrick.web.mvc.RequestContext;
 import jetbrick.web.mvc.action.annotations.AnnotatedArgumentGetter;
 import jetbrick.web.mvc.action.annotations.ArgumentGetter;
 import jetbrick.web.mvc.config.WebConfig;
 
-final class MethodInjector {
+final class ActionMethodInjector {
     private final Method method;
     private final ArgumentGetter<?>[] resolvers;
 
     @SuppressWarnings("unchecked")
-    public static MethodInjector create(MethodDescriptor md) throws Exception {
-        Class<?>[] parameterTypes = md.getRawParameterTypes();
-        if (parameterTypes.length == 0) {
-            return new MethodInjector(md.getMethod(), ArgumentGetter.EMPTY_ARRAY);
+    public static ActionMethodInjector create(MethodInfo method, Class<?> declaringClass) throws Exception {
+        List<ParameterInfo> parameters = method.getParameters();
+        if (parameters.size() == 0) {
+            return new ActionMethodInjector(method.getMethod(), ArgumentGetter.EMPTY_ARRAY);
         }
 
         Ioc ioc = WebConfig.getInstance().getIoc();
         ArgumentGetterResolver resolver = WebConfig.getInstance().getArgumentGetterResolver();
 
-        ArgumentGetter<?>[] resolvers = new ArgumentGetter[parameterTypes.length];
-        Annotation[][] parameterAnnotations = md.getRawParameterAnnotations();
+        ArgumentGetter<?>[] resolvers = new ArgumentGetter[parameters.size()];
         for (int i = 0; i < resolvers.length; i++) {
-            Class<?> type = parameterTypes[i];
+            ParameterInfo parameter = parameters.get(i);
 
             ArgumentGetter<?> getter = null;
-            for (Annotation annotation : parameterAnnotations[i]) {
+            for (Annotation annotation : parameter.getAnnotations()) {
                 Class<?> argumentGetterClass = resolver.lookup(annotation);
                 if (argumentGetterClass == null) {
                     // 没有注册 annotation， 那么尝试自动发现
@@ -57,17 +57,23 @@ final class MethodInjector {
                     ManagedWith managedWith = annotationType.getAnnotation(ManagedWith.class);
                     if (managedWith != null) {
                         argumentGetterClass = managedWith.value();
-                        resolver.register(annotationType, argumentGetterClass);
+                        if (AnnotatedArgumentGetter.class.isAssignableFrom(argumentGetterClass)) {
+                            // 找到一个没有注册的 annotation，在这里注册
+                            resolver.register(annotationType, argumentGetterClass);
+                        } else {
+                            argumentGetterClass = null; // 不是我们要的，恢复成 null
+                        }
                     }
                 }
                 if (argumentGetterClass != null) {
                     getter = (ArgumentGetter<?>) ioc.injectClass(argumentGetterClass);
-                    ((AnnotatedArgumentGetter<Annotation, ?>) getter).initialize(type, annotation);
+                    ((AnnotatedArgumentGetter<Annotation, ?>) getter).initialize(KlassInfo.create(argumentGetterClass), parameter, annotation);
                     break;
                 }
             }
             if (getter == null) {
                 // 没有找到标注，那么尝试根据参数类型来查找
+                Class<?> type = parameter.getRawType(declaringClass);
                 getter = resolver.lookup(type);
             }
             if (getter == null) {
@@ -76,10 +82,10 @@ final class MethodInjector {
             resolvers[i] = getter;
         }
 
-        return new MethodInjector(md.getMethod(), resolvers);
+        return new ActionMethodInjector(method.getMethod(), resolvers);
     }
 
-    public MethodInjector(Method method, ArgumentGetter<?>[] resolvers) {
+    public ActionMethodInjector(Method method, ArgumentGetter<?>[] resolvers) {
         this.method = method;
         this.resolvers = resolvers;
     }

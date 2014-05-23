@@ -18,15 +18,15 @@
  */
 package jetbrick.ioc.injectors;
 
-import java.lang.reflect.Constructor;
 import jetbrick.lang.ArrayUtils;
+import jetbrick.reflect.ConstructorInfo;
 
 //注入 @Inject 标注的构造函数
 public class CtorInjector {
-    private final Constructor<?> ctor;
+    private final ConstructorInfo ctor;
     private final ParameterInjector[] parameters;
 
-    public CtorInjector(Constructor<?> ctor, ParameterInjector[] parameters) {
+    public CtorInjector(ConstructorInfo ctor, ParameterInjector[] parameters) {
         this.ctor = ctor;
         this.parameters = parameters;
     }

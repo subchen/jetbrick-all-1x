@@ -19,6 +19,7 @@
 package jetbrick.web.mvc.action.annotations;
 
 import java.lang.annotation.*;
+import jetbrick.ioc.annotations.IocConstants;
 import jetbrick.ioc.annotations.ManagedWith;
 
 @Target(ElementType.PARAMETER)
@@ -28,6 +29,6 @@ public @interface SessionAttribute {
 
     String value();
 
-    boolean required() default ValueConstants.REQUIRED;
+    boolean required() default IocConstants.REQUIRED;
 
 }

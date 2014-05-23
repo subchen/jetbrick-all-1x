@@ -16,23 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.web.mvc.action.annotations;
+package jetbrick.ioc.annotations;
 
-import jetbrick.ioc.annotations.IocConstants;
-import jetbrick.ioc.annotations.Managed;
-import jetbrick.web.mvc.RequestContext;
-import jetbrick.web.mvc.multipart.FilePart;
+public class IocConstants {
 
-@Managed
-public class FilePartArgumentGetter implements TypedArgumentGetter<FilePart> {
+    public static final boolean SINGLETONE = true;
 
-    @Override
-    public FilePart get(RequestContext ctx) {
-        FilePart part = ctx.getFilePart();
+    public static final boolean REQUIRED = true;
 
-        if (part == null && IocConstants.REQUIRED) {
-            throw new IllegalStateException();
-        }
-        return part;
-    }
 }

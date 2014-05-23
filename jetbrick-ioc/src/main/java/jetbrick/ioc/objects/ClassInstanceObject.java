@@ -20,10 +20,10 @@ package jetbrick.ioc.objects;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import jetbrick.beans.introspectors.ClassDescriptor;
 import jetbrick.io.config.Configuration;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.injectors.*;
+import jetbrick.reflect.KlassInfo;
 
 public class ClassInstanceObject extends InstanceObject {
     private final Class<?> beanClass;
@@ -42,11 +42,11 @@ public class ClassInstanceObject extends InstanceObject {
 
     @Override
     protected void initialize() {
-        ClassDescriptor meta = ClassDescriptor.lookup(beanClass);
-        ctorInjector = IocObjectUtils.doGetCtorInjector(ioc, meta);
-        fieldInjectors = IocObjectUtils.doGetFieldInjectors(ioc, meta);
-        propertyInjectors = IocObjectUtils.doGetPropertyInjectors(ioc, meta, properties);
-        initializeMethod = IocObjectUtils.doGetInitializeMethod(meta);
+        KlassInfo klass = KlassInfo.create(beanClass);
+        ctorInjector = IocObjectUtils.doGetCtorInjector(ioc, klass);
+        fieldInjectors = IocObjectUtils.doGetFieldInjectors(ioc, klass);
+        propertyInjectors = IocObjectUtils.doGetPropertyInjectors(ioc, klass, properties);
+        initializeMethod = IocObjectUtils.doGetInitializeMethod(klass);
         properties = null;
     }
 

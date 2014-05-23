@@ -36,6 +36,6 @@ public @interface SpringBean {
 
     String value();
 
-    boolean required() default ValueConstants.REQUIRED;
+    boolean required() default IocConstants.REQUIRED;
 
 }

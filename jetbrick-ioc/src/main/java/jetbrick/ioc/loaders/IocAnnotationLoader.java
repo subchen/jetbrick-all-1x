@@ -23,7 +23,7 @@ import java.util.Collection;
 import jetbrick.io.finder.ClassFinder;
 import jetbrick.ioc.MutableIoc;
 import jetbrick.ioc.annotations.IocBean;
-import jetbrick.ioc.annotations.ValueConstants;
+import jetbrick.lang.annotations.ValueConstants;
 
 public class IocAnnotationLoader implements IocLoader {
     private Collection<Class<?>> klasses;

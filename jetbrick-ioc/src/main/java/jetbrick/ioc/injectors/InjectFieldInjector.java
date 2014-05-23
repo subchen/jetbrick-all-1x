@@ -19,28 +19,28 @@
 package jetbrick.ioc.injectors;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import jetbrick.beans.introspectors.FieldDescriptor;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.Inject;
-import jetbrick.ioc.annotations.ValueConstants;
 import jetbrick.lang.Validate;
+import jetbrick.lang.annotations.ValueConstants;
+import jetbrick.reflect.FieldInfo;
+import jetbrick.reflect.KlassInfo;
 
 //注入 @Inject 标注的字段
 public class InjectFieldInjector implements FieldInjector {
     private Ioc ioc;
     private String name;
-    private Field field;
+    private FieldInfo field;
     private boolean required;
 
     @Override
-    public void initialize(Ioc ioc, FieldDescriptor fd, Annotation anno) {
-        Validate.isInstanceOf(Inject.class, anno);
+    public void initialize(Ioc ioc, KlassInfo declaringKlass, FieldInfo field, Annotation annotation) {
+        Validate.isInstanceOf(Inject.class, annotation);
 
-        Inject inject = (Inject) anno;
+        Inject inject = (Inject) annotation;
         this.ioc = ioc;
-        this.field = fd.getField();
-        this.name = ValueConstants.defaultValue(inject.value(), fd.getRawType().getName());
+        this.field = field;
+        this.name = ValueConstants.defaultValue(inject.value(), field.getRawType(declaringKlass.getType()).getName());
         this.required = inject.required();
     }
 

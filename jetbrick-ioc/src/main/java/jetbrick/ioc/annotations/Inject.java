@@ -21,6 +21,7 @@ package jetbrick.ioc.annotations;
 import java.lang.annotation.*;
 import jetbrick.ioc.injectors.InjectFieldInjector;
 import jetbrick.ioc.injectors.InjectParameterInjector;
+import jetbrick.lang.annotations.ValueConstants;
 
 /**
  * 将 @IocBean 标注的对象注入到字段中/构造函数参数.
@@ -36,6 +37,6 @@ public @interface Inject {
 
     String value() default ValueConstants.EMPTY;
 
-    boolean required() default ValueConstants.REQUIRED;
+    boolean required() default IocConstants.REQUIRED;
 
 }

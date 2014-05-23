@@ -20,7 +20,9 @@ package jetbrick.ioc.injectors;
 
 import java.lang.annotation.Annotation;
 import jetbrick.ioc.Ioc;
-import jetbrick.ioc.annotations.ValueConstants;
+import jetbrick.ioc.annotations.IocConstants;
+import jetbrick.reflect.KlassInfo;
+import jetbrick.reflect.ParameterInfo;
 
 // 注入没有任何标注的参数
 public class DefaultParameterInjector implements ParameterInjector {
@@ -28,15 +30,15 @@ public class DefaultParameterInjector implements ParameterInjector {
     private String name;
 
     @Override
-    public void initialize(Ioc ioc, Class<?> parameterType, Annotation anno) {
+    public void initialize(Ioc ioc, KlassInfo declaringKlass, ParameterInfo parameter, Annotation annotation) {
         this.ioc = ioc;
-        this.name = parameterType.getName();
+        this.name = parameter.getRawType(declaringKlass).getName();
     }
 
     @Override
     public Object getObject() throws Exception {
         Object value = ioc.getBean(name);
-        if (value == null && ValueConstants.REQUIRED) {
+        if (value == null && IocConstants.REQUIRED) {
             throw new IllegalStateException("Can't inject parameter.");
         }
         return value;

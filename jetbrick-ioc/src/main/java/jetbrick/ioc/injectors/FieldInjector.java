@@ -19,13 +19,14 @@
 package jetbrick.ioc.injectors;
 
 import java.lang.annotation.Annotation;
-import jetbrick.beans.introspectors.FieldDescriptor;
 import jetbrick.ioc.Ioc;
+import jetbrick.reflect.FieldInfo;
+import jetbrick.reflect.KlassInfo;
 
 // 负责注入字段
 public interface FieldInjector {
 
-    public void initialize(Ioc ioc, FieldDescriptor fd, Annotation anno);
+    public void initialize(Ioc ioc, KlassInfo declaringKlass, FieldInfo field, Annotation annotation);
 
     public void set(Object object) throws Exception;
 

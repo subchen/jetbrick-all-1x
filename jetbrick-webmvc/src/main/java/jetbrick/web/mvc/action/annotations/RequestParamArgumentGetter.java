@@ -22,6 +22,9 @@ import java.lang.reflect.Array;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.lang.ArrayUtils;
 import jetbrick.lang.StringUtils;
+import jetbrick.lang.annotations.ValueConstants;
+import jetbrick.reflect.KlassInfo;
+import jetbrick.reflect.ParameterInfo;
 import jetbrick.typecast.Convertor;
 import jetbrick.web.mvc.RequestContext;
 import jetbrick.web.mvc.action.ArgumentGetterResolver;
@@ -41,8 +44,8 @@ public class RequestParamArgumentGetter implements AnnotatedArgumentGetter<Reque
     private Convertor<?> typeConvertor;
 
     @Override
-    public void initialize(Class<?> type, RequestParam annotation) {
-        this.type = type;
+    public void initialize(KlassInfo declaringKlass, ParameterInfo parameter, RequestParam annotation) {
+        this.type = parameter.getRawType(declaringKlass);
 
         if (FilePart.class.isAssignableFrom(type)) {
             objType = ObjectType.FILE;
@@ -57,7 +60,7 @@ public class RequestParamArgumentGetter implements AnnotatedArgumentGetter<Reque
 
         name = annotation.value();
         required = annotation.required();
-        defaultValue = ValueConstants.defaultIfNull(annotation.defaultValue());
+        defaultValue = ValueConstants.trimToNull(annotation.defaultValue());
     }
 
     @Override
@@ -80,7 +83,7 @@ public class RequestParamArgumentGetter implements AnnotatedArgumentGetter<Reque
         } else if (objType == ObjectType.ARRAY) {
             String[] values = ctx.getParameterValues(name);
             if (values == null) {
-                if (!ValueConstants.isEmpty(defaultValue)) {
+                if (!ValueConstants.isEmptyOrNull(defaultValue)) {
                     values = StringUtils.split(defaultValue, ',');
                 }
             }

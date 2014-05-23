@@ -20,13 +20,15 @@ package jetbrick.ioc.injectors;
 
 import java.lang.annotation.Annotation;
 import jetbrick.ioc.Ioc;
+import jetbrick.reflect.KlassInfo;
+import jetbrick.reflect.ParameterInfo;
 
 // 负责注入参数
 public interface ParameterInjector {
 
     public static final ParameterInjector[] EMPTY_ARRAY = new ParameterInjector[0];
 
-    public void initialize(Ioc ioc, Class<?> parameterType, Annotation anno);
+    public void initialize(Ioc ioc, KlassInfo declaringKlass, ParameterInfo parameter, Annotation annotation);
 
     public Object getObject() throws Exception;
 

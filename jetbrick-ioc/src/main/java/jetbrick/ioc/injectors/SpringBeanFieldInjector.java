@@ -19,13 +19,13 @@
 package jetbrick.ioc.injectors;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import javax.servlet.ServletContext;
-import jetbrick.beans.introspectors.FieldDescriptor;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.SpringBean;
-import jetbrick.ioc.annotations.ValueConstants;
 import jetbrick.lang.Validate;
+import jetbrick.lang.annotations.ValueConstants;
+import jetbrick.reflect.FieldInfo;
+import jetbrick.reflect.KlassInfo;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -33,17 +33,17 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 public class SpringBeanFieldInjector implements FieldInjector {
     private ApplicationContext appctx;
     private String name;
-    private Field field;
+    private FieldInfo field;
     private boolean required;
 
     @Override
-    public void initialize(Ioc ioc, FieldDescriptor fd, Annotation anno) {
-        Validate.isInstanceOf(SpringBean.class, anno);
+    public void initialize(Ioc ioc, KlassInfo declaringKlass, FieldInfo field, Annotation annotation) {
+        Validate.isInstanceOf(SpringBean.class, annotation);
 
-        SpringBean inject = (SpringBean) anno;
+        SpringBean inject = (SpringBean) annotation;
         this.appctx = getApplicationContext(ioc);
-        this.field = fd.getField();
-        this.name = ValueConstants.defaultValue(inject.value(), fd.getRawType().getName());
+        this.field = field;
+        this.name = ValueConstants.defaultValue(inject.value(), field.getRawType(declaringKlass.getType()).getName());
         this.required = inject.required();
     }
 

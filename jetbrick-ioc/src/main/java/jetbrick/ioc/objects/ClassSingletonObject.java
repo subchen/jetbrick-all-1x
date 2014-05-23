@@ -20,10 +20,10 @@ package jetbrick.ioc.objects;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import jetbrick.beans.introspectors.ClassDescriptor;
 import jetbrick.io.config.Configuration;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.injectors.*;
+import jetbrick.reflect.KlassInfo;
 
 public class ClassSingletonObject extends SingletonObject {
     protected final Class<?> beanClass;
@@ -37,11 +37,11 @@ public class ClassSingletonObject extends SingletonObject {
 
     @Override
     protected Object doGetObject() throws Exception {
-        ClassDescriptor meta = ClassDescriptor.lookup(beanClass);
-        CtorInjector ctorInjector = IocObjectUtils.doGetCtorInjector(ioc, meta);
-        List<FieldInjector> fieldInjectors = IocObjectUtils.doGetFieldInjectors(ioc, meta);
-        List<PropertyInjector> propertyInjectors = IocObjectUtils.doGetPropertyInjectors(ioc, meta, properties);
-        Method initializeMethod = IocObjectUtils.doGetInitializeMethod(meta);
+        KlassInfo klass = KlassInfo.create(beanClass);
+        CtorInjector ctorInjector = IocObjectUtils.doGetCtorInjector(ioc, klass);
+        List<FieldInjector> fieldInjectors = IocObjectUtils.doGetFieldInjectors(ioc, klass);
+        List<PropertyInjector> propertyInjectors = IocObjectUtils.doGetPropertyInjectors(ioc, klass, properties);
+        Method initializeMethod = IocObjectUtils.doGetInitializeMethod(klass);
 
         properties = null;
 

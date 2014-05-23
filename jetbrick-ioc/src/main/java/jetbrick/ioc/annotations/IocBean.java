@@ -19,9 +19,10 @@
 package jetbrick.ioc.annotations;
 
 import java.lang.annotation.*;
+import jetbrick.lang.annotations.ValueConstants;
 
 /**
- * ï¿½ï¿½ @IocBean ï¿½ï¿½×¢ï¿½Ä¶ï¿½Ó¦ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½ëµ½ï¿½ï¿½ï¿½ï¿½Ø£ï¿½ ï¿½ï¿½ï¿½ß½ï¿½ @IocBean ï¿½ï¿½×¢ï¿½Ä·ï¿½ï¿½ï¿½ï¿½Ä·ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ëµ½ï¿½ï¿½ï¿½ï¿½ï¿½.
+ * ËùÓÐ±ê×¢ÁË @IocBean µÄ Class ½«»á±» IoC ÈÝÆ÷¹ÜÀí.
  *
  * @author Guoqiang Chen
  */
@@ -32,6 +33,6 @@ public @interface IocBean {
 
     String value() default ValueConstants.EMPTY;
 
-    boolean singleton() default ValueConstants.SINGLETONE;
+    boolean singleton() default IocConstants.SINGLETONE;
 
 }

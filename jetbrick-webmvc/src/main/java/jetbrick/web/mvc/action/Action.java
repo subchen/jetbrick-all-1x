@@ -19,7 +19,7 @@
 package jetbrick.web.mvc.action;
 
 import java.lang.annotation.*;
-import jetbrick.web.mvc.action.annotations.ValueConstants;
+import jetbrick.lang.annotations.ValueConstants;
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

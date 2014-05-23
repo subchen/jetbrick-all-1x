@@ -19,7 +19,8 @@
 package jetbrick.web.mvc.action;
 
 import java.lang.annotation.*;
-import jetbrick.web.mvc.action.annotations.ValueConstants;
+import jetbrick.ioc.annotations.IocConstants;
+import jetbrick.lang.annotations.ValueConstants;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -28,6 +29,6 @@ public @interface Controller {
 
     String value() default ValueConstants.EMPTY;
 
-    boolean singleton() default ValueConstants.SINGLETONE;
+    boolean singleton() default IocConstants.SINGLETONE;
 
 }

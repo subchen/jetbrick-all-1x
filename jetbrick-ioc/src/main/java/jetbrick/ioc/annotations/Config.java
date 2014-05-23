@@ -21,6 +21,7 @@ package jetbrick.ioc.annotations;
 import java.lang.annotation.*;
 import jetbrick.ioc.injectors.ConfigFieldInjector;
 import jetbrick.ioc.injectors.ConfigParameterInjector;
+import jetbrick.lang.annotations.ValueConstants;
 
 /**
  * 将配置文件中配置的内容注入到字段中/构造函数参数.
@@ -36,7 +37,7 @@ public @interface Config {
 
     String value();
 
-    boolean required() default ValueConstants.REQUIRED;
+    boolean required() default IocConstants.REQUIRED;
 
     String defaultValue() default ValueConstants.NULL;
 

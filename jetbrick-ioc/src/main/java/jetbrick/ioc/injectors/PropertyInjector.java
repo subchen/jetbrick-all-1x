@@ -18,19 +18,19 @@
  */
 package jetbrick.ioc.injectors;
 
-import jetbrick.beans.introspectors.PropertyDescriptor;
+import jetbrick.reflect.PropertyInfo;
 
 // 注入配置文件中的属性
 public class PropertyInjector {
-    private final PropertyDescriptor pd;
+    private final PropertyInfo prop;
     private final Object value;
 
-    public PropertyInjector(PropertyDescriptor pd, Object value) {
-        this.pd = pd;
+    public PropertyInjector(PropertyInfo prop, Object value) {
+        this.prop = prop;
         this.value = value;
     }
 
     public void set(Object object) throws Exception {
-        pd.invokeSetter(object, value);
+        prop.set(object, value);
     }
 }

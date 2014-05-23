@@ -21,55 +21,57 @@ package jetbrick.ioc.objects;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
-import jetbrick.beans.introspectors.*;
 import jetbrick.io.config.Configuration;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.*;
 import jetbrick.ioc.injectors.*;
 import jetbrick.lang.ExceptionUtils;
+import jetbrick.reflect.*;
 
 class IocObjectUtils {
 
     //---------------------------------------------------------------------------
     // @Inject 标注的构造函数
-    public static CtorInjector doGetCtorInjector(Ioc ioc, ClassDescriptor meta) {
-        ConstructorDescriptor ctor = null;
+    public static CtorInjector doGetCtorInjector(Ioc ioc, KlassInfo klass) {
+        ConstructorInfo found = null;
 
         // 找到对应的构造函数
-        for (ConstructorDescriptor descriptor : meta.getConstructorDescriptors()) {
-            Inject ref = descriptor.getAnnotation(Inject.class);
+        for (ConstructorInfo ctor : klass.getDeclaredConstructors()) {
+            Inject ref = ctor.getAnnotation(Inject.class);
             if (ref != null) {
-                if (ctor != null) {
-                    throw new IllegalStateException("More than two constructors are annotated as injection points in bean: " + meta);
+                if (found != null) {
+                    throw new IllegalStateException("More than two constructors are annotated as injection points in bean: " + klass);
                 }
-                ctor = descriptor;
+                found = ctor;
             }
         }
-        if (ctor == null) {
+        if (found == null) {
             return null;
         }
 
         // 构造函数参数
-        ParameterInjector[] parameters = ParameterInjector.EMPTY_ARRAY;
-        Class<?>[] parameterTypes = ctor.getRawParameterTypes();
-        Annotation[][] parameterAnnotations = ctor.getRawParameterAnnotations();
-        if (parameterTypes.length > 0) {
-            parameters = new ParameterInjector[parameterTypes.length];
-            for (int i = 0; i < parameters.length; i++) {
+        ParameterInjector[] injectors = ParameterInjector.EMPTY_ARRAY;
+        List<ParameterInfo> parameters = found.getParameters();
+        int size = parameters.size();
+        if (size > 0) {
+            injectors = new ParameterInjector[size];
+            for (int i = 0; i < size; i++) {
+                ParameterInfo parameter = parameters.get(i);
+
                 Class<?> parameterInjectorClass = DefaultParameterInjector.class;
                 Annotation parameterAnnotation = null;
                 // 查找 @Inject/@Config 等标注
-                for (Annotation anno : parameterAnnotations[i]) {
-                    InjectParameterWith with = anno.annotationType().getAnnotation(InjectParameterWith.class);
+                for (Annotation annotation : parameter.getAnnotations()) {
+                    InjectParameterWith with = annotation.annotationType().getAnnotation(InjectParameterWith.class);
                     if (with != null) {
                         parameterInjectorClass = with.value();
-                        parameterAnnotation = anno;
+                        parameterAnnotation = annotation;
                         break;
                     }
                 }
                 try {
-                    parameters[i] = (ParameterInjector) parameterInjectorClass.newInstance();
-                    parameters[i].initialize(ioc, parameterTypes[i], parameterAnnotation);
+                    injectors[i] = (ParameterInjector) parameterInjectorClass.newInstance();
+                    injectors[i].initialize(ioc, klass, parameter, parameterAnnotation);
                 } catch (Exception e) {
                     throw ExceptionUtils.unchecked(e);
                 }
@@ -77,19 +79,19 @@ class IocObjectUtils {
         }
 
         //
-        return new CtorInjector(ctor.getConstructor(), parameters);
+        return new CtorInjector(found, injectors);
     }
 
     // @Inject/@Config 等标注的字段
-    public static List<FieldInjector> doGetFieldInjectors(Ioc ioc, ClassDescriptor meta) {
+    public static List<FieldInjector> doGetFieldInjectors(Ioc ioc, KlassInfo klass) {
         List<FieldInjector> injectors = new ArrayList<FieldInjector>(8);
-        for (FieldDescriptor fd : meta.getFieldDescriptors()) {
-            for (Annotation anno : fd.getAnnotations()) {
-                InjectFieldWith with = anno.annotationType().getAnnotation(InjectFieldWith.class);
+        for (FieldInfo field : klass.getFields()) {
+            for (Annotation annotation : field.getAnnotations()) {
+                InjectFieldWith with = annotation.annotationType().getAnnotation(InjectFieldWith.class);
                 if (with != null) {
                     try {
                         FieldInjector injector = with.value().newInstance();
-                        injector.initialize(ioc, fd, anno);
+                        injector.initialize(ioc, klass, field, annotation);
                         injectors.add(injector);
                     } catch (Exception e) {
                         throw ExceptionUtils.unchecked(e);
@@ -104,44 +106,45 @@ class IocObjectUtils {
     }
 
     // 注入配置文件中自定义的属性字段
-    public static List<PropertyInjector> doGetPropertyInjectors(Ioc ioc, ClassDescriptor meta, Configuration properties) {
+    public static List<PropertyInjector> doGetPropertyInjectors(Ioc ioc, KlassInfo klass, Configuration properties) {
         if (properties == null || properties.size() == 0) {
             return Collections.emptyList();
         }
         List<PropertyInjector> injectors = new ArrayList<PropertyInjector>();
         for (String name : properties.keySet()) {
-            PropertyDescriptor pd = meta.getPropertyDescriptor(name);
-            if (pd == null) {
-                throw new IllegalStateException("Property not found: " + meta.toString() + "#" + name);
+            PropertyInfo prop = klass.getProperty(name);
+            if (prop == null) {
+                throw new IllegalStateException("Property not found: " + klass + "#" + name);
             }
-            if (!pd.writable()) {
-                throw new IllegalStateException("Property not writable: " + pd);
+            if (!prop.writable()) {
+                throw new IllegalStateException("Property not writable: " + prop);
             }
 
             Object value;
-            if (List.class.isAssignableFrom(pd.getRawType())) {
-                value = properties.getValueList(pd.getName(), pd.getRawComponentType(0));
+            Class<?> rawType = prop.getRawType(klass.getType());
+            if (List.class.isAssignableFrom(rawType)) {
+                value = properties.getValueList(prop.getName(), prop.getRawComponentType(klass.getType(), 0));
             } else {
-                value = properties.getValue(pd.getName(), pd.getRawType(), null);
+                value = properties.getValue(prop.getName(), rawType, null);
             }
-            injectors.add(new PropertyInjector(pd, value));
+            injectors.add(new PropertyInjector(prop, value));
         }
         return injectors;
     }
 
     // @Initialize 标注的函数
-    public static Method doGetInitializeMethod(ClassDescriptor meta) {
-        MethodDescriptor found = null;
-        for (MethodDescriptor md : meta.getMethodDescriptors()) {
-            IocInit ref = md.getAnnotation(IocInit.class);
+    public static Method doGetInitializeMethod(KlassInfo klass) {
+        MethodInfo found = null;
+        for (MethodInfo method : klass.getMethods()) {
+            IocInit ref = method.getAnnotation(IocInit.class);
             if (ref != null) {
                 if (found != null) {
-                    throw new IllegalStateException("More than two methods are annotated @Initialize in bean: " + meta);
+                    throw new IllegalStateException("More than two methods are annotated @Initialize in bean: " + klass);
                 }
-                if (md.getRawParameterTypes().length != 0) {
+                if (method.getParameterCount() != 0) {
                     throw new IllegalStateException("@Initialize method parameters must be empty.");
                 }
-                found = md;
+                found = method;
             }
         }
         return (found == null) ? null : found.getMethod();

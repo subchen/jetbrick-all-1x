@@ -19,7 +19,9 @@
 package jetbrick.web.mvc.action.annotations;
 
 import java.lang.annotation.*;
+import jetbrick.ioc.annotations.IocConstants;
 import jetbrick.ioc.annotations.ManagedWith;
+import jetbrick.lang.annotations.ValueConstants;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
@@ -28,7 +30,7 @@ public @interface InitParameter {
 
     String value();
 
-    boolean required() default ValueConstants.REQUIRED;
+    boolean required() default IocConstants.REQUIRED;
 
     String defaultValue() default ValueConstants.NULL;
 

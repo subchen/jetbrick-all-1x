@@ -18,20 +18,20 @@
  */
 package jetbrick.web.mvc.action;
 
-import jetbrick.beans.introspectors.MethodDescriptor;
+import jetbrick.reflect.MethodInfo;
 import jetbrick.web.mvc.RequestContext;
 import jetbrick.web.mvc.ResultInfo;
 import jetbrick.web.mvc.router.UrlTemplate;
 
 public final class ActionInfo {
-    private final ControllerInfo ctrlInfo;
-    private final MethodDescriptor action;
+    private final ControllerInfo controller;
+    private final MethodInfo action;
     private final UrlTemplate urlTemplate;
-    private MethodInjector methodInjector;
+    private ActionMethodInjector methodInjector;
     private boolean initialized;
 
-    public ActionInfo(ControllerInfo ctrlInfo, MethodDescriptor action, String url) {
-        this.ctrlInfo = ctrlInfo;
+    public ActionInfo(ControllerInfo controller, MethodInfo action, String url) {
+        this.controller = controller;
         this.action = action;
         this.urlTemplate = new UrlTemplate(url);
         this.initialized = false;
@@ -41,7 +41,7 @@ public final class ActionInfo {
         if (initialized == false) {
             synchronized (this) {
                 if (initialized == false) {
-                    methodInjector = MethodInjector.create(action);
+                    methodInjector = ActionMethodInjector.create(action, controller.getType());
                     initialized = true;
                 }
             }
@@ -56,9 +56,9 @@ public final class ActionInfo {
     public ResultInfo execute(RequestContext ctx) throws Exception {
         initialize();
 
-        Object object = ctrlInfo.getObject();
+        Object object = controller.getObject();
         Object result = methodInjector.invoke(object, ctx);
 
-        return new ResultInfo(action.getRawReturnType(), result);
+        return new ResultInfo(action.getRawReturnType(controller.getType()), result);
     }
 }
