@@ -22,7 +22,7 @@ import java.lang.annotation.*;
 import jetbrick.lang.annotations.ValueConstants;
 
 /**
- * ���б�ע�� @IocBean �� Class ���ᱻ IoC ��������.
+ * 被 IoC 自动管理的对象标注.
  *
  * @author Guoqiang Chen
  */
