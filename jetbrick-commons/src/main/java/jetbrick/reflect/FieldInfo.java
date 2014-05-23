@@ -24,6 +24,11 @@ import jetbrick.beans.TypeResolverUtils;
 import jetbrick.lang.ExceptionUtils;
 import jetbrick.reflect.asm.ASMAccessor;
 
+/**
+ * 代表一个字段.
+ * 
+ * @author Guoqiang Chen
+ */
 public final class FieldInfo implements Comparable<FieldInfo>, Getter, Setter {
     private final KlassInfo declaringKlass;
     private final Field field;
@@ -65,12 +70,12 @@ public final class FieldInfo implements Comparable<FieldInfo>, Getter, Setter {
         return field.getGenericType();
     }
 
-    public Class<?> getRawType(Class<?> declaringKlass) {
-        return TypeResolverUtils.getRawType(field.getGenericType(), declaringKlass);
+    public Class<?> getRawType(Class<?> declaringClass) {
+        return TypeResolverUtils.getRawType(field.getGenericType(), declaringClass);
     }
 
-    public Class<?> getRawComponentType(Class<?> declaringKlass, int componentIndex) {
-        return TypeResolverUtils.getComponentType(field.getGenericType(), declaringKlass, componentIndex);
+    public Class<?> getRawComponentType(Class<?> declaringClass, int componentIndex) {
+        return TypeResolverUtils.getComponentType(field.getGenericType(), declaringClass, componentIndex);
     }
 
     public Annotation[] getAnnotations() {

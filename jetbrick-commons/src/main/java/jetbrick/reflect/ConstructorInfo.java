@@ -19,15 +19,24 @@
 package jetbrick.reflect;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Type;
 import jetbrick.lang.ExceptionUtils;
 import jetbrick.reflect.asm.ASMAccessor;
 
-public final class ConstructorInfo implements Executable, Creater, Comparable<ConstructorInfo> {
+/**
+ * 代表一个构造函数.
+ * 
+ * @author Guoqiang Chen
+ */
+public final class ConstructorInfo extends Executable implements Creater, Comparable<ConstructorInfo> {
     private final KlassInfo declaringKlass;
     private final Constructor<?> constructor;
     private final int offset;
 
+    /**
+     * 将 Constructor 对象转成 ConstructorInfo 对象.
+     */
     public static ConstructorInfo create(Constructor<?> constructor) {
         KlassInfo klass = KlassInfo.create(constructor.getDeclaringClass());
         return klass.getDeclaredConstructor(constructor);
@@ -57,20 +66,6 @@ public final class ConstructorInfo implements Executable, Creater, Comparable<Co
     @Override
     public int getOffset() {
         return offset;
-    }
-
-    private ParameterInfo[] parameters;
-
-    @Override
-    public ParameterInfo[] getParameters() {
-        if (parameters == null) {
-            synchronized (this) {
-                if (parameters == null) {
-                    parameters = ExecutableUtils.getParameterInfo(this);
-                }
-            }
-        }
-        return parameters;
     }
 
     @Override
@@ -123,21 +118,6 @@ public final class ConstructorInfo implements Executable, Creater, Comparable<Co
     }
 
     @Override
-    public boolean isPrivate() {
-        return Modifier.isPrivate(getModifiers());
-    }
-
-    @Override
-    public boolean isProtected() {
-        return Modifier.isProtected(getModifiers());
-    }
-
-    @Override
-    public boolean isPublic() {
-        return Modifier.isPublic(getModifiers());
-    }
-
-    @Override
     public Object newInstance(Object... args) {
         ASMAccessor accessor = declaringKlass.getASMAccessor();
         if (accessor == null) {
@@ -151,23 +131,8 @@ public final class ConstructorInfo implements Executable, Creater, Comparable<Co
         }
     }
 
-    private String descriptor;
-
-    @Override
-    public String getDescriptor() {
-        if (descriptor == null) {
-            descriptor = ExecutableUtils.getDescriptor(this);
-        }
-        return descriptor;
-    }
-
     @Override
     public int compareTo(ConstructorInfo o) {
         return getDescriptor().compareTo(o.getDescriptor());
-    }
-
-    @Override
-    public String toString() {
-        return getDescriptor();
     }
 }

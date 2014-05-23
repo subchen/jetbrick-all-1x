@@ -23,6 +23,7 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import jetbrick.lang.ExceptionUtils;
+import jetbrick.lang.Validate;
 import jetbrick.lang.concurrent.ConcurrentInitializer;
 import jetbrick.lang.concurrent.LazyInitializer;
 import jetbrick.reflect.Filters.FieldFilter;
@@ -30,14 +31,25 @@ import jetbrick.reflect.Filters.MethodFilter;
 import jetbrick.reflect.asm.ASMAccessor;
 import jetbrick.reflect.asm.ASMFactory;
 
+/**
+ * 代表一个 Class.
+ * 
+ * @author Guoqiang Chen
+ */
 public final class KlassInfo {
     private static final ConcurrentHashMap<Class<?>, KlassInfo> pool = new ConcurrentHashMap<Class<?>, KlassInfo>(128);
 
-    public static KlassInfo create(final Class<?> type) {
-        KlassInfo klass = pool.get(type);
+    /**
+     * 将 Class 对象转成 KlassInfo 对象 (有缓存).
+     * 
+     * @param clazz - 原始对象
+     * @return KlassInfo 对象
+     */
+    public static KlassInfo create(final Class<?> clazz) {
+        KlassInfo klass = pool.get(clazz);
         if (klass == null) {
-            klass = new KlassInfo(type);
-            KlassInfo old = pool.putIfAbsent(type, klass);
+            klass = new KlassInfo(clazz);
+            KlassInfo old = pool.putIfAbsent(clazz, klass);
             if (old != null) {
                 klass = old;
             }
@@ -45,27 +57,32 @@ public final class KlassInfo {
         return klass;
     }
 
-    private final Class<?> type;
+    private final Class<?> clazz;
 
     private KlassInfo(Class<?> type) {
-        this.type = type;
+        this.clazz = type;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Class<T> getType() {
+        return (Class<T>) clazz;
     }
 
     public String getName() {
-        return type.getName();
+        return clazz.getName();
     }
 
-    public Class<?> getType() {
-        return type;
+    public String getSimpleName() {
+        return clazz.getSimpleName();
     }
 
     public KlassInfo getSuperKlass() {
-        Class<?> superKlass = type.getSuperclass();
+        Class<?> superKlass = clazz.getSuperclass();
         return (superKlass == null) ? null : KlassInfo.create(superKlass);
     }
 
     public List<KlassInfo> getInterfaces() {
-        Class<?>[] interfaces = type.getInterfaces();
+        Class<?>[] interfaces = clazz.getInterfaces();
         if (interfaces.length == 0) {
             return Collections.emptyList();
         }
@@ -78,20 +95,20 @@ public final class KlassInfo {
 
     // ------------------------------------------------------------------
     public Annotation[] getAnnotations() {
-        return type.getAnnotations();
+        return clazz.getAnnotations();
     }
 
     public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
-        return type.getAnnotation(annotationClass);
+        return clazz.getAnnotation(annotationClass);
     }
 
     public <T extends Annotation> boolean isAnnotationPresent(Class<T> annotationClass) {
-        return type.isAnnotationPresent(annotationClass);
+        return clazz.isAnnotationPresent(annotationClass);
     }
 
     // ------------------------------------------------------------------
     public int getModifiers() {
-        return type.getModifiers();
+        return clazz.getModifiers();
     }
 
     public boolean isInterface() {
@@ -119,10 +136,10 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private final ConcurrentInitializer<List<ConstructorInfo>> declaredConstructorsGet = new LazyInitializer<List<ConstructorInfo>>() {
+    private final ConcurrentInitializer<List<ConstructorInfo>> declaredConstructorsGetter = new LazyInitializer<List<ConstructorInfo>>() {
         @Override
         protected List<ConstructorInfo> initialize() {
-            Constructor<?>[] constructors = type.getDeclaredConstructors();
+            Constructor<?>[] constructors = clazz.getDeclaredConstructors();
             if (constructors.length == 0) {
                 return Collections.emptyList();
             } else {
@@ -136,15 +153,15 @@ public final class KlassInfo {
     };
 
     public List<ConstructorInfo> getDeclaredConstructors() {
-        return declaredConstructorsGet.get();
+        return declaredConstructorsGetter.get();
     }
 
     public ConstructorInfo getDeclaredConstructor(Class<?>... parameterTypes) {
-        return searchExecutable(declaredConstructorsGet.get(), "<init>", parameterTypes);
+        return searchExecutable(declaredConstructorsGetter.get(), "<init>", parameterTypes);
     }
 
     public ConstructorInfo getDeclaredConstructor(Constructor<?> constructor) {
-        for (ConstructorInfo info : declaredConstructorsGet.get()) {
+        for (ConstructorInfo info : declaredConstructorsGetter.get()) {
             if (info.getConstructor() == constructor) {
                 return info;
             }
@@ -153,7 +170,7 @@ public final class KlassInfo {
     }
 
     public ConstructorInfo getDefaultConstructor() {
-        for (ConstructorInfo info : declaredConstructorsGet.get()) {
+        for (ConstructorInfo info : declaredConstructorsGetter.get()) {
             if (info.isDefault()) {
                 return info;
             }
@@ -162,10 +179,10 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private final ConcurrentInitializer<List<MethodInfo>> declaredMethodsGet = new LazyInitializer<List<MethodInfo>>() {
+    private final ConcurrentInitializer<List<MethodInfo>> declaredMethodsGetter = new LazyInitializer<List<MethodInfo>>() {
         @Override
         protected List<MethodInfo> initialize() {
-            Method[] methods = type.getDeclaredMethods();
+            Method[] methods = clazz.getDeclaredMethods();
             if (methods.length == 0) {
                 return Collections.emptyList();
             } else {
@@ -179,11 +196,11 @@ public final class KlassInfo {
     };
 
     public List<MethodInfo> getDeclaredMethods() {
-        return declaredMethodsGet.get();
+        return declaredMethodsGetter.get();
     }
 
     public List<MethodInfo> getDeclaredMethods(MethodFilter filter) {
-        List<MethodInfo> methods = declaredMethodsGet.get();
+        List<MethodInfo> methods = declaredMethodsGetter.get();
         if (methods.size() == 0) {
             return methods;
         }
@@ -197,11 +214,11 @@ public final class KlassInfo {
     }
 
     public MethodInfo getDeclaredMethod(String name, Class<?>... parameterTypes) {
-        return searchExecutable(declaredMethodsGet.get(), name, parameterTypes);
+        return searchExecutable(declaredMethodsGetter.get(), name, parameterTypes);
     }
 
     public MethodInfo getDeclaredMethod(Method method) {
-        for (MethodInfo info : declaredMethodsGet.get()) {
+        for (MethodInfo info : declaredMethodsGetter.get()) {
             if (info.getMethod() == method) {
                 return info;
             }
@@ -209,7 +226,7 @@ public final class KlassInfo {
         return null;
     }
 
-    private final ConcurrentInitializer<List<MethodInfo>> methodsGet = new LazyInitializer<List<MethodInfo>>() {
+    private final ConcurrentInitializer<List<MethodInfo>> methodsGetter = new LazyInitializer<List<MethodInfo>>() {
         @Override
         protected List<MethodInfo> initialize() {
             List<MethodInfo> results = new ArrayList<MethodInfo>();
@@ -223,11 +240,11 @@ public final class KlassInfo {
     };
 
     public List<MethodInfo> getMethods() {
-        return methodsGet.get();
+        return methodsGetter.get();
     }
 
     public List<MethodInfo> getMethods(MethodFilter filter) {
-        List<MethodInfo> methods = methodsGet.get();
+        List<MethodInfo> methods = methodsGetter.get();
         if (methods.size() == 0) {
             return methods;
         }
@@ -241,7 +258,7 @@ public final class KlassInfo {
     }
 
     public MethodInfo getMethod(String name, Class<?>... parameterTypes) {
-        return searchExecutable(methodsGet.get(), name, parameterTypes);
+        return searchExecutable(methodsGetter.get(), name, parameterTypes);
     }
 
     private <T extends Executable> T searchExecutable(List<T> list, String name, Class<?>... parameterTypes) {
@@ -266,10 +283,10 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private final ConcurrentInitializer<List<FieldInfo>> declaredFieldsGet = new LazyInitializer<List<FieldInfo>>() {
+    private final ConcurrentInitializer<List<FieldInfo>> declaredFieldsGetter = new LazyInitializer<List<FieldInfo>>() {
         @Override
         protected List<FieldInfo> initialize() {
-            Field[] fields = type.getDeclaredFields();
+            Field[] fields = clazz.getDeclaredFields();
             if (fields.length == 0) {
                 return Collections.emptyList();
             }
@@ -282,11 +299,11 @@ public final class KlassInfo {
     };
 
     public List<FieldInfo> getDeclaredFields() {
-        return declaredFieldsGet.get();
+        return declaredFieldsGetter.get();
     }
 
     public List<FieldInfo> getDeclaredFields(FieldFilter filter) {
-        List<FieldInfo> fields = declaredFieldsGet.get();
+        List<FieldInfo> fields = declaredFieldsGetter.get();
         if (fields.size() == 0) {
             return fields;
         }
@@ -300,7 +317,7 @@ public final class KlassInfo {
     }
 
     public FieldInfo getDeclaredField(String name) {
-        for (FieldInfo field : declaredFieldsGet.get()) {
+        for (FieldInfo field : declaredFieldsGetter.get()) {
             if (field.getName().equals(name)) {
                 return field;
             }
@@ -309,7 +326,7 @@ public final class KlassInfo {
     }
 
     public FieldInfo getDeclaredField(Field field) {
-        for (FieldInfo info : declaredFieldsGet.get()) {
+        for (FieldInfo info : declaredFieldsGetter.get()) {
             if (info.getField() == field) {
                 return info;
             }
@@ -317,7 +334,7 @@ public final class KlassInfo {
         return null;
     }
 
-    private final ConcurrentInitializer<List<FieldInfo>> fieldsGet = new LazyInitializer<List<FieldInfo>>() {
+    private final ConcurrentInitializer<List<FieldInfo>> fieldsGetter = new LazyInitializer<List<FieldInfo>>() {
         @Override
         protected List<FieldInfo> initialize() {
             List<FieldInfo> results = new ArrayList<FieldInfo>();
@@ -331,11 +348,11 @@ public final class KlassInfo {
     };
 
     public List<FieldInfo> getFields() {
-        return fieldsGet.get();
+        return fieldsGetter.get();
     }
 
     public List<FieldInfo> getFields(FieldFilter filter) {
-        List<FieldInfo> fields = fieldsGet.get();
+        List<FieldInfo> fields = fieldsGetter.get();
         if (fields.size() == 0) {
             return fields;
         }
@@ -349,7 +366,7 @@ public final class KlassInfo {
     }
 
     public FieldInfo getField(String name) {
-        for (FieldInfo field : fieldsGet.get()) {
+        for (FieldInfo field : fieldsGetter.get()) {
             if (field.getName().equals(name)) {
                 return field;
             }
@@ -358,10 +375,10 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private final ConcurrentInitializer<List<PropertyInfo>> propertiesGet = new LazyInitializer<List<PropertyInfo>>() {
+    private final ConcurrentInitializer<List<PropertyInfo>> propertiesGetter = new LazyInitializer<List<PropertyInfo>>() {
         @Override
         protected List<PropertyInfo> initialize() {
-            List<MethodInfo> methods = methodsGet.get();
+            List<MethodInfo> methods = methodsGetter.get();
             Map<String, PropertyInfo> map = new HashMap<String, PropertyInfo>(methods.size());
             for (MethodInfo method : methods) {
                 if (method.isStatic()) continue;
@@ -394,11 +411,11 @@ public final class KlassInfo {
     };
 
     public List<PropertyInfo> getProperties() {
-        return propertiesGet.get();
+        return propertiesGetter.get();
     }
 
     public PropertyInfo getProperty(String name) {
-        for (PropertyInfo prop : propertiesGet.get()) {
+        for (PropertyInfo prop : propertiesGetter.get()) {
             if (prop.getName().equals(name)) {
                 return prop;
             }
@@ -407,8 +424,8 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    private ASMAccessor asmAccessor;
-    private int asmCallNumber = 0;
+    private ASMAccessor asmAccessor; // ASM 生成的类的实例
+    private int asmCallNumber = 0; //  反射调用计数器，超过阈值，则使用 ASM 字节码增强技术
 
     protected ASMAccessor getASMAccessor() {
         if (asmAccessor == null) {
@@ -421,11 +438,14 @@ public final class KlassInfo {
         return asmAccessor;
     }
 
+    /**
+     * 调用默认的构造函数生成对象实例.
+     */
     public Object newInstance() {
         ASMAccessor accessor = getASMAccessor();
         if (accessor == null) {
             try {
-                return type.newInstance();
+                return clazz.newInstance();
             } catch (Exception e) {
                 throw ExceptionUtils.unchecked(e);
             }
@@ -435,7 +455,13 @@ public final class KlassInfo {
     }
 
     // ------------------------------------------------------------------
-    public Map<String, Object> asBeanMap(final Object object) {
+
+    /**
+     * 将一个 POJO 对象，转成一个 Map 对象.
+     */
+    public Map<String, Object> asBeanMap(final Object pojo) {
+        Validate.isInstanceOf(clazz, pojo);
+
         return new Map<String, Object>() {
 
             @Override
@@ -461,7 +487,7 @@ public final class KlassInfo {
                 if (key instanceof String) {
                     PropertyInfo prop = KlassInfo.this.getProperty((String) key);
                     if (prop != null) {
-                        return prop.get(object);
+                        return prop.get(pojo);
                     }
                 }
                 return null;
@@ -471,8 +497,8 @@ public final class KlassInfo {
             public Object put(String key, Object value) {
                 PropertyInfo prop = KlassInfo.this.getProperty(key);
                 if (prop != null) {
-                    Object old = prop.get(object);
-                    prop.set(object, value);
+                    Object old = prop.get(pojo);
+                    prop.set(pojo, value);
                     return old;
                 }
                 return null;
@@ -522,6 +548,6 @@ public final class KlassInfo {
     // ------------------------------------------------------------------
     @Override
     public String toString() {
-        return type.toString();
+        return clazz.toString();
     }
 }

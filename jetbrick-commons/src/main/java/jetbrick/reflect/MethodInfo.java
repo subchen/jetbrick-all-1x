@@ -25,7 +25,12 @@ import jetbrick.lang.ExceptionUtils;
 import jetbrick.lang.IdentifiedNameUtils;
 import jetbrick.reflect.asm.ASMAccessor;
 
-public final class MethodInfo implements Executable, Invoker, Comparable<MethodInfo> {
+/**
+ * 代表一个方法.
+ *
+ * @author Guoqiang Chen
+ */
+public final class MethodInfo extends Executable implements Invoker, Comparable<MethodInfo> {
     private final KlassInfo declaringKlass;
     private final Method method;
     private final int offset;
@@ -61,20 +66,6 @@ public final class MethodInfo implements Executable, Invoker, Comparable<MethodI
         return offset;
     }
 
-    private ParameterInfo[] parameters;
-
-    @Override
-    public ParameterInfo[] getParameters() {
-        if (parameters == null) {
-            synchronized (this) {
-                if (parameters == null) {
-                    parameters = ExecutableUtils.getParameterInfo(this);
-                }
-            }
-        }
-        return parameters;
-    }
-
     @Override
     public int getParameterCount() {
         return method.getParameterTypes().length;
@@ -103,12 +94,16 @@ public final class MethodInfo implements Executable, Invoker, Comparable<MethodI
         return method.getGenericReturnType();
     }
 
-    public Class<?> getRawReturnType(Class<?> declaringKlass) {
-        return TypeResolverUtils.getRawType(method.getGenericReturnType(), declaringKlass);
+    public Class<?> getRawReturnType(KlassInfo declaringKlass) {
+        return getRawReturnType(declaringKlass.getType());
     }
 
-    public Class<?> getRawReturnComponentType(Class<?> declaringKlass, int componentIndex) {
-        return TypeResolverUtils.getComponentType(method.getGenericReturnType(), declaringKlass, componentIndex);
+    public Class<?> getRawReturnType(Class<?> declaringClass) {
+        return TypeResolverUtils.getRawType(method.getGenericReturnType(), declaringClass);
+    }
+
+    public Class<?> getRawReturnComponentType(Class<?> declaringClass, int componentIndex) {
+        return TypeResolverUtils.getComponentType(method.getGenericReturnType(), declaringClass, componentIndex);
     }
 
     @Override
@@ -142,21 +137,6 @@ public final class MethodInfo implements Executable, Invoker, Comparable<MethodI
 
     public boolean isAbstract() {
         return Modifier.isAbstract(getModifiers());
-    }
-
-    @Override
-    public boolean isPrivate() {
-        return Modifier.isPrivate(getModifiers());
-    }
-
-    @Override
-    public boolean isProtected() {
-        return Modifier.isProtected(getModifiers());
-    }
-
-    @Override
-    public boolean isPublic() {
-        return Modifier.isPublic(getModifiers());
     }
 
     public boolean isFinal() {
@@ -218,23 +198,8 @@ public final class MethodInfo implements Executable, Invoker, Comparable<MethodI
         }
     }
 
-    private String descriptor;
-
-    @Override
-    public String getDescriptor() {
-        if (descriptor == null) {
-            descriptor = ExecutableUtils.getDescriptor(this);
-        }
-        return descriptor;
-    }
-
     @Override
     public int compareTo(MethodInfo o) {
         return getDescriptor().compareTo(o.getDescriptor());
-    }
-
-    @Override
-    public String toString() {
-        return getDescriptor();
     }
 }

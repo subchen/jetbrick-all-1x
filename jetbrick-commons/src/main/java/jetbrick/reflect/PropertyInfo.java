@@ -18,6 +18,11 @@
  */
 package jetbrick.reflect;
 
+/**
+ * 代表一个对象的 public 属性 (Getter, Setter).
+ * 
+ * @author Guoqiang Chen
+ */
 public final class PropertyInfo implements Getter, Setter {
     private final KlassInfo declaringKlass;
     private final String name;
@@ -47,22 +52,26 @@ public final class PropertyInfo implements Getter, Setter {
         throw new IllegalStateException("Invalid PropertyInfo: " + toString());
     }
 
-    public Class<?> getRawType(Class<?> declaringKlass) {
+    public Class<?> getRawType(KlassInfo declaringKlass) {
+        return getRawType(declaringKlass.getType());
+    }
+
+    public Class<?> getRawType(Class<?> declaringClass) {
         if (getter != null) {
-            return getter.getRawReturnType(declaringKlass);
+            return getter.getRawReturnType(declaringClass);
         }
         if (setter != null) {
-            return setter.getParameters()[0].getRawType(declaringKlass);
+            return setter.getParameters().get(0).getRawType(declaringClass);
         }
         throw new IllegalStateException("Invalid PropertyInfo: " + toString());
     }
 
-    public Class<?> getRawComponentType(Class<?> declaringKlass, int componentIndex) {
+    public Class<?> getRawComponentType(Class<?> declaringClass, int componentIndex) {
         if (getter != null) {
-            return getter.getRawReturnComponentType(declaringKlass, componentIndex);
+            return getter.getRawReturnComponentType(declaringClass, componentIndex);
         }
         if (setter != null) {
-            return setter.getParameters()[0].getRawComponentType(declaringKlass, componentIndex);
+            return setter.getParameters().get(0).getRawComponentType(declaringClass, componentIndex);
         }
         throw new IllegalStateException("Invalid PropertyInfo: " + toString());
     }

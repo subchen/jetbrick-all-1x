@@ -22,13 +22,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.List;
 import jetbrick.asm.*;
 import jetbrick.beans.ClassLoaderUtils;
 import jetbrick.beans.TypeResolverUtils;
 
+/**
+ * 表示一个方法参数或者构造函数参数.
+ * 
+ * @author Guoqiang Chen
+ */
 public final class ParameterInfo {
-    public static final ParameterInfo[] EMPTY_ARRAY = new ParameterInfo[0];
-
     private final Executable declaringExecutable;
     private final Class<?> type;
     private final Type genericType;
@@ -73,12 +77,16 @@ public final class ParameterInfo {
         return genericType;
     }
 
-    public Class<?> getRawType(Class<?> declaringKlass) {
-        return TypeResolverUtils.getRawType(genericType, declaringKlass);
+    public Class<?> getRawType(KlassInfo declaringKlass) {
+        return getRawType(declaringKlass.getType());
     }
 
-    public Class<?> getRawComponentType(Class<?> declaringKlass, int componentIndex) {
-        return TypeResolverUtils.getComponentType(genericType, declaringKlass, componentIndex);
+    public Class<?> getRawType(Class<?> declaringClass) {
+        return TypeResolverUtils.getRawType(genericType, declaringClass);
+    }
+
+    public Class<?> getRawComponentType(Class<?> declaringClass, int componentIndex) {
+        return TypeResolverUtils.getComponentType(genericType, declaringClass, componentIndex);
     }
 
     public Annotation[] getAnnotations() {
@@ -107,7 +115,7 @@ public final class ParameterInfo {
     // 使用 ASM 获取参数名称
     private static void receiveParameterNames(final KlassInfo declaringklass) {
         if (declaringklass.getType().getClassLoader() == null) {
-            // cannot find parameter name for class in class
+            // We can not find parameter name for class which is in JDK
             return;
         }
 
@@ -129,21 +137,22 @@ public final class ParameterInfo {
 
                 MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
                 return new MethodVisitor(Opcodes.ASM5, mv) {
-                    ParameterInfo[] parameters = method.getParameters();
-                    int parameterIndex = 0;
+                    List<ParameterInfo> parameters = method.getParameters();
 
                     @Override
                     public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
                         int offset = method.isStatic() ? index : index - 1;
-                        if (offset >= 0 && offset < parameters.length) {
-                            parameters[offset].name = name;
+                        if (offset >= 0 && offset < parameters.size()) {
+                            parameters.get(offset).name = name;
                         }
                         super.visitLocalVariable(name, desc, signature, start, end, index);
                     }
 
+                    int visitParameterIndex = 0; // JDK8 parameter name 是按照循序存储的，这里需要一个计数器
+
                     @Override
                     public void visitParameter(String name, int access) {
-                        parameters[parameterIndex++].name = name;
+                        parameters.get(visitParameterIndex++).name = name;
                         super.visitParameter(name, access);
                     }
                 };
@@ -171,6 +180,6 @@ public final class ParameterInfo {
                 }
                 return null;
             }
-        }, 0);
+        }, ClassReader.SKIP_CODE | ClassReader.SKIP_FRAMES);
     }
 }
