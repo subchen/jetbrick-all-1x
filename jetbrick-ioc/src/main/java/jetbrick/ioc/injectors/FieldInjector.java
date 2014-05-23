@@ -26,8 +26,53 @@ import jetbrick.reflect.KlassInfo;
 // 负责注入字段
 public interface FieldInjector {
 
-    public void initialize(Ioc ioc, KlassInfo declaringKlass, FieldInfo field, Annotation annotation);
+    public void initialize(FieldContext ctx);
 
     public void set(Object object) throws Exception;
 
+    public static class FieldContext {
+        final Ioc ioc;
+        final KlassInfo declaringKlass;
+        final FieldInfo field;
+        final Annotation annotation;
+
+        public FieldContext(Ioc ioc, KlassInfo declaringKlass, FieldInfo field, Annotation annotation) {
+            this.ioc = ioc;
+            this.declaringKlass = declaringKlass;
+            this.field = field;
+            this.annotation = annotation;
+        }
+
+        public Ioc getIoc() {
+            return ioc;
+        }
+
+        public KlassInfo getDeclaringKlass() {
+            return declaringKlass;
+        }
+
+        public FieldInfo getField() {
+            return field;
+        }
+
+        public Annotation getAnnotation() {
+            return annotation;
+        }
+
+        public String getFieldName() {
+            return field.getName();
+        }
+
+        public Class<?> getRawFieldType() {
+            return field.getRawType(declaringKlass);
+        }
+
+        public Class<?> getRawFieldComponentType(int index) {
+            return field.getRawComponentType(declaringKlass.getType(), index);
+        }
+
+        public String getRawFieldTypeName() {
+            return getRawFieldType().getName();
+        }
+    }
 }

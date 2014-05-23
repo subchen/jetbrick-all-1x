@@ -25,6 +25,7 @@ import jetbrick.io.config.Configuration;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.*;
 import jetbrick.ioc.injectors.*;
+import jetbrick.ioc.injectors.FieldInjector.FieldContext;
 import jetbrick.lang.ExceptionUtils;
 import jetbrick.reflect.*;
 
@@ -91,7 +92,8 @@ class IocObjectUtils {
                 if (with != null) {
                     try {
                         FieldInjector injector = with.value().newInstance();
-                        injector.initialize(ioc, klass, field, annotation);
+                        FieldContext ctx = new FieldContext(ioc, klass, field, annotation);
+                        injector.initialize(ctx);
                         injectors.add(injector);
                     } catch (Exception e) {
                         throw ExceptionUtils.unchecked(e);

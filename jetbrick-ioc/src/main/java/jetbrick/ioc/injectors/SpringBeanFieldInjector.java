@@ -25,7 +25,6 @@ import jetbrick.ioc.annotations.SpringBean;
 import jetbrick.lang.Validate;
 import jetbrick.lang.annotations.ValueConstants;
 import jetbrick.reflect.FieldInfo;
-import jetbrick.reflect.KlassInfo;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -37,13 +36,14 @@ public class SpringBeanFieldInjector implements FieldInjector {
     private boolean required;
 
     @Override
-    public void initialize(Ioc ioc, KlassInfo declaringKlass, FieldInfo field, Annotation annotation) {
+    public void initialize(FieldContext ctx) {
+        Annotation annotation = ctx.getAnnotation();
         Validate.isInstanceOf(SpringBean.class, annotation);
 
         SpringBean inject = (SpringBean) annotation;
-        this.appctx = getApplicationContext(ioc);
-        this.field = field;
-        this.name = ValueConstants.defaultValue(inject.value(), field.getRawType(declaringKlass).getName());
+        this.appctx = getApplicationContext(ctx.getIoc());
+        this.field = ctx.getField();
+        this.name = ValueConstants.defaultValue(inject.value(), ctx.getFieldName()); // 默认取字段名
         this.required = inject.required();
     }
 
@@ -69,7 +69,7 @@ public class SpringBeanFieldInjector implements FieldInjector {
     public void set(Object object) throws Exception {
         Object value = appctx.getBean(name);
         if (value == null && required) {
-            throw new IllegalStateException("Can't inject bean: " + name + " for field: " + object.getClass().getName() + '#' + field.getName());
+            throw new IllegalStateException("Can't inject bean: " + name + " for field: " + field);
         }
         field.set(object, value);
     }

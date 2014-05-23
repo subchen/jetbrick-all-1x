@@ -25,7 +25,6 @@ import jetbrick.ioc.annotations.Config;
 import jetbrick.lang.Validate;
 import jetbrick.lang.annotations.ValueConstants;
 import jetbrick.reflect.FieldInfo;
-import jetbrick.reflect.KlassInfo;
 
 // 注入 @Config 标注的字段
 public class ConfigFieldInjector implements FieldInjector {
@@ -34,31 +33,33 @@ public class ConfigFieldInjector implements FieldInjector {
     private Object value;
 
     @Override
-    public void initialize(Ioc ioc, KlassInfo declaringKlass, FieldInfo field, Annotation annotation) {
+    public void initialize(FieldContext ctx) {
+        Annotation annotation = ctx.getAnnotation();
         Validate.isInstanceOf(Config.class, annotation);
 
         Config config = (Config) annotation;
-        this.field = field;
+        this.field = ctx.getField();
         this.required = config.required();
 
         // 类型转换
-        Class<?> type = field.getRawType(declaringKlass);
-        if (List.class == type) {
-            Class<?> elementType = field.getRawComponentType(declaringKlass.getType(), 0);
+        Ioc ioc = ctx.getIoc();
+        Class<?> clazz = ctx.getRawFieldType();
+        if (List.class == clazz) {
+            Class<?> elementType = ctx.getRawFieldComponentType(0);
             value = ioc.getConfigAsList(config.value(), elementType);
-        } else if (type.isArray()) {
-            Class<?> elementType = type.getComponentType();
+        } else if (clazz.isArray()) {
+            Class<?> elementType = clazz.getComponentType();
             value = ioc.getConfigAsArray(config.value(), elementType);
         } else {
-            String defaultValue = ValueConstants.defaultValue(config.defaultValue(), null);
-            value = ioc.getConfig(config.value(), type, defaultValue);
+            String defaultValue = ValueConstants.trimToNull(config.defaultValue());
+            value = ioc.getConfig(config.value(), clazz, defaultValue);
         }
     }
 
     @Override
     public void set(Object object) throws Exception {
         if (value == null && required) {
-            throw new IllegalStateException("Can't inject field: " + object.getClass().getName() + '#' + field.getName());
+            throw new IllegalStateException("Can't inject field: " + field);
         }
         field.set(object, value);
     }

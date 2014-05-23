@@ -24,7 +24,6 @@ import jetbrick.ioc.annotations.Inject;
 import jetbrick.lang.Validate;
 import jetbrick.lang.annotations.ValueConstants;
 import jetbrick.reflect.FieldInfo;
-import jetbrick.reflect.KlassInfo;
 
 //注入 @Inject 标注的字段
 public class InjectFieldInjector implements FieldInjector {
@@ -34,13 +33,14 @@ public class InjectFieldInjector implements FieldInjector {
     private boolean required;
 
     @Override
-    public void initialize(Ioc ioc, KlassInfo declaringKlass, FieldInfo field, Annotation annotation) {
+    public void initialize(FieldContext ctx) {
+        Annotation annotation = ctx.getAnnotation();
         Validate.isInstanceOf(Inject.class, annotation);
 
         Inject inject = (Inject) annotation;
-        this.ioc = ioc;
-        this.field = field;
-        this.name = ValueConstants.defaultValue(inject.value(), field.getRawType(declaringKlass).getName());
+        this.ioc = ctx.getIoc();
+        this.field = ctx.getField();
+        this.name = ValueConstants.defaultValue(inject.value(), ctx.getRawFieldTypeName()); // 默认是字段类型名
         this.required = inject.required();
     }
 
@@ -48,7 +48,7 @@ public class InjectFieldInjector implements FieldInjector {
     public void set(Object object) throws Exception {
         Object value = ioc.getBean(name);
         if (value == null && required) {
-            throw new IllegalStateException("Can't inject bean: " + name + " for field: " + object.getClass().getName() + '#' + field.getName());
+            throw new IllegalStateException("Can't inject bean: " + name + " for field: " + field);
         }
         field.set(object, value);
     }
