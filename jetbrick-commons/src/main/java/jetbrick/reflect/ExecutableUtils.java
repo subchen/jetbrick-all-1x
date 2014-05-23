@@ -16,41 +16,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.beans;
+package jetbrick.reflect;
 
 import java.util.List;
-import jetbrick.reflect.*;
+import jetbrick.beans.ClassUtils;
 
-public class ExecutableLookupUtils {
+final class ExecutableUtils {
 
     /**
-     * 根据参数类型，查找最匹配的方法。
+     * 查找完全匹配的方法或者构造函数
      */
-    public static MethodInfo lookupMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
-        KlassInfo klass = KlassInfo.create(clazz);
-        MethodInfo method = klass.getMethod(methodName, parameterTypes);
-        if (method == null) {
-            method = (MethodInfo) lookupBestExecutable(clazz, klass.getMethods(), methodName, parameterTypes);
+    public static <T extends Executable> T searchExecutable(List<T> executables, String name, Class<?>... parameterTypes) {
+        for (T info : executables) {
+            if (info.getName().equals(name)) {
+                Class<?>[] types = info.getParameterTypes();
+                if (parameterTypes.length == types.length) {
+                    boolean match = true;
+                    for (int i = 0; i < parameterTypes.length; i++) {
+                        if (types[i] != parameterTypes[i]) {
+                            match = false;
+                            break;
+                        }
+                    }
+                    if (match) {
+                        return info;
+                    }
+                }
+            }
         }
-        return method;
+        return null;
     }
 
     /**
-     * 根据参数类型，查找最匹配的构造函数。
+     * 查找最佳匹配的方法或者构造函数
      */
-    public static ConstructorInfo lookupConstructor(Class<?> clazz, Class<?>... parameterTypes) {
-        KlassInfo klass = KlassInfo.create(clazz);
-        ConstructorInfo constructor = klass.getDeclaredConstructor(parameterTypes);
-        if (constructor == null) {
-            constructor = (ConstructorInfo) lookupBestExecutable(clazz, klass.getDeclaredConstructors(), "<init>", parameterTypes);
-        }
-        return constructor;
-    }
-
-    /**
-     * 查找最佳匹配
-     */
-    public static Executable lookupBestExecutable(Class<?> declaringClass, List<? extends Executable> executables, String name, Class<?>... parameterTypes) {
+    public static Executable searchBestExecutable(Class<?> declaringClass, List<? extends Executable> executables, String name, Class<?>... parameterTypes) {
         Executable best = null;
         Class<?>[] bestParametersTypes = null;
 
@@ -58,7 +58,7 @@ public class ExecutableLookupUtils {
             if (!execute.getName().equals(name)) continue;
 
             Class<?>[] types = execute.getRawParameterTypes(declaringClass);
-            if (isParameterTypesCampatible(types, parameterTypes, execute.isVarArgs(), false)) {
+            if (isParameterTypesCompatible(types, parameterTypes, execute.isVarArgs(), false)) {
                 // 可能有多个方法与实际参数类型兼容。采用就近兼容原则。
                 if (best == null) {
                     best = execute;
@@ -69,7 +69,7 @@ public class ExecutableLookupUtils {
                 } else if ((!best.isVarArgs()) && execute.isVarArgs()) {
                     // no change
                 } else {
-                    if (isParameterTypesCampatible(bestParametersTypes, types, best.isVarArgs(), execute.isVarArgs())) {
+                    if (isParameterTypesCompatible(bestParametersTypes, types, best.isVarArgs(), execute.isVarArgs())) {
                         best = execute;
                         bestParametersTypes = types;
                     }
@@ -82,7 +82,7 @@ public class ExecutableLookupUtils {
     /**
      * 判断参数列表是否兼容, 支持可变参数
      */
-    public static boolean isParameterTypesCampatible(Class<?>[] lhs, Class<?>[] rhs, boolean lhsVarArgs, boolean rhsVarArgs) {
+    public static boolean isParameterTypesCompatible(Class<?>[] lhs, Class<?>[] rhs, boolean lhsVarArgs, boolean rhsVarArgs) {
         if (lhs == null) {
             return rhs == null || rhs.length == 0;
         }

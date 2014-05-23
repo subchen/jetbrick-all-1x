@@ -20,7 +20,6 @@ package jetbrick.reflect;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import jetbrick.beans.TypeResolverUtils;
 import jetbrick.lang.ExceptionUtils;
 import jetbrick.lang.IdentifiedNameUtils;
 import jetbrick.reflect.asm.ASMAccessor;

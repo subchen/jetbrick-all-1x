@@ -25,7 +25,6 @@ import java.lang.reflect.Type;
 import java.util.List;
 import jetbrick.asm.*;
 import jetbrick.beans.ClassLoaderUtils;
-import jetbrick.beans.TypeResolverUtils;
 
 /**
  * 表示一个方法参数或者构造函数参数.

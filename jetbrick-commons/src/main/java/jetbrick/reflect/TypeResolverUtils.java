@@ -16,12 +16,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jetbrick.beans;
+package jetbrick.reflect;
 
 import java.lang.reflect.*;
 import jetbrick.lang.ArrayUtils;
 
-public class TypeResolverUtils {
+/**
+ * 根据类型定义，获取泛型信息.
+ *
+ * @author Guoqiang Chen
+ */
+public final class TypeResolverUtils {
 
     /**
      * Returns raw class for given <code>type</code>. Use this method with both

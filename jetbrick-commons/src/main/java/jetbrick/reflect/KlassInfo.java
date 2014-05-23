@@ -155,8 +155,22 @@ public final class KlassInfo {
         return declaredConstructorsGetter.get();
     }
 
+    /**
+     * 根据目标参数类型，查找完全匹配的构造函数。
+     */
     public ConstructorInfo getDeclaredConstructor(Class<?>... parameterTypes) {
-        return searchExecutable(declaredConstructorsGetter.get(), "<init>", parameterTypes);
+        return ExecutableUtils.searchExecutable(declaredConstructorsGetter.get(), "<init>", parameterTypes);
+    }
+
+    /**
+     * 根据目标参数类型，查找最佳匹配的构造函数。
+     */
+    public ConstructorInfo searchDeclaredConstructor(Class<?>... parameterTypes) {
+        ConstructorInfo constructor = ExecutableUtils.searchExecutable(declaredConstructorsGetter.get(), "<init>", parameterTypes);
+        if (constructor == null) {
+            constructor = (ConstructorInfo) ExecutableUtils.searchBestExecutable(clazz, declaredConstructorsGetter.get(), "<init>", parameterTypes);
+        }
+        return constructor;
     }
 
     public ConstructorInfo getDeclaredConstructor(Constructor<?> constructor) {
@@ -213,7 +227,7 @@ public final class KlassInfo {
     }
 
     public MethodInfo getDeclaredMethod(String name, Class<?>... parameterTypes) {
-        return searchExecutable(declaredMethodsGetter.get(), name, parameterTypes);
+        return ExecutableUtils.searchExecutable(declaredMethodsGetter.get(), name, parameterTypes);
     }
 
     public MethodInfo getDeclaredMethod(Method method) {
@@ -256,29 +270,22 @@ public final class KlassInfo {
         return results;
     }
 
+    /**
+     * 根据目标参数类型，查找完全匹配的方法。
+     */
     public MethodInfo getMethod(String name, Class<?>... parameterTypes) {
-        return searchExecutable(methodsGetter.get(), name, parameterTypes);
+        return ExecutableUtils.searchExecutable(methodsGetter.get(), name, parameterTypes);
     }
 
-    private <T extends Executable> T searchExecutable(List<T> list, String name, Class<?>... parameterTypes) {
-        for (T info : list) {
-            if (info.getName().equals(name)) {
-                Class<?>[] types = info.getParameterTypes();
-                if (parameterTypes.length == types.length) {
-                    boolean match = true;
-                    for (int i = 0; i < parameterTypes.length; i++) {
-                        if (types[i] != parameterTypes[i]) {
-                            match = false;
-                            break;
-                        }
-                    }
-                    if (match) {
-                        return info;
-                    }
-                }
-            }
+    /**
+     * 根据目标参数类型，查找最佳匹配的方法。
+     */
+    public MethodInfo searchMethod(String name, Class<?>... parameterTypes) {
+        MethodInfo method = ExecutableUtils.searchExecutable(methodsGetter.get(), name, parameterTypes);
+        if (method == null) {
+            method = (MethodInfo) ExecutableUtils.searchBestExecutable(clazz, methodsGetter.get(), name, parameterTypes);
         }
-        return null;
+        return method;
     }
 
     // ------------------------------------------------------------------
