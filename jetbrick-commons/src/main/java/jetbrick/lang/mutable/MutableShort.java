@@ -62,10 +62,7 @@ public final class MutableShort extends Number implements Comparable<MutableShor
     @Override
     public boolean equals(Object obj) {
         if (obj != null) {
-            if ((obj instanceof Short)) {
-                return value == ((Short) obj).shortValue();
-            }
-            if ((obj instanceof MutableShort)) {
+            if (obj instanceof MutableShort) {
                 return value == ((MutableShort) obj).value;
             }
         }

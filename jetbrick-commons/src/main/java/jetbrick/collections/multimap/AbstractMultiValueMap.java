@@ -18,9 +18,12 @@
  */
 package jetbrick.collections.multimap;
 
+import java.io.Serializable;
 import java.util.*;
 
-public abstract class AbstractMultiValueMap<K, V> implements MultiValueMap<K, V> {
+public abstract class AbstractMultiValueMap<K, V> implements MultiValueMap<K, V>, Serializable {
+    private static final long serialVersionUID = 1L;
+
     private final Map<K, List<V>> map;
 
     protected AbstractMultiValueMap(Map<K, List<V>> map) {

@@ -62,10 +62,7 @@ public final class MutableByte extends Number implements Comparable<MutableByte>
     @Override
     public boolean equals(Object obj) {
         if (obj != null) {
-            if ((obj instanceof Byte)) {
-                return value == ((Byte) obj).byteValue();
-            }
-            if ((obj instanceof MutableByte)) {
+            if (obj instanceof MutableByte) {
                 return value == ((MutableByte) obj).value;
             }
         }

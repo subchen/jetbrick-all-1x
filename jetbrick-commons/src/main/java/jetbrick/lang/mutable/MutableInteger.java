@@ -62,10 +62,7 @@ public final class MutableInteger extends Number implements Comparable<MutableIn
     @Override
     public boolean equals(Object obj) {
         if (obj != null) {
-            if ((obj instanceof Integer)) {
-                return value == ((Integer) obj).intValue();
-            }
-            if ((obj instanceof MutableInteger)) {
+            if (obj instanceof MutableInteger) {
                 return value == ((MutableInteger) obj).value;
             }
         }
