@@ -23,7 +23,6 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import jetbrick.lang.ExceptionUtils;
-import jetbrick.lang.Validate;
 import jetbrick.lang.concurrent.ConcurrentInitializer;
 import jetbrick.lang.concurrent.LazyInitializer;
 import jetbrick.reflect.Filters.FieldFilter;
@@ -33,7 +32,7 @@ import jetbrick.reflect.asm.ASMFactory;
 
 /**
  * 代表一个 Class.
- * 
+ *
  * @author Guoqiang Chen
  */
 public final class KlassInfo {
@@ -41,7 +40,7 @@ public final class KlassInfo {
 
     /**
      * 将 Class 对象转成 KlassInfo 对象 (有缓存).
-     * 
+     *
      * @param clazz - 原始对象
      * @return KlassInfo 对象
      */
@@ -452,97 +451,6 @@ public final class KlassInfo {
         } else {
             return accessor.newInstance();
         }
-    }
-
-    // ------------------------------------------------------------------
-
-    /**
-     * 将一个 POJO 对象，转成一个 Map 对象.
-     */
-    public Map<String, Object> asBeanMap(final Object pojo) {
-        Validate.isInstanceOf(clazz, pojo);
-
-        return new Map<String, Object>() {
-
-            @Override
-            public int size() {
-                return KlassInfo.this.getProperties().size();
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return KlassInfo.this.getProperties().isEmpty();
-            }
-
-            @Override
-            public boolean containsKey(Object key) {
-                if (key instanceof String) {
-                    return KlassInfo.this.getProperty((String) key) != null;
-                }
-                return false;
-            }
-
-            @Override
-            public Object get(Object key) {
-                if (key instanceof String) {
-                    PropertyInfo prop = KlassInfo.this.getProperty((String) key);
-                    if (prop != null) {
-                        return prop.get(pojo);
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            public Object put(String key, Object value) {
-                PropertyInfo prop = KlassInfo.this.getProperty(key);
-                if (prop != null) {
-                    Object old = prop.get(pojo);
-                    prop.set(pojo, value);
-                    return old;
-                }
-                return null;
-            }
-
-            @Override
-            public Set<java.util.Map.Entry<String, Object>> entrySet() {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public boolean containsValue(Object value) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public Object remove(Object key) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public void putAll(Map<? extends String, ? extends Object> m) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public void clear() {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public Set<String> keySet() {
-                Set<String> set = new HashSet<String>();
-                for (PropertyInfo prop : KlassInfo.this.getProperties()) {
-                    set.add(prop.getName());
-                }
-                return set;
-            }
-
-            @Override
-            public Collection<Object> values() {
-                throw new UnsupportedOperationException();
-            }
-        };
     }
 
     // ------------------------------------------------------------------

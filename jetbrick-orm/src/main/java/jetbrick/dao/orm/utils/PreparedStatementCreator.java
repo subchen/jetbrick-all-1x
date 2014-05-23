@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 import jetbrick.beans.ClassUtils;
 import jetbrick.collections.iterators.ArrayIterator;
 import jetbrick.lang.StringUtils;
-import jetbrick.reflect.KlassInfo;
+import jetbrick.reflect.BeanMap;
 
 public class PreparedStatementCreator {
     private static final Pattern namedParameterPattern = Pattern.compile("\\:([a-zA-Z0-9_]+)");
@@ -46,7 +46,7 @@ public class PreparedStatementCreator {
             } else if (clazz.isPrimitive() || clazz.getName().startsWith("java.")) {
                 return createByIterator(conn, sql, new ArrayIterator(parameters));
             } else {
-                Map<String, Object> beanMap = KlassInfo.create(clazz).asBeanMap(value);
+                Map<String, Object> beanMap = new BeanMap(value);
                 return createByMap(conn, sql, beanMap);
             }
         } else {
