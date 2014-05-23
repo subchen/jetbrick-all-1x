@@ -26,6 +26,7 @@ import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.*;
 import jetbrick.ioc.injectors.*;
 import jetbrick.ioc.injectors.FieldInjector.FieldContext;
+import jetbrick.ioc.injectors.ParameterInjector.ParameterContext;
 import jetbrick.lang.ExceptionUtils;
 import jetbrick.reflect.*;
 
@@ -72,7 +73,8 @@ class IocObjectUtils {
                 }
                 try {
                     injectors[i] = (ParameterInjector) parameterInjectorClass.newInstance();
-                    injectors[i].initialize(ioc, klass, parameter, parameterAnnotation);
+                    ParameterContext ctx = new ParameterContext(ioc, klass, parameter, parameterAnnotation);
+                    injectors[i].initialize(ctx);
                 } catch (Exception e) {
                     throw ExceptionUtils.unchecked(e);
                 }

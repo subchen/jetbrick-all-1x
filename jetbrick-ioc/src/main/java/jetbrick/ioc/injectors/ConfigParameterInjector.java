@@ -23,8 +23,6 @@ import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.Config;
 import jetbrick.lang.Validate;
 import jetbrick.lang.annotations.ValueConstants;
-import jetbrick.reflect.KlassInfo;
-import jetbrick.reflect.ParameterInfo;
 
 // 注入 @Config 标注的参数
 public class ConfigParameterInjector implements ParameterInjector {
@@ -32,21 +30,23 @@ public class ConfigParameterInjector implements ParameterInjector {
     private Object value;
 
     @Override
-    public void initialize(Ioc ioc, KlassInfo declaringKlass, ParameterInfo parameter, Annotation annotation) {
+    public void initialize(ParameterContext ctx) {
+        Annotation annotation = ctx.getAnnotation();
         Validate.isInstanceOf(Config.class, annotation);
 
         Config config = (Config) annotation;
         required = config.required();
 
-        String defaultValue = ValueConstants.defaultValue(config.defaultValue(), null);
-        Class<?> parameterType = parameter.getRawType(declaringKlass);
+        Ioc ioc = ctx.getIoc();
+        Class<?> parameterType = ctx.getRawParameterType();
+        String defaultValue = ValueConstants.trimToNull(config.defaultValue());
         value = ioc.getConfig(config.value(), parameterType, defaultValue);
     }
 
     @Override
     public Object getObject() throws Exception {
         if (value == null && required) {
-            throw new IllegalStateException("Can't inject parameter.");
+            throw new IllegalStateException("Can't inject parameter");
         }
         return value;
     }

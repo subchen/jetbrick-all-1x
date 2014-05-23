@@ -28,8 +28,54 @@ public interface ParameterInjector {
 
     public static final ParameterInjector[] EMPTY_ARRAY = new ParameterInjector[0];
 
-    public void initialize(Ioc ioc, KlassInfo declaringKlass, ParameterInfo parameter, Annotation annotation);
+    public void initialize(ParameterContext ctx);
 
     public Object getObject() throws Exception;
+
+    public static class ParameterContext {
+        final Ioc ioc;
+        final KlassInfo declaringKlass;
+        final ParameterInfo parameter;
+        final Annotation annotation;
+
+        public ParameterContext(Ioc ioc, KlassInfo declaringKlass, ParameterInfo parameter, Annotation annotation) {
+            this.ioc = ioc;
+            this.declaringKlass = declaringKlass;
+            this.parameter = parameter;
+            this.annotation = annotation;
+        }
+
+        public Ioc getIoc() {
+            return ioc;
+        }
+
+        public KlassInfo getDeclaringKlass() {
+            return declaringKlass;
+        }
+
+        public ParameterInfo getParameter() {
+            return parameter;
+        }
+
+        public Annotation getAnnotation() {
+            return annotation;
+        }
+
+        public String getParameterName() {
+            return parameter.getName();
+        }
+
+        public Class<?> getRawParameterType() {
+            return parameter.getRawType(declaringKlass);
+        }
+
+        public Class<?> getRawParameterComponentType(int index) {
+            return parameter.getRawComponentType(declaringKlass.getType(), index);
+        }
+
+        public String getRawParameterTypeName() {
+            return getRawParameterType().getName();
+        }
+    }
 
 }

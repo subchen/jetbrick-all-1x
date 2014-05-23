@@ -18,21 +18,20 @@
  */
 package jetbrick.ioc.injectors;
 
-import java.lang.annotation.Annotation;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.IocConstants;
-import jetbrick.reflect.KlassInfo;
-import jetbrick.reflect.ParameterInfo;
 
-// 注入没有任何标注的参数
+/**
+ * 注入没有任何标注的参数(默认是  <code>@Inject</code>，然后根据类型名注入)
+ */
 public class DefaultParameterInjector implements ParameterInjector {
     private Ioc ioc;
     private String name;
 
     @Override
-    public void initialize(Ioc ioc, KlassInfo declaringKlass, ParameterInfo parameter, Annotation annotation) {
-        this.ioc = ioc;
-        this.name = parameter.getRawType(declaringKlass).getName();
+    public void initialize(ParameterContext ctx) {
+        this.ioc = ctx.getIoc();
+        this.name = ctx.getRawParameterTypeName();
     }
 
     @Override

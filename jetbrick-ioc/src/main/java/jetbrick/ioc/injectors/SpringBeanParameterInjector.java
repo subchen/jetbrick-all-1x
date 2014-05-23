@@ -24,8 +24,6 @@ import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.SpringBean;
 import jetbrick.lang.Validate;
 import jetbrick.lang.annotations.ValueConstants;
-import jetbrick.reflect.KlassInfo;
-import jetbrick.reflect.ParameterInfo;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -36,14 +34,13 @@ public class SpringBeanParameterInjector implements ParameterInjector {
     private boolean required;
 
     @Override
-    public void initialize(Ioc ioc, KlassInfo declaringKlass, ParameterInfo parameter, Annotation annotation) {
+    public void initialize(ParameterContext ctx) {
+        Annotation annotation = ctx.getAnnotation();
         Validate.isInstanceOf(SpringBean.class, annotation);
 
-        Class<?> parameterType = parameter.getRawType(declaringKlass);
-
         SpringBean inject = (SpringBean) annotation;
-        this.appctx = getApplicationContext(ioc);
-        this.name = ValueConstants.defaultValue(inject.value(), parameterType.getName());
+        this.appctx = getApplicationContext(ctx.getIoc());
+        this.name = ValueConstants.defaultValue(inject.value(), ctx.getParameterName()); // 默认取参数名称
         this.required = inject.required();
     }
 
