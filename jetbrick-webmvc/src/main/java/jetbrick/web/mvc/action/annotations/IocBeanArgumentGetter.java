@@ -22,6 +22,7 @@ import java.lang.annotation.Annotation;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.*;
 import jetbrick.ioc.injectors.ParameterInjector;
+import jetbrick.ioc.injectors.ParameterInjector.ParameterContext;
 import jetbrick.lang.ExceptionUtils;
 import jetbrick.lang.Validate;
 import jetbrick.web.mvc.RequestContext;
@@ -41,7 +42,8 @@ public class IocBeanArgumentGetter implements AnnotatedArgumentGetter<Annotation
 
         try {
             injector = with.value().newInstance();
-            injector.initialize(ioc, ctx.getDeclaringKlass(), ctx.getParameter(), annotation);
+            ParameterContext paramCtx = new ParameterContext(ioc, ctx.getDeclaringKlass(), ctx.getParameter(), annotation);
+            injector.initialize(paramCtx);
         } catch (Exception e) {
             throw ExceptionUtils.unchecked(e);
         }
