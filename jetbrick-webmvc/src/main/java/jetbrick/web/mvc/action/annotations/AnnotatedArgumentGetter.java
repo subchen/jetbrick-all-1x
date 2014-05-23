@@ -62,6 +62,10 @@ public interface AnnotatedArgumentGetter<A extends Annotation, T> extends Argume
             return parameter.getRawType(declaringKlass);
         }
 
+        public Class<?> getRawParameterComponentType(int index) {
+            return parameter.getRawComponentType(declaringKlass.getType(), index);
+        }
+
         /**
          * 获取参数类型的转换器，如果是 String，那么无需转换，返回 null.
          */
