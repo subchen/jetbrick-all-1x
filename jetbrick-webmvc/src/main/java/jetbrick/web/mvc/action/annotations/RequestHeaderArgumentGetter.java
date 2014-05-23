@@ -20,25 +20,23 @@ package jetbrick.web.mvc.action.annotations;
 
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.lang.annotations.ValueConstants;
-import jetbrick.reflect.KlassInfo;
-import jetbrick.reflect.ParameterInfo;
 import jetbrick.typecast.Convertor;
 import jetbrick.web.mvc.RequestContext;
-import jetbrick.web.mvc.action.ArgumentGetterResolver;
 
 @Managed
 public class RequestHeaderArgumentGetter implements AnnotatedArgumentGetter<RequestHeader, Object> {
     private String name;
     private boolean required;
     private String defaultValue;
-    private Convertor<?> typeConvertor;
+    private Convertor<?> cast;
 
     @Override
-    public void initialize(KlassInfo declaringKlass, ParameterInfo parameter, RequestHeader annotation) {
+    public void initialize(ArgumentContext<RequestHeader> ctx) {
+        RequestHeader annotation = ctx.getAnnotation();
         name = annotation.value();
         required = annotation.required();
         defaultValue = ValueConstants.trimToNull(annotation.defaultValue());
-        typeConvertor = ArgumentGetterResolver.getTypeConvertor(parameter.getRawType(declaringKlass));
+        cast = ctx.getTypeConvertor();
     }
 
     @Override
@@ -49,12 +47,12 @@ public class RequestHeaderArgumentGetter implements AnnotatedArgumentGetter<Requ
         }
         if (value == null) {
             if (required) {
-                throw new IllegalStateException();
+                throw new IllegalStateException("request header is not found: " + name);
             }
             return null;
         }
-        if (typeConvertor != null) {
-            return typeConvertor.convert(value);
+        if (cast != null) {
+            return cast.convert(value);
         }
         return value;
 

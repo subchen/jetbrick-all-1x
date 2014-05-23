@@ -19,21 +19,18 @@
 package jetbrick.web.mvc.action.annotations;
 
 import jetbrick.ioc.annotations.Managed;
-import jetbrick.reflect.KlassInfo;
-import jetbrick.reflect.ParameterInfo;
 import jetbrick.typecast.Convertor;
-import jetbrick.typecast.TypeCastUtils;
 import jetbrick.web.mvc.RequestContext;
 
 @Managed
 public class PathVariableArgumentGetter implements AnnotatedArgumentGetter<PathVariable, Object> {
     private String name;
-    private Convertor<?> typeConvertor;
+    private Convertor<?> cast;
 
     @Override
-    public void initialize(KlassInfo declaringKlass, ParameterInfo parameter, PathVariable annotation) {
-        this.name = annotation.value();
-        this.typeConvertor = TypeCastUtils.lookup(parameter.getRawType(declaringKlass));
+    public void initialize(ArgumentContext<PathVariable> ctx) {
+        this.name = ctx.getAnnotation().value();
+        this.cast = ctx.getTypeConvertor();
     }
 
     @Override
@@ -42,8 +39,8 @@ public class PathVariableArgumentGetter implements AnnotatedArgumentGetter<PathV
         if (value == null) {
             return null;
         }
-        if (typeConvertor != null) {
-            return typeConvertor.convert(value);
+        if (cast != null) {
+            return cast.convert(value);
         }
         return value;
     }

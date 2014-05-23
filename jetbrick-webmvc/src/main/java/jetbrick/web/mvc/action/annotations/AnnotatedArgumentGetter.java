@@ -19,17 +19,68 @@
 package jetbrick.web.mvc.action.annotations;
 
 import java.lang.annotation.Annotation;
+import jetbrick.lang.Validate;
 import jetbrick.reflect.KlassInfo;
 import jetbrick.reflect.ParameterInfo;
+import jetbrick.typecast.Convertor;
+import jetbrick.web.mvc.action.ArgumentGetterResolver;
 
 /**
  * 根据 annotation 来注入参数
  *
- * @param <A>
- * @param <T>
+ * @param <A> － 代表的 Annotation
+ * @param <T> － 要返回的类型
  */
 public interface AnnotatedArgumentGetter<A extends Annotation, T> extends ArgumentGetter<T> {
 
-    public void initialize(KlassInfo declaringKlass, ParameterInfo parameter, A annotation);
+    public void initialize(ArgumentContext<A> ctx);
 
+    public static class ArgumentContext<T extends Annotation> {
+        private final KlassInfo declaringKlass;
+        private final ParameterInfo parameter;
+        private final T annotation;
+
+        public ArgumentContext(KlassInfo declaringKlass, ParameterInfo parameter, T annotation) {
+            this.declaringKlass = declaringKlass;
+            this.parameter = parameter;
+            this.annotation = annotation;
+        }
+
+        public KlassInfo getDeclaringKlass() {
+            return declaringKlass;
+        }
+
+        public ParameterInfo getParameter() {
+            return parameter;
+        }
+
+        public T getAnnotation() {
+            return annotation;
+        }
+
+        public Class<?> getRawParameterType() {
+            return parameter.getRawType(declaringKlass);
+        }
+
+        /**
+         * 获取参数类型的转换器，如果是 String，那么无需转换，返回 null.
+         */
+        public Convertor<?> getTypeConvertor() {
+            Class<?> clazz = getRawParameterType();
+            if (clazz == String.class) {
+                return null;
+            }
+            return ArgumentGetterResolver.getTypeConvertor(clazz);
+        }
+
+        public Convertor<?> getComponentTypeConvertor() {
+            Class<?> clazz = parameter.getRawType(declaringKlass);
+            Validate.isTrue(clazz.isArray(), "parameter is not an array");
+
+            if (clazz == String.class) {
+                return null;
+            }
+            return ArgumentGetterResolver.getTypeConvertor(clazz.getComponentType());
+        }
+    }
 }

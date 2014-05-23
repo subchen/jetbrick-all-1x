@@ -26,8 +26,8 @@ import jetbrick.ioc.annotations.ManagedWith;
 import jetbrick.lang.ArrayUtils;
 import jetbrick.reflect.*;
 import jetbrick.web.mvc.RequestContext;
-import jetbrick.web.mvc.action.annotations.AnnotatedArgumentGetter;
-import jetbrick.web.mvc.action.annotations.ArgumentGetter;
+import jetbrick.web.mvc.action.annotations.*;
+import jetbrick.web.mvc.action.annotations.AnnotatedArgumentGetter.ArgumentContext;
 import jetbrick.web.mvc.config.WebConfig;
 
 final class ActionMethodInjector {
@@ -67,7 +67,8 @@ final class ActionMethodInjector {
                 }
                 if (argumentGetterClass != null) {
                     getter = (ArgumentGetter<?>) ioc.injectClass(argumentGetterClass);
-                    ((AnnotatedArgumentGetter<Annotation, ?>) getter).initialize(KlassInfo.create(argumentGetterClass), parameter, annotation);
+                    ArgumentContext<Annotation> ctx = new ArgumentContext<Annotation>(KlassInfo.create(argumentGetterClass), parameter, annotation);
+                    ((AnnotatedArgumentGetter<Annotation, ?>) getter).initialize(ctx);
                     break;
                 }
             }

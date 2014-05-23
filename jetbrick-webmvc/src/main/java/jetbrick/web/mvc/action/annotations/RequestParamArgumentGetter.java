@@ -23,41 +23,40 @@ import jetbrick.ioc.annotations.Managed;
 import jetbrick.lang.ArrayUtils;
 import jetbrick.lang.StringUtils;
 import jetbrick.lang.annotations.ValueConstants;
-import jetbrick.reflect.KlassInfo;
-import jetbrick.reflect.ParameterInfo;
 import jetbrick.typecast.Convertor;
 import jetbrick.web.mvc.RequestContext;
-import jetbrick.web.mvc.action.ArgumentGetterResolver;
 import jetbrick.web.mvc.multipart.FilePart;
 
 @Managed
 public class RequestParamArgumentGetter implements AnnotatedArgumentGetter<RequestParam, Object> {
-    private enum ObjectType {
+    // 区分不同的场景
+    private enum Scenario {
         FILE, ARRAY, ELEMENT
     }
 
-    private Class<?> type;
-    private ObjectType objType;
+    private Scenario scenario;
+    private Class<?> type; // 参数类型
     private String name;
     private boolean required;
     private String defaultValue;
-    private Convertor<?> typeConvertor;
+    private Convertor<?> cast;
 
     @Override
-    public void initialize(KlassInfo declaringKlass, ParameterInfo parameter, RequestParam annotation) {
-        this.type = parameter.getRawType(declaringKlass);
-
+    public void initialize(ArgumentContext<RequestParam> ctx) {
+        type = ctx.getRawParameterType();
         if (FilePart.class.isAssignableFrom(type)) {
-            objType = ObjectType.FILE;
-            typeConvertor = null;
+            scenario = Scenario.FILE;
+            cast = null;
         } else if (type.isArray()) {
-            objType = ObjectType.ARRAY;
-            typeConvertor = ArgumentGetterResolver.getTypeConvertor(type.getComponentType());
+            scenario = Scenario.ARRAY;
+            type = type.getComponentType();
+            cast = ctx.getComponentTypeConvertor();
         } else {
-            objType = ObjectType.ELEMENT;
-            typeConvertor = ArgumentGetterResolver.getTypeConvertor(type);
+            scenario = Scenario.ELEMENT;
+            cast = ctx.getTypeConvertor();
         }
 
+        RequestParam annotation = ctx.getAnnotation();
         name = annotation.value();
         required = annotation.required();
         defaultValue = ValueConstants.trimToNull(annotation.defaultValue());
@@ -65,46 +64,51 @@ public class RequestParamArgumentGetter implements AnnotatedArgumentGetter<Reque
 
     @Override
     public Object get(RequestContext ctx) {
-        if (objType == ObjectType.ELEMENT) {
+        switch (scenario) {
+        case ELEMENT: {
             String value = ctx.getParameter(name);
             if (value == null) {
                 value = defaultValue;
             }
             if (value == null) {
                 if (required) {
-                    throw new IllegalStateException();
+                    throw new IllegalStateException("request parameter is not found: " + name);
                 }
                 return null;
             }
-            if (typeConvertor != null) {
-                return typeConvertor.convert(value);
+            if (cast != null) {
+                return cast.convert(value);
             }
             return value;
-        } else if (objType == ObjectType.ARRAY) {
+        }
+        case ARRAY: {
             String[] values = ctx.getParameterValues(name);
             if (values == null) {
-                if (!ValueConstants.isEmptyOrNull(defaultValue)) {
+                if (defaultValue != null) {
                     values = StringUtils.split(defaultValue, ',');
                 }
             }
             if (values == null) {
                 values = ArrayUtils.EMPTY_STRING_ARRAY;
             }
-            if (typeConvertor != null) {
-                Object[] result = (Object[]) Array.newInstance(type.getComponentType(), values.length);
+            if (cast != null) {
+                Object[] result = (Object[]) Array.newInstance(type, values.length);
                 for (int i = 0; i < values.length; i++) {
-                    result[i] = typeConvertor.convert(values[i]);
+                    result[i] = cast.convert(values[i]);
                 }
                 return result;
             }
             return values;
-        } else if (objType == ObjectType.FILE) {
+        }
+        case FILE: {
             Object value = ctx.getFilePart(name);
             if (value == null && required) {
-                throw new IllegalStateException();
+                throw new IllegalStateException("upload file object is not found: " + name);
             }
             return value;
         }
-        throw new IllegalStateException();
+        }
+
+        throw new IllegalStateException("unreachable");
     }
 }

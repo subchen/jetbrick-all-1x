@@ -19,8 +19,6 @@
 package jetbrick.web.mvc.action.annotations;
 
 import jetbrick.ioc.annotations.Managed;
-import jetbrick.reflect.KlassInfo;
-import jetbrick.reflect.ParameterInfo;
 import jetbrick.web.mvc.RequestContext;
 
 @Managed
@@ -29,7 +27,8 @@ public class ServletContextAttributeArgumentGetter implements AnnotatedArgumentG
     private boolean required;
 
     @Override
-    public void initialize(KlassInfo declaringKlass, ParameterInfo parameter, ServletContextAttribute annotation) {
+    public void initialize(ArgumentContext<ServletContextAttribute> ctx) {
+        ServletContextAttribute annotation = ctx.getAnnotation();
         name = annotation.value();
         required = annotation.required();
     }
@@ -38,7 +37,7 @@ public class ServletContextAttributeArgumentGetter implements AnnotatedArgumentG
     public Object get(RequestContext ctx) {
         Object value = ctx.getServletContext().getAttribute(name);
         if (value == null && required) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("servletContext attribute is not found: " + name);
         }
         return value;
     }

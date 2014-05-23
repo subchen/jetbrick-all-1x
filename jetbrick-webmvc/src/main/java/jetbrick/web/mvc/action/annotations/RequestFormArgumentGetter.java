@@ -21,22 +21,21 @@ package jetbrick.web.mvc.action.annotations;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.lang.ExceptionUtils;
 import jetbrick.reflect.KlassInfo;
-import jetbrick.reflect.ParameterInfo;
 import jetbrick.web.mvc.RequestContext;
 
 @Managed
 public class RequestFormArgumentGetter implements AnnotatedArgumentGetter<RequestForm, Object> {
-    private Class<?> type;
+    private KlassInfo klass;
 
     @Override
-    public void initialize(KlassInfo declaringKlass, ParameterInfo parameter, RequestForm annotation) {
-        this.type = parameter.getRawType(declaringKlass);
+    public void initialize(ArgumentContext<RequestForm> ctx) {
+        this.klass = KlassInfo.create(ctx.getRawParameterType());
     }
 
     @Override
     public Object get(RequestContext ctx) {
         try {
-            Object form = type.newInstance();
+            Object form = klass.newInstance();
             return ctx.getForm(form);
         } catch (Exception e) {
             throw ExceptionUtils.unchecked(e);
