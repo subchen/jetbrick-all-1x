@@ -1,6 +1,5 @@
 /**
- * Copyright 2013-2014 Guoqiangimport java.util.concurrent.*;
-hts reserved.
+ * Copyright 2013-2014 Guoqiang Chen, Shanghai, China. All rights reserved.
  *
  * Email: subchen@gmail.com
  * URL: http://subchen.github.io/

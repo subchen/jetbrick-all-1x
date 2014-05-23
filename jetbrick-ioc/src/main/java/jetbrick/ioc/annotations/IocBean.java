@@ -22,7 +22,7 @@ import java.lang.annotation.*;
 import jetbrick.lang.annotations.ValueConstants;
 
 /**
- * ËùÓÐ±ê×¢ÁË @IocBean µÄ Class ½«»á±» IoC ÈÝÆ÷¹ÜÀí.
+ * ï¿½ï¿½ï¿½Ð±ï¿½×¢ï¿½ï¿½ @IocBean ï¿½ï¿½ Class ï¿½ï¿½ï¿½á±» IoC ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.
  *
  * @author Guoqiang Chen
  */
