@@ -32,7 +32,7 @@ public class JsDataViewHandler extends AbstractDataViewHandler {
 
     @Override
     public String getMimetype(HttpServletRequest request) {
-        return MimetypeUtils.getJavaScriptMimetype(request);
+        return MimetypeUtils.getJavaScript(request);
     }
 
 }

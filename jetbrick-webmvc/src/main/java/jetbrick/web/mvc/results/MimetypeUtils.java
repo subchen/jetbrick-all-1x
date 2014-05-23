@@ -23,12 +23,12 @@ import javax.servlet.http.HttpServletRequest;
 public class MimetypeUtils {
 
     // IE 10 以下的版本不支持 application/json
-    public static String getJsonMimetype(HttpServletRequest request) {
+    public static String getJSON(HttpServletRequest request) {
         return isOldIEBrowser(request, 10) ? "text/html" : "application/json";
     }
 
     // IE 9  以下的版本不支持 application/javscript
-    public static String getJavaScriptMimetype(HttpServletRequest request) {
+    public static String getJavaScript(HttpServletRequest request) {
         return isOldIEBrowser(request, 9) ? "text/html" : "application/javascript";
     }
 

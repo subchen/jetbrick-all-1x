@@ -32,7 +32,7 @@ public class JsonDataViewHandler extends AbstractDataViewHandler {
 
     @Override
     public String getMimetype(HttpServletRequest request) {
-        return MimetypeUtils.getJsonMimetype(request);
+        return MimetypeUtils.getJSON(request);
     }
 
 }

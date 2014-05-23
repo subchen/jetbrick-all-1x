@@ -53,7 +53,7 @@ public class FastJSONResultHandler implements ResultHandler<JSONAware> {
         String characterEncoding = request.getCharacterEncoding();
         response.setCharacterEncoding(characterEncoding);
 
-        String mimetype = MimetypeUtils.getJsonMimetype(request);
+        String mimetype = MimetypeUtils.getJSON(request);
         response.setContentType(mimetype + "; charset=" + characterEncoding);
 
         PrintWriter out = response.getWriter();
