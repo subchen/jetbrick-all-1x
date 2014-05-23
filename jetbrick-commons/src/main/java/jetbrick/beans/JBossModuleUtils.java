@@ -26,9 +26,11 @@ import java.util.*;
 import jetbrick.io.URLUtils;
 
 /**
+ * 特殊处理 Jboss/Wildfly 的 classpath (jboss-module).
+ *
  * @author Guoqiang Chen
  */
-class WildflyClasspathUtils {
+class JBossModuleUtils {
 
     @SuppressWarnings("unchecked")
     public static Set<URL> getClasspathURLs(final Object rootModuleClassLoader, boolean allModules) throws Exception {

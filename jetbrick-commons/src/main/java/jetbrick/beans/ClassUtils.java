@@ -58,34 +58,34 @@ public class ClassUtils {
         return clazz;
     }
 
-    public static Class<?>[] primitivesToWrappers(Class<?>... classes) {
-        if (classes == null) {
+    public static Class<?>[] primitivesToWrappers(Class<?>... clazz) {
+        if (clazz == null) {
             return ArrayUtils.EMPTY_CLASS_ARRAY;
         }
-        if (classes.length == 0) {
-            return classes;
+        if (clazz.length == 0) {
+            return clazz;
         }
-        Class<?>[] convertedClasses = new Class[classes.length];
-        for (int i = 0; i < classes.length; i++) {
-            convertedClasses[i] = primitiveToWrapper(classes[i]);
+        Class<?>[] convertedClasses = new Class[clazz.length];
+        for (int i = 0; i < clazz.length; i++) {
+            convertedClasses[i] = primitiveToWrapper(clazz[i]);
         }
         return convertedClasses;
     }
 
-    public static Class<?> wrapperToPrimitive(Class<?> cls) {
-        return unboxed_class_map.get(cls);
+    public static Class<?> wrapperToPrimitive(Class<?> clazz) {
+        return unboxed_class_map.get(clazz);
     }
 
-    public static Class<?>[] wrappersToPrimitives(Class<?>... classes) {
-        if (classes == null) {
+    public static Class<?>[] wrappersToPrimitives(Class<?>... clazz) {
+        if (clazz == null) {
             return null;
         }
-        if (classes.length == 0) {
-            return classes;
+        if (clazz.length == 0) {
+            return clazz;
         }
-        Class<?>[] convertedClasses = new Class[classes.length];
-        for (int i = 0; i < classes.length; i++) {
-            convertedClasses[i] = wrapperToPrimitive(classes[i]);
+        Class<?>[] convertedClasses = new Class[clazz.length];
+        for (int i = 0; i < clazz.length; i++) {
+            convertedClasses[i] = wrapperToPrimitive(clazz[i]);
         }
         return convertedClasses;
     }

@@ -65,7 +65,7 @@ public final class ClasspathUtils {
             } else if (className.startsWith("org.jboss.modules.ModuleClassLoader")) {
                 // 该死的 Jboss/Wildfly 8，只能特殊处理
                 try {
-                    Set<URL> urlSet = WildflyClasspathUtils.getClasspathURLs(loader, false);
+                    Set<URL> urlSet = JBossModuleUtils.getClasspathURLs(loader, false);
                     urls.addAll(urlSet);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
