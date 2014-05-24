@@ -19,10 +19,7 @@
 package jetbrick.web.mvc;
 
 import java.util.HashMap;
-import java.util.Map;
 import jetbrick.lang.JSONUtils;
-import com.alibaba.fastjson.JSONObject;
-import com.google.gson.*;
 
 @SuppressWarnings("serial")
 public class Model extends HashMap<String, Object> {
@@ -50,30 +47,5 @@ public class Model extends HashMap<String, Object> {
      */
     public String toJSONString() {
         return JSONUtils.toJSONString(this);
-    }
-
-    /**
-     * 转成 fastjson 对象
-     */
-    public JSONObject toFastjson() {
-        JSONObject json = new JSONObject();
-        for (Map.Entry<String, Object> entry : entrySet()) {
-            json.put(entry.getKey(), entry.getValue());
-        }
-        return json;
-    }
-
-    /**
-     * 转成 gson 对象
-     */
-    public JsonElement toGson() {
-        Gson gson = new Gson();
-        JsonObject json = new JsonObject();
-        for (Map.Entry<String, Object> entry : entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            json.add(key, gson.toJsonTree(value));
-        }
-        return json;
     }
 }
