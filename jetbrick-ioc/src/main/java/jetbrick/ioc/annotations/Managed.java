@@ -21,7 +21,7 @@ package jetbrick.ioc.annotations;
 import java.lang.annotation.*;
 
 /**
- * ��עһ�� Class����Ҫ�����Զ�ɨ���ռ���.
+ * 标注一个 Class，主要用来自动扫描收集用.
  *
  * @author Guoqiang Chen
  */

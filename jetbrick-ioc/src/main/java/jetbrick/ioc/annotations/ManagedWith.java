@@ -21,7 +21,7 @@ package jetbrick.ioc.annotations;
 import java.lang.annotation.*;
 
 /**
- * �� @Managed �γ�һ������.
+ * 和 @Managed 形成一对配置.
  */
 @Target({ ElementType.TYPE, ElementType.ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)

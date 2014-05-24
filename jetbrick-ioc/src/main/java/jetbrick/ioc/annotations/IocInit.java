@@ -21,7 +21,7 @@ package jetbrick.ioc.annotations;
 import java.lang.annotation.*;
 
 /**
- * Ioc ע����ɺ�ĵ��õĳ�ʼ������.
+ * Ioc 注入完成后的调用的初始化方法.
  *
  * @author Guoqiang Chen
  */

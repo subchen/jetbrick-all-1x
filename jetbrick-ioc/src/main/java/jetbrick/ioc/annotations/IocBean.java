@@ -22,7 +22,7 @@ import java.lang.annotation.*;
 import jetbrick.lang.annotations.ValueConstants;
 
 /**
- * 被 IoC 自动管理的对象标注.
+ * 将 @IocBean 标注的对应的对象加入到对象池， 或者将 @IocBean 标注的方法的返回值加入到对象池.
  *
  * @author Guoqiang Chen
  */
