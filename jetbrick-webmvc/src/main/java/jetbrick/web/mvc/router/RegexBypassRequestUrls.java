@@ -18,6 +18,7 @@
  */
 package jetbrick.web.mvc.router;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +31,7 @@ public class RegexBypassRequestUrls implements BypassRequestUrls {
     public static final String DEFAULT_PATTERNS = "^(.+[.])(jsp|js|css|jpg|png|gif|ico|swf)$, ^(/assets/|/static/).+$";
 
     private String patterns = DEFAULT_PATTERNS;
-    private List<Pattern> patternList;
+    private List<Pattern> patternList = new ArrayList<Pattern>(8);
 
     public void setPatterns(String patterns) {
         this.patterns = patterns;
