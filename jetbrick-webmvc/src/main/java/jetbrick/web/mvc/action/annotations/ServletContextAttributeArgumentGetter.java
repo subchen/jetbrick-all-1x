@@ -19,6 +19,7 @@
 package jetbrick.web.mvc.action.annotations;
 
 import jetbrick.ioc.annotations.Managed;
+import jetbrick.lang.annotations.ValueConstants;
 import jetbrick.web.mvc.RequestContext;
 
 @Managed
@@ -30,6 +31,9 @@ public class ServletContextAttributeArgumentGetter implements AnnotatedArgumentG
     public void initialize(ArgumentContext<ServletContextAttribute> ctx) {
         ServletContextAttribute annotation = ctx.getAnnotation();
         name = annotation.value();
+        if (ValueConstants.isEmptyOrNull(name)) {
+            name = ctx.getParameterName();
+        }
         required = annotation.required();
     }
 

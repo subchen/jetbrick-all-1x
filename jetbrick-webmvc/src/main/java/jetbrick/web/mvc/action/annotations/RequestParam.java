@@ -29,7 +29,7 @@ import jetbrick.lang.annotations.ValueConstants;
 @ManagedWith(RequestParamArgumentGetter.class)
 public @interface RequestParam {
 
-    String value();
+    String value() default ValueConstants.EMPTY;
 
     boolean required() default IocConstants.REQUIRED;
 

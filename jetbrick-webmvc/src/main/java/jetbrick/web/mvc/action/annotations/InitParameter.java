@@ -28,7 +28,7 @@ import jetbrick.lang.annotations.ValueConstants;
 @ManagedWith(InitParameterArgumentGetter.class)
 public @interface InitParameter {
 
-    String value();
+    String value() default ValueConstants.EMPTY;
 
     boolean required() default IocConstants.REQUIRED;
 

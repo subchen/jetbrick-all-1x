@@ -21,13 +21,14 @@ package jetbrick.web.mvc.action.annotations;
 import java.lang.annotation.*;
 import jetbrick.ioc.annotations.IocConstants;
 import jetbrick.ioc.annotations.ManagedWith;
+import jetbrick.lang.annotations.ValueConstants;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @ManagedWith(RequestAttributeArgumentGetter.class)
 public @interface RequestAttribute {
 
-    String value();
+    String value() default ValueConstants.EMPTY;
 
     boolean required() default IocConstants.REQUIRED;
 

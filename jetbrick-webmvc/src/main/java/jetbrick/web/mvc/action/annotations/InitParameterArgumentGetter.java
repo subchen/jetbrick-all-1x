@@ -34,6 +34,9 @@ public class InitParameterArgumentGetter implements AnnotatedArgumentGetter<Init
     public void initialize(ArgumentContext<InitParameter> ctx) {
         InitParameter annotation = ctx.getAnnotation();
         name = annotation.value();
+        if (ValueConstants.isEmptyOrNull(name)) {
+            name = ctx.getParameterName();
+        }
         required = annotation.required();
         defaultValue = ValueConstants.trimToNull(annotation.defaultValue());
         cast = ctx.getTypeConvertor();

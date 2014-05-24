@@ -27,6 +27,11 @@ import jetbrick.lang.ExceptionUtils;
 import jetbrick.lang.Validate;
 import jetbrick.web.mvc.RequestContext;
 
+/**
+ * 专门处理 带 @InjectParameterWith 标注的 annotation，比如 @Inject, @Config 等.
+ *
+ * @author Guoqiang Chen
+ */
 @Managed
 public class IocBeanArgumentGetter implements AnnotatedArgumentGetter<Annotation, Object> {
     @Inject

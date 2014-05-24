@@ -20,12 +20,13 @@ package jetbrick.web.mvc.action.annotations;
 
 import java.lang.annotation.*;
 import jetbrick.ioc.annotations.ManagedWith;
+import jetbrick.lang.annotations.ValueConstants;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
 @ManagedWith(PathVariableArgumentGetter.class)
 public @interface PathVariable {
 
-    String value();
+    String value() default ValueConstants.EMPTY;
 
 }

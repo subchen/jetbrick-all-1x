@@ -28,7 +28,7 @@ import jetbrick.lang.annotations.ValueConstants;
 @ManagedWith(RequestHeaderArgumentGetter.class)
 public @interface RequestHeader {
 
-    String value();
+    String value() default ValueConstants.EMPTY;
 
     boolean required() default IocConstants.REQUIRED;
 

@@ -19,6 +19,7 @@
 package jetbrick.web.mvc.action.annotations;
 
 import jetbrick.ioc.annotations.Managed;
+import jetbrick.lang.annotations.ValueConstants;
 import jetbrick.typecast.Convertor;
 import jetbrick.web.mvc.RequestContext;
 
@@ -29,8 +30,11 @@ public class PathVariableArgumentGetter implements AnnotatedArgumentGetter<PathV
 
     @Override
     public void initialize(ArgumentContext<PathVariable> ctx) {
-        this.name = ctx.getAnnotation().value();
-        this.cast = ctx.getTypeConvertor();
+        name = ctx.getAnnotation().value();
+        if (ValueConstants.isEmptyOrNull(name)) {
+            name = ctx.getParameterName();
+        }
+        cast = ctx.getTypeConvertor();
     }
 
     @Override

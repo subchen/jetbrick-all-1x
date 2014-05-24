@@ -58,6 +58,10 @@ public interface AnnotatedArgumentGetter<A extends Annotation, T> extends Argume
             return annotation;
         }
 
+        public String getParameterName() {
+            return parameter.getName();
+        }
+
         public Class<?> getRawParameterType() {
             return parameter.getRawType(declaringKlass);
         }

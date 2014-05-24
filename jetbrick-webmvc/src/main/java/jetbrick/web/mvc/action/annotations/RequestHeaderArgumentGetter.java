@@ -34,6 +34,9 @@ public class RequestHeaderArgumentGetter implements AnnotatedArgumentGetter<Requ
     public void initialize(ArgumentContext<RequestHeader> ctx) {
         RequestHeader annotation = ctx.getAnnotation();
         name = annotation.value();
+        if (ValueConstants.isEmptyOrNull(name)) {
+            name = ctx.getParameterName();
+        }
         required = annotation.required();
         defaultValue = ValueConstants.trimToNull(annotation.defaultValue());
         cast = ctx.getTypeConvertor();

@@ -28,7 +28,7 @@ import jetbrick.lang.annotations.ValueConstants;
 @ManagedWith(RequestCookieArgumentGetter.class)
 public @interface RequestCookie {
 
-    String value();
+    String value() default ValueConstants.EMPTY;
 
     boolean required() default IocConstants.REQUIRED;
 
