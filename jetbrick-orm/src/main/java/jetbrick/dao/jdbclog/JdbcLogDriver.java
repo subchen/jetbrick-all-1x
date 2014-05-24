@@ -189,7 +189,7 @@ public class JdbcLogDriver implements Driver {
     @Override
     public int getMajorVersion() {
         if (drivers.size() == 1) {
-            return drivers.get(0).getMajorVersion();
+            return getFirstDriver().getMajorVersion();
         }
         return 0;
     }
@@ -197,7 +197,7 @@ public class JdbcLogDriver implements Driver {
     @Override
     public int getMinorVersion() {
         if (drivers.size() == 1) {
-            return drivers.get(0).getMinorVersion();
+            return getFirstDriver().getMinorVersion();
         }
         return 0;
     }
@@ -205,7 +205,7 @@ public class JdbcLogDriver implements Driver {
     @Override
     public boolean jdbcCompliant() {
         if (drivers.size() == 1) {
-            return drivers.get(0).jdbcCompliant();
+            return getFirstDriver().jdbcCompliant();
         }
         return false;
     }
@@ -214,8 +214,12 @@ public class JdbcLogDriver implements Driver {
     @Override
     public java.util.logging.Logger getParentLogger() throws SQLFeatureNotSupportedException {
         if (drivers.size() == 1) {
-            return drivers.get(0).getParentLogger();
+            return getFirstDriver().getParentLogger();
         }
         return null;
+    }
+
+    private Driver getFirstDriver() {
+        return drivers.values().iterator().next();
     }
 }
