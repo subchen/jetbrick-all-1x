@@ -242,11 +242,29 @@ public final class KlassInfo {
     private final ConcurrentInitializer<List<MethodInfo>> methodsGetter = new LazyInitializer<List<MethodInfo>>() {
         @Override
         protected List<MethodInfo> initialize() {
-            List<MethodInfo> results = new ArrayList<MethodInfo>();
             KlassInfo klass = KlassInfo.this;
-            while (klass != null) {
-                results.addAll(klass.getDeclaredMethods());
-                klass = klass.getSuperKlass();
+            List<MethodInfo> declaredMethods = klass.getDeclaredMethods();
+
+            List<MethodInfo> results = new ArrayList<MethodInfo>(declaredMethods.size() + 16);
+            results.addAll(declaredMethods);
+
+            if (klass.isInterface()) {
+                for (KlassInfo parent : klass.getInterfaces()) {
+                    for (MethodInfo method : parent.getDeclaredMethods()) {
+                        results.add(method);
+                    }
+                }
+            } else {
+                KlassInfo parent = klass.getSuperKlass();
+                while (parent != null) {
+                    for (MethodInfo method : parent.getDeclaredMethods()) {
+                        // 只加入 super class 中 非private, 非 static 的, 非 abstract 的方法 (这些方法一般是被认为可继承的)
+                        if (!method.isPrivate() && !method.isStatic() && !method.isAbstract()) {
+                            results.add(method);
+                        }
+                    }
+                    parent = parent.getSuperKlass();
+                }
             }
             return Collections.unmodifiableList(results);
         }
@@ -343,11 +361,32 @@ public final class KlassInfo {
     private final ConcurrentInitializer<List<FieldInfo>> fieldsGetter = new LazyInitializer<List<FieldInfo>>() {
         @Override
         protected List<FieldInfo> initialize() {
-            List<FieldInfo> results = new ArrayList<FieldInfo>();
             KlassInfo klass = KlassInfo.this;
-            while (klass != null) {
-                results.addAll(klass.getDeclaredFields());
-                klass = klass.getSuperKlass();
+            List<FieldInfo> declaredFields = klass.getDeclaredFields();
+
+            List<FieldInfo> results = new ArrayList<FieldInfo>(declaredFields.size() + 8);
+            results.addAll(declaredFields);
+
+            if (klass.isInterface()) {
+                for (KlassInfo parent : klass.getInterfaces()) {
+                    for (FieldInfo field : parent.getDeclaredFields()) {
+                        // 只加入 super interface 中 非private， 非 static 的字段 (这些字段一般是被认为可继承的)
+                        if (!field.isPrivate() && !field.isStatic()) {
+                            results.add(field);
+                        }
+                    }
+                }
+            } else {
+                KlassInfo parent = klass.getSuperKlass();
+                while (parent != null) {
+                    for (FieldInfo field : parent.getDeclaredFields()) {
+                        // 只加入 super class 中 非private， 非 static 的字段 (这些字段一般是被认为可继承的)
+                        if (!field.isPrivate() && !field.isStatic()) {
+                            results.add(field);
+                        }
+                    }
+                    parent = parent.getSuperKlass();
+                }
             }
             return Collections.unmodifiableList(results);
         }
