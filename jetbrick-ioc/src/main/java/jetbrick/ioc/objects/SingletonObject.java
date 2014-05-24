@@ -19,41 +19,40 @@
 package jetbrick.ioc.objects;
 
 import jetbrick.ioc.Ioc;
+import jetbrick.lang.ExceptionUtils;
+import jetbrick.lang.concurrent.ConcurrentInitializer;
+import jetbrick.lang.concurrent.LazyInitializer;
 
 // 单例模式
 public abstract class SingletonObject implements IocObject {
     protected final Ioc ioc;
-    private boolean initializing;
-    private volatile Object object;
+
+    private final ConcurrentInitializer<Object> object = new LazyInitializer<Object>() {
+        private boolean initializing = false;
+
+        @Override
+        protected Object initialize() {
+            if (initializing) {
+                throw new IllegalStateException("Cycle dependencies on singleton bean detected: " + toString());
+            }
+            try {
+                initializing = true;
+                return doGetObject();
+            } catch (Exception e) {
+                throw ExceptionUtils.unchecked(e);
+            } finally {
+                initializing = false;
+            }
+        }
+    };
 
     public SingletonObject(Ioc ioc) {
         this.ioc = ioc;
-        this.initializing = false;
     }
 
     @Override
     public Object getObject() {
-        Object result = object;
-        if (result == null) {
-            synchronized (this) {
-                result = object;
-                if (result == null) {
-                    if (initializing) {
-                        throw new IllegalStateException("Cycle dependencies on singleton bean detected: " + toString());
-                    }
-                    try {
-                        initializing = true;
-                        object = (result = doGetObject());
-                        initializing = false;
-                    } catch (RuntimeException e) {
-                        throw e;
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-        }
-        return result;
+        return object.get();
     }
 
     protected abstract Object doGetObject() throws Exception;
