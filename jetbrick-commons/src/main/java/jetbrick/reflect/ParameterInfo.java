@@ -28,7 +28,7 @@ import jetbrick.beans.ClassLoaderUtils;
 
 /**
  * 表示一个方法参数或者构造函数参数.
- * 
+ *
  * @author Guoqiang Chen
  */
 public final class ParameterInfo {
@@ -137,10 +137,11 @@ public final class ParameterInfo {
                 MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
                 return new MethodVisitor(Opcodes.ASM5, mv) {
                     List<ParameterInfo> parameters = method.getParameters();
+                    boolean isStatic = method.isStatic();
 
                     @Override
                     public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
-                        int offset = method.isStatic() ? index : index - 1;
+                        int offset = isStatic ? index : index - 1;
                         if (offset >= 0 && offset < parameters.size()) {
                             parameters.get(offset).name = name;
                         }
@@ -179,6 +180,6 @@ public final class ParameterInfo {
                 }
                 return null;
             }
-        }, ClassReader.SKIP_CODE | ClassReader.SKIP_FRAMES);
+        }, ClassReader.SKIP_FRAMES);
     }
 }
