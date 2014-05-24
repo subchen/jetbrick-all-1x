@@ -27,12 +27,11 @@ import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.*;
 import jetbrick.lang.ExceptionUtils;
 import jetbrick.lang.Validate;
-import jetbrick.typecast.Convertor;
-import jetbrick.typecast.TypeCastUtils;
 import jetbrick.web.mvc.Model;
 import jetbrick.web.mvc.RequestContext;
 import jetbrick.web.mvc.action.annotations.*;
 import jetbrick.web.mvc.multipart.FilePart;
+import jetbrick.web.servlet.map.*;
 
 /**
  * 全局 ArgumentGetter 管理器.
@@ -55,6 +54,15 @@ public final class ArgumentGetterResolver {
         register(ServletContext.class, ServletContextArgumentGetter.class);
         register(FilePart.class, FilePartArgumentGetter.class);
         register(FilePart[].class, FilePartsArgumentGetter.class);
+        register(RequestAttributeMap.class, RequestAttributeMapArgumentGetter.class);
+        register(SessionAttributeMap.class, SessionAttributeMapArgumentGetter.class);
+        register(ServletContextAttributeMap.class, ServletContextAttributeMapArgumentGetter.class);
+        register(RequestParameterMap.class, RequestParameterMapArgumentGetter.class);
+        register(RequestParameterValuesMap.class, RequestParameterValuesMapArgumentGetter.class);
+        register(RequestHeaderMap.class, RequestHeaderMapArgumentGetter.class);
+        register(RequestHeaderValuesMap.class, RequestHeaderValuesMapArgumentGetter.class);
+        register(RequestCookieMap.class, RequestCookieMapArgumentGetter.class);
+        register(ServletContextInitParameterMap.class, ServletContextInitParameterMapArgumentGetter.class);
 
         // annotated
         register(PathVariable.class, PathVariableArgumentGetter.class);
@@ -99,13 +107,5 @@ public final class ArgumentGetterResolver {
             return IocBeanArgumentGetter.class;
         }
         return annotatedMaps.get(annotation.annotationType());
-    }
-
-    public static Convertor<?> getTypeConvertor(Class<?> type) {
-        if (type == null || type == String.class) {
-            return null;
-        } else {
-            return TypeCastUtils.lookup(type);
-        }
     }
 }

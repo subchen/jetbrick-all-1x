@@ -23,7 +23,7 @@ import jetbrick.lang.Validate;
 import jetbrick.reflect.KlassInfo;
 import jetbrick.reflect.ParameterInfo;
 import jetbrick.typecast.Convertor;
-import jetbrick.web.mvc.action.ArgumentGetterResolver;
+import jetbrick.typecast.TypeCastUtils;
 
 /**
  * 根据 annotation 来注入参数
@@ -78,7 +78,7 @@ public interface AnnotatedArgumentGetter<A extends Annotation, T> extends Argume
             if (clazz == String.class) {
                 return null;
             }
-            return ArgumentGetterResolver.getTypeConvertor(clazz);
+            return TypeCastUtils.lookup(clazz);
         }
 
         public Convertor<?> getComponentTypeConvertor() {
@@ -88,7 +88,7 @@ public interface AnnotatedArgumentGetter<A extends Annotation, T> extends Argume
             if (clazz == String.class) {
                 return null;
             }
-            return ArgumentGetterResolver.getTypeConvertor(clazz.getComponentType());
+            return TypeCastUtils.lookup(clazz.getComponentType());
         }
     }
 }
