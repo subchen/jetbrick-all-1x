@@ -142,10 +142,11 @@ public final class KlassInfo {
             if (constructors.length == 0) {
                 return Collections.emptyList();
             } else {
-                List<ConstructorInfo> results = new ArrayList<ConstructorInfo>(constructors.length);
+                ArrayList<ConstructorInfo> results = new ArrayList<ConstructorInfo>(constructors.length);
                 for (int i = 0; i < constructors.length; i++) {
                     results.add(new ConstructorInfo(KlassInfo.this, constructors[i], i));
                 }
+                results.trimToSize();
                 return Collections.unmodifiableList(results);
             }
         }
@@ -199,10 +200,11 @@ public final class KlassInfo {
             if (methods.length == 0) {
                 return Collections.emptyList();
             } else {
-                List<MethodInfo> results = new ArrayList<MethodInfo>(methods.length);
+                ArrayList<MethodInfo> results = new ArrayList<MethodInfo>(methods.length);
                 for (int i = 0; i < methods.length; i++) {
                     results.add(new MethodInfo(KlassInfo.this, methods[i], i));
                 }
+                results.trimToSize();
                 return Collections.unmodifiableList(results);
             }
         }
@@ -245,7 +247,7 @@ public final class KlassInfo {
             KlassInfo klass = KlassInfo.this;
             List<MethodInfo> declaredMethods = klass.getDeclaredMethods();
 
-            List<MethodInfo> results = new ArrayList<MethodInfo>(declaredMethods.size() + 16);
+            ArrayList<MethodInfo> results = new ArrayList<MethodInfo>(declaredMethods.size() + 16);
             results.addAll(declaredMethods);
 
             if (klass.isInterface()) {
@@ -266,6 +268,7 @@ public final class KlassInfo {
                     parent = parent.getSuperKlass();
                 }
             }
+            results.trimToSize();
             return Collections.unmodifiableList(results);
         }
     };
@@ -314,10 +317,11 @@ public final class KlassInfo {
             if (fields.length == 0) {
                 return Collections.emptyList();
             }
-            List<FieldInfo> results = new ArrayList<FieldInfo>(fields.length);
+            ArrayList<FieldInfo> results = new ArrayList<FieldInfo>(fields.length);
             for (int i = 0; i < fields.length; i++) {
                 results.add(new FieldInfo(KlassInfo.this, fields[i], i));
             }
+            results.trimToSize();
             return Collections.unmodifiableList(results);
         }
     };
@@ -364,7 +368,7 @@ public final class KlassInfo {
             KlassInfo klass = KlassInfo.this;
             List<FieldInfo> declaredFields = klass.getDeclaredFields();
 
-            List<FieldInfo> results = new ArrayList<FieldInfo>(declaredFields.size() + 8);
+            ArrayList<FieldInfo> results = new ArrayList<FieldInfo>(declaredFields.size() + 8);
             results.addAll(declaredFields);
 
             if (klass.isInterface()) {
@@ -388,6 +392,7 @@ public final class KlassInfo {
                     parent = parent.getSuperKlass();
                 }
             }
+            results.trimToSize();
             return Collections.unmodifiableList(results);
         }
     };
