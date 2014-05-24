@@ -53,12 +53,30 @@ public final class RawData {
         return raw(data, "text/xml", encoding);
     }
 
+    public static RawData json(String data) {
+        RequestContext ctx = RequestContext.getCurrent();
+        String mimetype = MimetypeUtils.getJSON(ctx.getRequest());
+        String encoding = ctx.getResponse().getCharacterEncoding();
+        return raw(data, mimetype, encoding);
+    }
+
+    public static RawData json(String data, String encoding) {
+        RequestContext ctx = RequestContext.getCurrent();
+        String mimetype = MimetypeUtils.getJSON(ctx.getRequest());
+        return raw(data, mimetype, encoding);
+    }
+
     public static RawData js(String data) {
-        return raw(data, "text/javascript", null);
+        RequestContext ctx = RequestContext.getCurrent();
+        String mimetype = MimetypeUtils.getJavaScript(ctx.getRequest());
+        String encoding = ctx.getResponse().getCharacterEncoding();
+        return raw(data, mimetype, encoding);
     }
 
     public static RawData js(String data, String encoding) {
-        return raw(data, "text/javascript", encoding);
+        RequestContext ctx = RequestContext.getCurrent();
+        String mimetype = MimetypeUtils.getJavaScript(ctx.getRequest());
+        return raw(data, mimetype, encoding);
     }
 
     public static RawData css(String data) {
