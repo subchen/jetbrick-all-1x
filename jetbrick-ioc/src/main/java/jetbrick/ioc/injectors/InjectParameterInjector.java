@@ -38,7 +38,7 @@ public class InjectParameterInjector implements ParameterInjector {
         Inject inject = (Inject) annotation;
         this.ioc = ctx.getIoc();
         this.required = inject.required();
-        this.name = ValueConstants.defaultValue(inject.value(), ctx.getRawParameterTypeName());
+        this.name = ValueConstants.defaultValue(inject.value(), ctx.getRawParameterTypeName()); // ，默认参数类型名
     }
 
     @Override
