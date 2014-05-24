@@ -18,9 +18,10 @@
  */
 package jetbrick.lang;
 
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import jetbrick.reflect.KlassInfo;
+import jetbrick.reflect.MethodInfo;
 
 /**
  * 简单实现的 Object 转 JSON 字符串.
@@ -79,18 +80,16 @@ public final class JSONUtils {
 
     private static String beanToJSONString(Object bean) {
         try {
-            Method method = bean.getClass().getMethod("toJSONString", (Class<?>[]) null);
-            if (!method.isAccessible()) {
-                method.setAccessible(true);
+            KlassInfo klass = KlassInfo.create(bean.getClass());
+            MethodInfo method = klass.getMethod("toJSONString");
+            if (method == null) {
+                return stringToJSONString(bean.toString());
+            } else {
+                Object result = method.invoke(bean);
+                return result == null ? "null" : result.toString();
             }
-            Object result = method.invoke(bean, (Object[]) null);
-            return result == null ? "null" : result.toString();
-        } catch (NoSuchMethodException e) {
-            return stringToJSONString(bean.toString());
-        } catch (RuntimeException e) {
-            throw e;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw ExceptionUtils.unchecked(e);
         }
     }
 }

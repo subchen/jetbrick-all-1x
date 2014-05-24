@@ -20,6 +20,7 @@ package jetbrick.web.mvc;
 
 import java.util.HashMap;
 import java.util.Map;
+import jetbrick.lang.JSONUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.google.gson.*;
 
@@ -42,6 +43,13 @@ public class Model extends HashMap<String, Object> {
         } else {
             return super.put(name, value);
         }
+    }
+
+    /**
+     * 使用内置的 json 库，转成 json 字符串
+     */
+    public String toJSONString() {
+        return JSONUtils.toJSONString(this);
     }
 
     /**
