@@ -25,7 +25,7 @@ public interface Interceptor {
 
     public void init(WebConfig config);
 
-    public void intercept(RequestContext ctx, InterceptorChain chain) throws Throwable;
+    public void intercept(RequestContext ctx, InterceptorChain chain) throws Exception;
 
     public void destory();
 

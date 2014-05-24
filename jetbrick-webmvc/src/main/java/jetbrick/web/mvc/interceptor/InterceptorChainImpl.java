@@ -37,7 +37,7 @@ public class InterceptorChainImpl implements InterceptorChain {
     }
 
     @Override
-    public void invoke() throws Throwable {
+    public void invoke() throws Exception {
         if (currentIndex < interceptors.size()) {
             Interceptor interceptor = interceptors.get(currentIndex++);
             interceptor.intercept(ctx, this);
@@ -50,7 +50,7 @@ public class InterceptorChainImpl implements InterceptorChain {
         return result;
     }
 
-    private void executeAction(RequestContext ctx) throws Throwable {
+    private void executeAction(RequestContext ctx) throws Exception {
         RouteInfo route = ctx.getRouteInfo();
         if (route == null || route == RouteInfo.NOT_FOUND) {
             throw new WebException("Action not found for URL: " + ctx.getPathInfo());

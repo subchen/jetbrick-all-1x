@@ -18,8 +18,33 @@
  */
 package jetbrick.web.mvc.interceptor;
 
-public interface InterceptorChain {
+import jetbrick.web.mvc.RequestContext;
+import jetbrick.web.mvc.config.WebConfig;
 
-    public void invoke() throws Exception;
+/**
+ * 实现类似于 AOP 风格的 Interceptor.
+ *
+ * @author Guoqiang Chen
+ */
+public abstract class AopInterceptor implements Interceptor {
+
+    @Override
+    public void init(WebConfig config) {
+    }
+
+    public abstract void before(RequestContext ctx);
+
+    public abstract void after(RequestContext ctx);
+
+    @Override
+    public void intercept(RequestContext ctx, InterceptorChain chain) throws Exception {
+        before(ctx);
+        chain.invoke();
+        after(ctx);
+    }
+
+    @Override
+    public void destory() {
+    }
 
 }
