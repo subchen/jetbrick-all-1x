@@ -29,7 +29,7 @@ import jetbrick.web.mvc.RequestContext;
 import com.google.gson.*;
 
 @Managed(JsonElement.class)
-public class GSONResultHandler implements ResultHandler<JsonElement> {
+public class GsonResultHandler implements ResultHandler<JsonElement> {
 
     @Inject(required = false)
     private Gson gson;

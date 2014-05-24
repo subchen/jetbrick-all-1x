@@ -46,10 +46,10 @@ public class ResultHandlerResolver {
         register(RawDownload.class, RawDownloadResultHandler.class);
 
         if (ClassUtils.available("com.alibaba.fastjson.JSONAware")) {
-            register(JSONAware.class, FastJSONResultHandler.class);
+            register(JSONAware.class, FastjsonResultHandler.class);
         }
         if (ClassUtils.available("com.google.gson.JsonElement")) {
-            register(JsonElement.class, GSONResultHandler.class);
+            register(JsonElement.class, GsonResultHandler.class);
         }
     }
 

@@ -30,7 +30,7 @@ import com.alibaba.fastjson.JSONAware;
 import com.alibaba.fastjson.JSONObject;
 
 @Managed(JSONAware.class)
-public class FastJSONResultHandler implements ResultHandler<JSONAware> {
+public class FastjsonResultHandler implements ResultHandler<JSONAware> {
 
     @Override
     public void handle(RequestContext ctx, JSONAware result) throws IOException {
