@@ -18,41 +18,29 @@
  */
 package jetbrick.web.mvc.results;
 
-import java.io.*;
-import javax.servlet.ServletOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.http.HttpServletResponse;
-import jetbrick.io.IoUtils;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.web.mvc.RequestContext;
 
 /**
- * 负责文件下载.
+ * 自定义输出文本.
  *
  * @author Guoqiang Chen
  */
 @Managed
-public class RawDownloadResultHandler implements ResultHandler<RawDownload> {
+public class RawTextResultHandler implements ResultHandler<RawText> {
 
     @Override
-    public void handle(RequestContext ctx, RawDownload result) throws IOException {
+    public void handle(RequestContext ctx, RawText result) throws IOException {
         HttpServletResponse response = ctx.getResponse();
 
-        response.setContentType(result.getContentType());
+        String contentType = result.getMimetype() + "; charset=" + response.getCharacterEncoding();
+        response.setContentType(contentType);
 
-        // 中文文件名支持
-        try {
-            String encodedfileName = new String(result.getFileName().getBytes(), "ISO8859-1");
-            response.setHeader("Content-Disposition", "attachment; filename=" + encodedfileName);
-        } catch (UnsupportedEncodingException e) {
-        }
-
-        ServletOutputStream out = response.getOutputStream();
-        InputStream is = result.getInputStream();
-        try {
-            IoUtils.copy(is, out);
-        } finally {
-            IoUtils.closeQuietly(is);
-        }
+        PrintWriter out = response.getWriter();
+        out.write(result.getText());
         out.flush();
     }
 

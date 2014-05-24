@@ -22,6 +22,11 @@ import java.io.*;
 import jetbrick.io.streams.UnsafeByteArrayInputStream;
 import jetbrick.ioc.annotations.ManagedWith;
 
+/**
+ * 负责文件下载.
+ *
+ * @author Guoqiang Chen
+ */
 @ManagedWith(RawDownloadResultHandler.class)
 public final class RawDownload {
     public static final String MIME_APPLICATION_X_DOWNLOAD = "application/x-download";

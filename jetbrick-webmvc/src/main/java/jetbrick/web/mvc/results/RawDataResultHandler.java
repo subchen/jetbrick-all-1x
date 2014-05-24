@@ -26,7 +26,11 @@ import jetbrick.io.IoUtils;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.web.mvc.RequestContext;
 
-// 自定义输出
+/**
+ * 自定义输出二进制数据.
+ *
+ * @author Guoqiang Chen
+ */
 @Managed
 public class RawDataResultHandler implements ResultHandler<RawData> {
 

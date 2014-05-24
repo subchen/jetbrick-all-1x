@@ -21,84 +21,17 @@ package jetbrick.web.mvc.results;
 import java.io.*;
 import jetbrick.io.streams.UnsafeByteArrayInputStream;
 import jetbrick.ioc.annotations.ManagedWith;
-import jetbrick.web.mvc.RequestContext;
 
+/**
+ * 自定义输出二进制数据.
+ *
+ * @author Guoqiang Chen
+ */
 @ManagedWith(RawDataResultHandler.class)
 public final class RawData {
     private final InputStream is;
     private final String contentType;
     private final int contentLength;
-
-    public static RawData html(String data) {
-        return raw(data, "text/html", null);
-    }
-
-    public static RawData html(String data, String encoding) {
-        return raw(data, "text/html", encoding);
-    }
-
-    public static RawData text(String data) {
-        return raw(data, "text/plain", null);
-    }
-
-    public static RawData text(String data, String encoding) {
-        return raw(data, "text/plain", encoding);
-    }
-
-    public static RawData xml(String data) {
-        return raw(data, "text/xml", null);
-    }
-
-    public static RawData xml(String data, String encoding) {
-        return raw(data, "text/xml", encoding);
-    }
-
-    public static RawData json(String data) {
-        RequestContext ctx = RequestContext.getCurrent();
-        String mimetype = MimetypeUtils.getJSON(ctx.getRequest());
-        String encoding = ctx.getResponse().getCharacterEncoding();
-        return raw(data, mimetype, encoding);
-    }
-
-    public static RawData json(String data, String encoding) {
-        RequestContext ctx = RequestContext.getCurrent();
-        String mimetype = MimetypeUtils.getJSON(ctx.getRequest());
-        return raw(data, mimetype, encoding);
-    }
-
-    public static RawData js(String data) {
-        RequestContext ctx = RequestContext.getCurrent();
-        String mimetype = MimetypeUtils.getJavaScript(ctx.getRequest());
-        String encoding = ctx.getResponse().getCharacterEncoding();
-        return raw(data, mimetype, encoding);
-    }
-
-    public static RawData js(String data, String encoding) {
-        RequestContext ctx = RequestContext.getCurrent();
-        String mimetype = MimetypeUtils.getJavaScript(ctx.getRequest());
-        return raw(data, mimetype, encoding);
-    }
-
-    public static RawData css(String data) {
-        return raw(data, "text/css", null);
-    }
-
-    public static RawData css(String data, String encoding) {
-        return raw(data, "text/css", encoding);
-    }
-
-    public static RawData raw(String data, String mimetype, String encoding) {
-        if (encoding == null) {
-            encoding = RequestContext.getCurrent().getResponse().getCharacterEncoding();
-        }
-        String contentType = mimetype + "; charset=" + encoding;
-
-        try {
-            return new RawData(data.getBytes(encoding), contentType);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public RawData(InputStream is, String contentType) {
         this.is = is;
