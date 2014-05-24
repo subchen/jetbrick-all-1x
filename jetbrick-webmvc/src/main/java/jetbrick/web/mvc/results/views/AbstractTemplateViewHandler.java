@@ -27,7 +27,7 @@ public abstract class AbstractTemplateViewHandler implements ViewHandler {
     public abstract String getPrefix();
 
     @Override
-    public void render(RequestContext ctx, String viewPathName) throws Throwable {
+    public void render(RequestContext ctx, String viewPathName) throws Exception {
         // 转换相对路径为绝对路径
         String view = PathUtils.getRelativePath(ctx.getPathInfo(), viewPathName);
 
@@ -44,6 +44,6 @@ public abstract class AbstractTemplateViewHandler implements ViewHandler {
         doRender(ctx, view);
     }
 
-    protected abstract void doRender(RequestContext ctx, String viewPathName) throws Throwable;
+    protected abstract void doRender(RequestContext ctx, String viewPathName) throws Exception;
 
 }

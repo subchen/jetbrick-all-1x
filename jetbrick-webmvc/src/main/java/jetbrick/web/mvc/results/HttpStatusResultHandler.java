@@ -27,7 +27,7 @@ import jetbrick.web.mvc.WebException;
 public class HttpStatusResultHandler implements ResultHandler<HttpStatus> {
 
     @Override
-    public void handle(RequestContext ctx, HttpStatus result) throws Throwable {
+    public void handle(RequestContext ctx, HttpStatus result) throws Exception {
         int status = result.getStatus();
         if (status >= 400) {
             try {

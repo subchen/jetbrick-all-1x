@@ -25,6 +25,6 @@ import jetbrick.web.mvc.RequestContext;
  */
 public interface ResultHandler<T> {
 
-    public void handle(RequestContext ctx, T result) throws Throwable;
+    public void handle(RequestContext ctx, T result) throws Exception;
 
 }

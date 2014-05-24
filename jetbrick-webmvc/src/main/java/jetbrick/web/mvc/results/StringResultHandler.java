@@ -42,7 +42,7 @@ public class StringResultHandler implements ResultHandler<String> {
     }
 
     @Override
-    public void handle(RequestContext ctx, String result) throws Throwable {
+    public void handle(RequestContext ctx, String result) throws Exception {
         ViewHandler viewHandler = null;
 
         String url;
