@@ -24,11 +24,13 @@ import org.junit.Test;
 public class StringUtilsTest {
 
     @Test
-    public void testSplitQuote() {
+    public void splitCSV() {
         Assert.assertArrayEquals(new String[] { "aa" }, StringUtils.splitCSV("aa"));
         Assert.assertArrayEquals(new String[] { "aa", "bb" }, StringUtils.splitCSV("aa, bb"));
         Assert.assertArrayEquals(new String[] { "aa", "bb", "cc, dd" }, StringUtils.splitCSV("aa, bb, 'cc, dd'"));
         Assert.assertArrayEquals(new String[] { "aa", "bb", ",cc,, dd," }, StringUtils.splitCSV("aa, bb, ',cc,, dd,'"));
+        Assert.assertArrayEquals(new String[] { "aa" }, StringUtils.splitCSV("'aa'"));
+        Assert.assertArrayEquals(new String[] { "aa", "bb" }, StringUtils.splitCSV("'aa','bb'"));
     }
 
 }

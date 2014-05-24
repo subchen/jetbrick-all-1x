@@ -2543,11 +2543,11 @@ public final class StringUtils {
                 if (c == '"' || c == '\'' || c == '`') {
                     StringBuilder sb = new StringBuilder();
                     sb.append(s);
-                    while (++i < parts.length) {
+                    while (i + 1 < parts.length) {
                         if (sb.length() > 1 && s.length() > 0 && s.charAt(s.length() - 1) == c) {
                             break;
                         }
-                        s = parts[i];
+                        s = parts[++i];
                         sb.append(',').append(s);
                     }
                     s = sb.toString().trim();
