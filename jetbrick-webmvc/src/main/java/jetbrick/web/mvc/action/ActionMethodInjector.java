@@ -35,7 +35,7 @@ final class ActionMethodInjector {
     private final ArgumentGetter<?>[] resolvers;
 
     @SuppressWarnings("unchecked")
-    public static ActionMethodInjector create(MethodInfo method, Class<?> declaringClass) throws Exception {
+    public static ActionMethodInjector create(MethodInfo method, Class<?> declaringClass) {
         List<ParameterInfo> parameters = method.getParameters();
         if (parameters.size() == 0) {
             return new ActionMethodInjector(method.getMethod(), ArgumentGetter.EMPTY_ARRAY);
@@ -78,7 +78,7 @@ final class ActionMethodInjector {
                 getter = resolver.lookup(type);
             }
             if (getter == null) {
-                throw new IllegalStateException();
+                throw new IllegalStateException("cannot inject parameter: " + parameter);
             }
             resolvers[i] = getter;
         }

@@ -18,6 +18,8 @@
  */
 package jetbrick.web.mvc.action;
 
+import jetbrick.lang.concurrent.ConcurrentInitializer;
+import jetbrick.lang.concurrent.LazyInitializer;
 import jetbrick.reflect.MethodInfo;
 import jetbrick.web.mvc.RequestContext;
 import jetbrick.web.mvc.ResultInfo;
@@ -27,25 +29,18 @@ public final class ActionInfo {
     private final ControllerInfo controller;
     private final MethodInfo action;
     private final UrlTemplate urlTemplate;
-    private ActionMethodInjector methodInjector;
-    private boolean initialized;
+
+    private final ConcurrentInitializer<ActionMethodInjector> methodInjector = new LazyInitializer<ActionMethodInjector>() {
+        @Override
+        protected ActionMethodInjector initialize() {
+            return ActionMethodInjector.create(action, controller.getType());
+        }
+    };
 
     public ActionInfo(ControllerInfo controller, MethodInfo action, String url) {
         this.controller = controller;
         this.action = action;
         this.urlTemplate = new UrlTemplate(url);
-        this.initialized = false;
-    }
-
-    private void initialize() throws Exception {
-        if (initialized == false) {
-            synchronized (this) {
-                if (initialized == false) {
-                    methodInjector = ActionMethodInjector.create(action, controller.getType());
-                    initialized = true;
-                }
-            }
-        }
     }
 
     // 和实际的 URL 进行匹配，并返回成功匹配的参数(pathVariables)
@@ -54,10 +49,8 @@ public final class ActionInfo {
     }
 
     public ResultInfo execute(RequestContext ctx) throws Exception {
-        initialize();
-
         Object object = controller.getObject();
-        Object result = methodInjector.invoke(object, ctx);
+        Object result = methodInjector.get().invoke(object, ctx);
 
         return new ResultInfo(action.getRawReturnType(controller.getType()), result);
     }
