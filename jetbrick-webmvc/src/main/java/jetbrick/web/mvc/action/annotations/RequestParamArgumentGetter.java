@@ -18,12 +18,12 @@
  */
 package jetbrick.web.mvc.action.annotations;
 
-import java.lang.reflect.Array;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.lang.ArrayUtils;
 import jetbrick.lang.StringUtils;
 import jetbrick.lang.annotations.ValueConstants;
 import jetbrick.typecast.Convertor;
+import jetbrick.typecast.TypeCastUtils;
 import jetbrick.web.mvc.RequestContext;
 import jetbrick.web.mvc.multipart.FilePart;
 
@@ -50,7 +50,7 @@ public class RequestParamArgumentGetter implements AnnotatedArgumentGetter<Reque
         } else if (type.isArray()) {
             scenario = Scenario.ARRAY;
             type = type.getComponentType();
-            cast = ctx.getComponentTypeConvertor();
+            cast = null;
         } else {
             scenario = Scenario.ELEMENT;
             cast = ctx.getTypeConvertor();
@@ -94,14 +94,7 @@ public class RequestParamArgumentGetter implements AnnotatedArgumentGetter<Reque
             if (values == null) {
                 values = ArrayUtils.EMPTY_STRING_ARRAY;
             }
-            if (cast != null) {
-                Object[] result = (Object[]) Array.newInstance(type, values.length);
-                for (int i = 0; i < values.length; i++) {
-                    result[i] = cast.convert(values[i]);
-                }
-                return result;
-            }
-            return values;
+            return TypeCastUtils.convertToArray(values, type);
         }
         case FILE: {
             Object value = ctx.getFilePart(name);
