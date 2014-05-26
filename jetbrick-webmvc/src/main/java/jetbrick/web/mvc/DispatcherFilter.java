@@ -57,6 +57,8 @@ public final class DispatcherFilter implements Filter {
         log.info("user.timezone = {}", System.getProperty("user.timezone"));
         log.info("file.encoding = {}", System.getProperty("file.encoding"));
 
+        WebContext.setServletContext(filterConfig.getServletContext());
+
         try {
             config = WebConfigBuilder.build(filterConfig);
             encoding = config.getHttpEncoding();

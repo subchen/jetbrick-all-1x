@@ -70,24 +70,21 @@ public class WebConfigBuilder {
         MutableIoc ioc = new MutableIoc();
         ioc.addBean(Ioc.class.getName(), ioc);
         ioc.addBean(ServletContext.class.getName(), sc);
-        ioc.addBean(WebConfig.class, null, true);
-        ioc.addBean(ResultHandlerResolver.class, null, true);
-        ioc.addBean(ViewHandlerResolver.class, null, true);
-        ioc.addBean(ArgumentGetterResolver.class, null, true);
+        ioc.addBean(WebConfig.class);
+        ioc.addBean(ResultHandlerResolver.class);
+        ioc.addBean(ViewHandlerResolver.class);
+        ioc.addBean(ArgumentGetterResolver.class);
         ioc.load(new IocAnnotationLoader(componentKlasses));
         ioc.load(new IocPropertiesLoader(config));
 
         // put into servletContext
         sc.setAttribute(Ioc.class.getName(), ioc);
 
-        // create the webconfig instance and inject all fields
-        WebConfig webConfig = ioc.getBean(WebConfig.class);
-
         // register others
         registerManagedComponments(ioc, componentKlasses);
-        registerControllers(webConfig.getRouter(), componentKlasses);
+        registerControllers(ioc, componentKlasses);
 
-        return webConfig;
+        return ioc.getBean(WebConfig.class);
     }
 
     private static Set<Class<?>> discoveryComponents(List<String> packageNames) {
@@ -136,7 +133,9 @@ public class WebConfigBuilder {
         }
     }
 
-    private static void registerControllers(Router router, Set<Class<?>> klasses) {
+    private static void registerControllers(Ioc ioc, Set<Class<?>> klasses) {
+        WebConfig webConfig = ioc.getBean(WebConfig.class);
+        Router router = webConfig.getRouter();
         for (Class<?> klass : klasses) {
             Controller controller = klass.getAnnotation(Controller.class);
             if (controller != null) {

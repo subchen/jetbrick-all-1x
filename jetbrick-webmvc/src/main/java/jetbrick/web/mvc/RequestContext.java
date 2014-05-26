@@ -64,12 +64,12 @@ public class RequestContext {
         return response;
     }
 
-    public ServletContext getServletContext() {
-        return request.getSession().getServletContext();
-    }
-
     public HttpSession getSession() {
         return request.getSession();
+    }
+
+    public ServletContext getServletContext() {
+        return WebContext.getServletContext();
     }
 
     public WebConfig getWebConfig() {
@@ -81,7 +81,7 @@ public class RequestContext {
     }
 
     public Ioc getIoc() {
-        return (Ioc) request.getServletContext().getAttribute(Ioc.class.getName());
+        return (Ioc) getServletContext().getAttribute(Ioc.class.getName());
     }
 
     //---- parameters ------------------------------------------------
@@ -180,7 +180,7 @@ public class RequestContext {
 
     //---- url ------------------------------------------------
     public File getWebroot() {
-        return WebConfig.getInstance().getWebroot();
+        return WebContext.getWebroot();
     }
 
     public String getPathInfo() {
