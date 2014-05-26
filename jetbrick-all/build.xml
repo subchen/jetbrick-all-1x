@@ -96,7 +96,7 @@
         </copy>
     </target>
 
-    <target name="compile" depends="download-libs">
+    <target name="compile" depends="clean">
         <mkdir dir="${build.classes.dir}" />
         <javac destdir="${build.classes.dir}"
                classpathref="compile.classpath"
