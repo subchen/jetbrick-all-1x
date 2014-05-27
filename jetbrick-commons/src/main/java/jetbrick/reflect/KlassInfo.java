@@ -494,11 +494,11 @@ public final class KlassInfo {
     public Object newInstance() {
         ASMAccessor accessor = getASMAccessor();
         if (accessor == null) {
-            try {
-                return clazz.newInstance();
-            } catch (Exception e) {
-                throw ExceptionUtils.unchecked(e);
+            ConstructorInfo ctor = getDefaultConstructor();
+            if (ctor != null) {
+                return ctor.newInstance();
             }
+            throw new IllegalStateException("No default constructor");
         } else {
             return accessor.newInstance();
         }
