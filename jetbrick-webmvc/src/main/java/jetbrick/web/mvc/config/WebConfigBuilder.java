@@ -106,7 +106,7 @@ public class WebConfigBuilder {
                     if (ResultHandler.class.isAssignableFrom(klass)) {
                         Class<?>[] managedClasses = ((Managed) annotation).value();
                         if (managedClasses.length == 0) {
-                            Class<?> type = TypeResolverUtils.getGenericSupertype(klass);
+                            Class<?> type = TypeResolverUtils.getRawType(ResultHandler.class.getTypeParameters()[0], klass);
                             resultHandlerResolver.register(type, klass);
                         } else {
                             for (Class<?> type : managedClasses) {
@@ -118,7 +118,7 @@ public class WebConfigBuilder {
                     } else if (ArgumentGetter.class.isAssignableFrom(klass)) {
                         Class<?>[] managedClasses = ((Managed) annotation).value();
                         if (managedClasses.length == 0) {
-                            Class<?> type = TypeResolverUtils.getGenericSupertype(klass);
+                            Class<?> type = TypeResolverUtils.getRawType(ArgumentGetter.class.getTypeParameters()[0], klass);
                             argumentGetterResolver.register(type, klass);
                         } else {
                             for (Class<?> type : managedClasses) {
