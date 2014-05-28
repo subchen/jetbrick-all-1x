@@ -133,6 +133,6 @@ public final class ConstructorInfo extends Executable implements Creater, Compar
 
     @Override
     public int compareTo(ConstructorInfo o) {
-        return getDescriptor().compareTo(o.getDescriptor());
+        return getSignature().compareTo(o.getSignature());
     }
 }

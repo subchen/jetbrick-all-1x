@@ -110,12 +110,13 @@ public abstract class Executable {
         return Modifier.isPublic(getModifiers());
     }
 
-    private volatile String descriptor;
+    private volatile String signature;
 
-    public String getDescriptor() {
-        if (descriptor == null) {
+    public String getSignature() {
+        if (signature == null) {
             StringBuilder sb = new StringBuilder();
-            sb.append(getName()).append('(');
+            sb.append(getDeclaringKlass().getType().getName());
+            sb.append('#').append(getName()).append('(');
             Class<?>[] parameterTypes = getParameterTypes();
             for (int i = 0; i < parameterTypes.length; i++) {
                 if (i > 0) {
@@ -124,14 +125,14 @@ public abstract class Executable {
                 sb.append(parameterTypes[i].getName());
             }
             sb.append(')');
-            descriptor = sb.toString();
+            signature = sb.toString();
         }
-        return descriptor;
+        return signature;
     }
 
     @Override
     public String toString() {
-        return getDescriptor();
+        return getSignature();
     }
 
 }

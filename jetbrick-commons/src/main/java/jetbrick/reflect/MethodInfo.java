@@ -199,6 +199,6 @@ public final class MethodInfo extends Executable implements Invoker, Comparable<
 
     @Override
     public int compareTo(MethodInfo o) {
-        return getDescriptor().compareTo(o.getDescriptor());
+        return getSignature().compareTo(o.getSignature());
     }
 }
