@@ -40,6 +40,7 @@ public class ResultHandlerResolver {
     @IocInit
     public void initialize() {
         register(Void.TYPE, VoidResultHandler.class);
+        register(Object.class, ObjectResultHandler.class);
         register(String.class, StringResultHandler.class);
         register(HttpStatus.class, HttpStatusResultHandler.class);
         register(RawData.class, RawDataResultHandler.class);
@@ -64,6 +65,13 @@ public class ResultHandlerResolver {
     public ResultHandler<Object> lookup(Class<?> resultClass) {
         ResultHandler<Object> result = (ResultHandler<Object>) mapping.get(resultClass);
         if (result == null) {
+            // Special code for Object.class as result
+            for (Map.Entry<Class<?>, ResultHandler<?>> entry : mapping.entrySet()) {
+                Class<?> targetClass = entry.getKey();
+                if (targetClass != Object.class && targetClass.isAssignableFrom(resultClass)) {
+                    return (ResultHandler<Object>) entry.getValue();
+                }
+            }
             throw new IllegalStateException("Unsupported result class: " + resultClass.getName());
         }
         return result;
