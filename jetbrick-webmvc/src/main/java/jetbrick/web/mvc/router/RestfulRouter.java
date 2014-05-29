@@ -67,8 +67,9 @@ public final class RestfulRouter implements Router {
             String url = StringUtils.removeEnd(ctrlPath, "/") + StringUtils.prefix(actionPath, "/");
 
             // validate the action result type
-            if (!resultHandlerResolver.supported(actionMethod.getRawReturnType(clazz))) {
-                throw new IllegalStateException("Unsupported result class for method: " + actionMethod);
+            Class<?> returnClass = actionMethod.getRawReturnType(clazz);
+            if (!resultHandlerResolver.validate(returnClass)) {
+                throw new IllegalStateException("Unsupported result class: " + returnClass.getName() + " of " + actionMethod);
             }
 
             HttpMethod[] httpMethods = action.method();

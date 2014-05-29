@@ -77,14 +77,25 @@ public class ResultHandlerResolver {
         return result;
     }
 
-    public boolean supported(Class<?> resultClass) {
+    // 是否支持该 resultClass
+    public boolean validate(Class<?> resultClass) {
+        // 查找：已经注册的类
         if (mapping.containsKey(resultClass)) {
             return true;
         }
+        // 查找：用 annotation 标注，但是没有注册的 ResultHandler
         ManagedWith with = resultClass.getAnnotation(ManagedWith.class);
         if (with != null && ResultHandler.class.isAssignableFrom(with.value())) {
-            register(resultClass, with.value());
+            register(resultClass, with.value()); // 发现后注册
             return true;
+        }
+        // 查找：使用了已经注册的类的子类
+        for (Map.Entry<Class<?>, ResultHandler<?>> entry : mapping.entrySet()) {
+            Class<?> targetClass = entry.getKey();
+            if (targetClass != Object.class && targetClass.isAssignableFrom(resultClass)) {
+                mapping.put(resultClass, entry.getValue()); // 发现后关联
+                return true;
+            }
         }
         return false;
     }
