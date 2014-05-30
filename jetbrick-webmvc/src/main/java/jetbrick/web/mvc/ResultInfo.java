@@ -18,7 +18,10 @@
  */
 package jetbrick.web.mvc;
 
-public class ResultInfo {
+/**
+ * Action 执行结果
+ */
+public final class ResultInfo {
     private final Class<?> resultClass;
     private final Object resultObject;
 

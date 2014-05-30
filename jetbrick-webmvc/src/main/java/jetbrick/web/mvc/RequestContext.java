@@ -23,6 +23,7 @@ import java.util.*;
 import javax.servlet.ServletContext;
 import javax.servlet.http.*;
 import jetbrick.ioc.Ioc;
+import jetbrick.reflect.MethodInfo;
 import jetbrick.web.mvc.action.HttpMethod;
 import jetbrick.web.mvc.config.WebConfig;
 import jetbrick.web.mvc.multipart.*;
@@ -78,6 +79,14 @@ public class RequestContext {
 
     public RouteInfo getRouteInfo() {
         return routeInfo;
+    }
+
+    public Class<?> getController() {
+        return routeInfo.getAction().getControllerClass();
+    }
+
+    public MethodInfo getAction() {
+        return routeInfo.getAction().getMethod();
     }
 
     public Ioc getIoc() {

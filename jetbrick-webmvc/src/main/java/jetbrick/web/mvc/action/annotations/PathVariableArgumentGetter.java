@@ -39,7 +39,7 @@ public class PathVariableArgumentGetter implements AnnotatedArgumentGetter<PathV
 
     @Override
     public Object get(RequestContext ctx) {
-        String value = ctx.getRouteInfo().getPathVariable(name);
+        String value = ctx.getPathVariable(name);
         if (value == null) {
             return null;
         }

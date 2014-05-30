@@ -22,7 +22,9 @@ import jetbrick.lang.builder.ToStringBuilder;
 import jetbrick.web.mvc.action.ActionInfo;
 import jetbrick.web.mvc.action.PathVariables;
 
-// 路由匹配结果（包括路径参数）
+/**
+ * 路由匹配结果（包括路径参数）
+ */
 public class RouteInfo {
     public static final RouteInfo NOT_FOUND = new RouteInfo(null);
 

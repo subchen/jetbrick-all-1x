@@ -27,19 +27,19 @@ import jetbrick.web.mvc.router.UrlTemplate;
 
 public final class ActionInfo {
     private final ControllerInfo controller;
-    private final MethodInfo action;
+    private final MethodInfo method;
     private final UrlTemplate urlTemplate;
 
     private final ConcurrentInitializer<ActionMethodInjector> methodInjector = new LazyInitializer<ActionMethodInjector>() {
         @Override
         protected ActionMethodInjector initialize() {
-            return ActionMethodInjector.create(action, controller.getType());
+            return ActionMethodInjector.create(method, controller.getType());
         }
     };
 
-    public ActionInfo(ControllerInfo controller, MethodInfo action, String url) {
+    public ActionInfo(ControllerInfo controller, MethodInfo method, String url) {
         this.controller = controller;
-        this.action = action;
+        this.method = method;
         this.urlTemplate = new UrlTemplate(url);
     }
 
@@ -52,6 +52,14 @@ public final class ActionInfo {
         Object object = controller.getObject();
         Object result = methodInjector.get().invoke(object, ctx);
 
-        return new ResultInfo(action.getRawReturnType(controller.getType()), result);
+        return new ResultInfo(method.getRawReturnType(controller.getType()), result);
+    }
+
+    public MethodInfo getMethod() {
+        return method;
+    }
+
+    public Class<?> getControllerClass() {
+        return controller.getType();
     }
 }
