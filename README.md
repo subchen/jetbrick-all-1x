@@ -11,7 +11,7 @@ Maven
 <dependency>
   <groupId>com.github.subchen</groupId>
   <artifactId>jetbrick-all</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
 </dependency>
 ```
 
@@ -25,9 +25,9 @@ http://subchen.github.io/jetbrick/
 Downloads
 ==============
 
-* [jetbrick-all-1.0.3.jar](http://search.maven.org/remotecontent?filepath=com/github/subchen/jetbrick-all/1.0.3/jetbrick-all-1.0.3.jar)
-* [jetbrick-all-1.0.3-sources.jar](http://search.maven.org/remotecontent?filepath=com/github/subchen/jetbrick-all/1.0.3/jetbrick-all-1.0.3-sources.jar)
-* [jetbrick-all-1.0.3-javadoc.jar](http://search.maven.org/remotecontent?filepath=com/github/subchen/jetbrick-all/1.0.3/jetbrick-all-1.0.3-javadoc.jar)
+* [jetbrick-all-1.0.4.jar](http://search.maven.org/remotecontent?filepath=com/github/subchen/jetbrick-all/1.0.4/jetbrick-all-1.0.4.jar)
+* [jetbrick-all-1.0.4-sources.jar](http://search.maven.org/remotecontent?filepath=com/github/subchen/jetbrick-all/1.0.4/jetbrick-all-1.0.4-sources.jar)
+* [jetbrick-all-1.0.4-javadoc.jar](http://search.maven.org/remotecontent?filepath=com/github/subchen/jetbrick-all/1.0.4/jetbrick-all-1.0.4-javadoc.jar)
 
 Samples
 ===============
