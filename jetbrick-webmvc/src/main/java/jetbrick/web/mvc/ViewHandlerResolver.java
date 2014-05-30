@@ -20,6 +20,7 @@ package jetbrick.web.mvc;
 
 import java.util.HashMap;
 import java.util.Map;
+import jetbrick.beans.ClassUtils;
 import jetbrick.ioc.Ioc;
 import jetbrick.ioc.annotations.Inject;
 import jetbrick.ioc.annotations.IocInit;
@@ -48,7 +49,10 @@ public class ViewHandlerResolver {
         register(CssDataViewHandler.class);
         register(JsonDataViewHandler.class);
         register(JspTemplateViewHandler.class);
-        register(JetxTemplateViewHandler.class);
+
+        if (ClassUtils.available("jetbrick.template.JetEngine")) {
+            register(JetxTemplateViewHandler.class);
+        }
     }
 
     public void register(Class<?> viewHandlerClass) {
