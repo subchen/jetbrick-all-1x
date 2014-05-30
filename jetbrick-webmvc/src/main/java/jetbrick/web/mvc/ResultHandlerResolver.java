@@ -43,6 +43,7 @@ public class ResultHandlerResolver {
         register(Object.class, ObjectResultHandler.class);
         register(String.class, StringResultHandler.class);
         register(HttpStatus.class, HttpStatusResultHandler.class);
+        register(RawText.class, RawTextResultHandler.class);
         register(RawData.class, RawDataResultHandler.class);
         register(RawDownload.class, RawDownloadResultHandler.class);
 
