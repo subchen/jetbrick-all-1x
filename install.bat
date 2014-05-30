@@ -13,10 +13,10 @@ set PATH=C:\dev\git-1.8.1\bin;%PATH%
 :: switch pwd
 cd /d %~dp0
 
-call ant -buildfile jetbrick-commons/build.xml install
-call ant -buildfile jetbrick-ioc/build.xml install
-call ant -buildfile jetbrick-webmvc/build.xml install
-call ant -buildfile jetbrick-orm/build.xml install
+::call ant -buildfile jetbrick-commons/build.xml install
+::call ant -buildfile jetbrick-ioc/build.xml install
+::call ant -buildfile jetbrick-webmvc/build.xml install
+::call ant -buildfile jetbrick-orm/build.xml install
 call ant -buildfile jetbrick-all/build.xml install
 
 
