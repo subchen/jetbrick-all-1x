@@ -103,6 +103,10 @@ public class WebConfigBuilder {
         for (Class<?> klass : klasses) {
             for (Annotation annotation : klass.getAnnotations()) {
                 if (annotation instanceof Managed) {
+                    // 跳过框架自带的 Class，这些class已经被自动注册了。
+                    if (klass.getName().startsWith("jetbrick.web.mvc.")) {
+                        continue;
+                    }
                     if (ResultHandler.class.isAssignableFrom(klass)) {
                         Class<?>[] managedClasses = ((Managed) annotation).value();
                         if (managedClasses.length == 0) {
