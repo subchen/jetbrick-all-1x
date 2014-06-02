@@ -57,7 +57,7 @@ final class ExecutableUtils {
         for (Executable execute : executables) {
             if (!execute.getName().equals(name)) continue;
 
-            Class<?>[] types = execute.getRawParameterTypes(declaringClass);
+            Class<?>[] types = execute.getParameterTypes();
             if (isParameterTypesCompatible(types, parameterTypes, execute.isVarArgs(), false)) {
                 // 可能有多个方法与实际参数类型兼容。采用就近兼容原则。
                 if (best == null) {
