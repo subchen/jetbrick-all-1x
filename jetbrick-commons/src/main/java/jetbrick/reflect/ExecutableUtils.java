@@ -21,14 +21,14 @@ package jetbrick.reflect;
 import java.util.List;
 import jetbrick.beans.ClassUtils;
 
-final class ExecutableUtils {
+public final class ExecutableUtils {
 
     /**
      * 查找完全匹配的方法或者构造函数
      */
-    public static <T extends Executable> T searchExecutable(List<T> executables, String name, Class<?>... parameterTypes) {
+    public static <T extends Executable> T getExecutable(List<T> executables, String name, Class<?>... parameterTypes) {
         for (T info : executables) {
-            if (info.getName().equals(name)) {
+            if (name == null || info.getName().equals(name)) {
                 Class<?>[] types = info.getParameterTypes();
                 if (parameterTypes.length == types.length) {
                     boolean match = true;
@@ -50,12 +50,12 @@ final class ExecutableUtils {
     /**
      * 查找最佳匹配的方法或者构造函数
      */
-    public static Executable searchBestExecutable(Class<?> declaringClass, List<? extends Executable> executables, String name, Class<?>... parameterTypes) {
+    public static Executable searchExecutable(List<? extends Executable> executables, String name, Class<?>... parameterTypes) {
         Executable best = null;
         Class<?>[] bestParametersTypes = null;
 
         for (Executable execute : executables) {
-            if (!execute.getName().equals(name)) continue;
+            if (name != null && !execute.getName().equals(name)) continue;
 
             Class<?>[] types = execute.getParameterTypes();
             if (isParameterTypesCompatible(types, parameterTypes, execute.isVarArgs(), false)) {

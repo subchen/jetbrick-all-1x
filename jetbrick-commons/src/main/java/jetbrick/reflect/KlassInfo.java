@@ -159,16 +159,16 @@ public final class KlassInfo {
      * 根据目标参数类型，查找完全匹配的构造函数。
      */
     public ConstructorInfo getDeclaredConstructor(Class<?>... parameterTypes) {
-        return ExecutableUtils.searchExecutable(declaredConstructorsGetter.get(), "<init>", parameterTypes);
+        return ExecutableUtils.getExecutable(declaredConstructorsGetter.get(), null, parameterTypes);
     }
 
     /**
      * 根据目标参数类型，查找最佳匹配的构造函数。
      */
     public ConstructorInfo searchDeclaredConstructor(Class<?>... parameterTypes) {
-        ConstructorInfo constructor = ExecutableUtils.searchExecutable(declaredConstructorsGetter.get(), "<init>", parameterTypes);
+        ConstructorInfo constructor = ExecutableUtils.getExecutable(declaredConstructorsGetter.get(), null, parameterTypes);
         if (constructor == null) {
-            constructor = (ConstructorInfo) ExecutableUtils.searchBestExecutable(clazz, declaredConstructorsGetter.get(), "<init>", parameterTypes);
+            constructor = (ConstructorInfo) ExecutableUtils.searchExecutable(declaredConstructorsGetter.get(), null, parameterTypes);
         }
         return constructor;
     }
@@ -228,7 +228,7 @@ public final class KlassInfo {
     }
 
     public MethodInfo getDeclaredMethod(String name, Class<?>... parameterTypes) {
-        return ExecutableUtils.searchExecutable(declaredMethodsGetter.get(), name, parameterTypes);
+        return ExecutableUtils.getExecutable(declaredMethodsGetter.get(), name, parameterTypes);
     }
 
     public MethodInfo getDeclaredMethod(Method method) {
@@ -294,16 +294,16 @@ public final class KlassInfo {
      * 根据目标参数类型，查找完全匹配的方法。
      */
     public MethodInfo getMethod(String name, Class<?>... parameterTypes) {
-        return ExecutableUtils.searchExecutable(methodsGetter.get(), name, parameterTypes);
+        return ExecutableUtils.getExecutable(methodsGetter.get(), name, parameterTypes);
     }
 
     /**
      * 根据目标参数类型，查找最佳匹配的方法。
      */
     public MethodInfo searchMethod(String name, Class<?>... parameterTypes) {
-        MethodInfo method = ExecutableUtils.searchExecutable(methodsGetter.get(), name, parameterTypes);
+        MethodInfo method = ExecutableUtils.getExecutable(methodsGetter.get(), name, parameterTypes);
         if (method == null) {
-            method = (MethodInfo) ExecutableUtils.searchBestExecutable(clazz, methodsGetter.get(), name, parameterTypes);
+            method = (MethodInfo) ExecutableUtils.searchExecutable(methodsGetter.get(), name, parameterTypes);
         }
         return method;
     }
