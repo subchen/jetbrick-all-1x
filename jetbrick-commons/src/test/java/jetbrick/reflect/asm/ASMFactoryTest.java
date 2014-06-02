@@ -26,13 +26,13 @@ import org.junit.*;
 public class ASMFactoryTest {
     @Before
     public void setup() {
-        System.setProperty("jetbrick.asm.threshold", "0");
-        System.setProperty("jetbrick.asm.debug", "true");
+        ASMFactory.setThreshold(0);
+        ASMFactory.setEnabled(true);
     }
 
     @After
     public void cleanup() {
-        System.clearProperty("jetbrick.asm.debug");
+        ASMFactory.setEnabled(false);
     }
 
     @Test
