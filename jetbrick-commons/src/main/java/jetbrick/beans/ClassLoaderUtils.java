@@ -180,7 +180,7 @@ public class ClassLoaderUtils {
             }
         }
 
-        return null;
+        return ClassLoader.getSystemResource(name);
     }
 
     /**
