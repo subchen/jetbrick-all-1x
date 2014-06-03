@@ -50,11 +50,11 @@ public final class ExecutableUtils {
     /**
      * 查找最佳匹配的方法或者构造函数
      */
-    public static Executable searchExecutable(List<? extends Executable> executables, String name, Class<?>... parameterTypes) {
-        Executable best = null;
+    public static <T extends Executable> T searchExecutable(List<T> executables, String name, Class<?>... parameterTypes) {
+        T best = null;
         Class<?>[] bestParametersTypes = null;
 
-        for (Executable execute : executables) {
+        for (T execute : executables) {
             if (name != null && !execute.getName().equals(name)) continue;
 
             Class<?>[] types = execute.getParameterTypes();
