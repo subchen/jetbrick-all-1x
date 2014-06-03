@@ -168,7 +168,7 @@ public final class KlassInfo {
     public ConstructorInfo searchDeclaredConstructor(Class<?>... parameterTypes) {
         ConstructorInfo constructor = ExecutableUtils.getExecutable(declaredConstructorsGetter.get(), null, parameterTypes);
         if (constructor == null) {
-            constructor = (ConstructorInfo) ExecutableUtils.searchExecutable(declaredConstructorsGetter.get(), null, parameterTypes);
+            constructor = ExecutableUtils.searchExecutable(declaredConstructorsGetter.get(), null, parameterTypes);
         }
         return constructor;
     }
@@ -303,7 +303,7 @@ public final class KlassInfo {
     public MethodInfo searchMethod(String name, Class<?>... parameterTypes) {
         MethodInfo method = ExecutableUtils.getExecutable(methodsGetter.get(), name, parameterTypes);
         if (method == null) {
-            method = (MethodInfo) ExecutableUtils.searchExecutable(methodsGetter.get(), name, parameterTypes);
+            method = ExecutableUtils.searchExecutable(methodsGetter.get(), name, parameterTypes);
         }
         return method;
     }
