@@ -1,3 +1,10 @@
+Version 1.0.5 (2014-06-05)
+-----------------------------
+
+* [新增] RequestContext允许获取 Controller 和 Action 的元数据
+* [新增] 允许动态设置 ASM 生效规则
+* [增强] 设置 jsp, jetx 视图默认的 ContentType 为 text/html
+
 Version 1.0.4 (2014-05-30)
 -----------------------------
 
