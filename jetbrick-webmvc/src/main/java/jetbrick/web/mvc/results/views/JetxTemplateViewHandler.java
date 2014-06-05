@@ -20,6 +20,7 @@ package jetbrick.web.mvc.results.views;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import javax.servlet.http.HttpServletResponse;
 import jetbrick.ioc.annotations.Config;
 import jetbrick.ioc.annotations.Managed;
 import jetbrick.template.*;
@@ -61,8 +62,11 @@ public class JetxTemplateViewHandler extends AbstractTemplateViewHandler {
             suffix = engine.getConfig().getTemplateSuffix();
         }
 
-        JetContext context = new JetWebContext(ctx.getRequest(), ctx.getResponse(), ctx.getModel());
-        OutputStream out = ctx.getResponse().getOutputStream();
+        HttpServletResponse response = ctx.getResponse();
+        response.setContentType("text/html; charset=" + response.getCharacterEncoding());
+
+        JetContext context = new JetWebContext(ctx.getRequest(), response, ctx.getModel());
+        OutputStream out = response.getOutputStream();
 
         try {
             JetTemplate template = engine.getTemplate(viewPathName);

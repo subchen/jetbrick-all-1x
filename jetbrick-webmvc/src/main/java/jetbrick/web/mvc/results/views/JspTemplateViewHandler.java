@@ -59,6 +59,7 @@ public class JspTemplateViewHandler extends AbstractTemplateViewHandler {
             request.setAttribute(entry.getKey(), entry.getValue());
         }
 
+        response.setContentType("text/html; charset=" + response.getCharacterEncoding());
         request.getRequestDispatcher(viewPathName).forward(request, response);
     }
 
