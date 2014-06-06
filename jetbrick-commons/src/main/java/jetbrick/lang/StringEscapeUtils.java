@@ -62,6 +62,10 @@ public final class StringEscapeUtils {
                 case 'f':
                     ch = '\f';
                     break;
+                case 'u':
+                    ch = (char) Integer.parseInt(value.substring(i + 1, i + 5), 16);
+                    i = i + 4;
+                    break;
                 default:
                     j--;
                 }
