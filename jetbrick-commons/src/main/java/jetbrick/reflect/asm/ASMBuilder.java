@@ -40,7 +40,7 @@ final class ASMBuilder {
 
         cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         String[] interfaces = new String[] { interfaceKlass.getName().replace('.', '/') };
-        cw.visit(V1_1, ACC_PUBLIC + ACC_SUPER + ACC_FINAL, generatedKlassNameInternal, null, SUN_MAGIC_ACCESSOR_KLASS, interfaces);
+        cw.visit(V1_1, ACC_PUBLIC + ACC_SUPER + ACC_FINAL + ACC_SYNTHETIC, generatedKlassNameInternal, null, SUN_MAGIC_ACCESSOR_KLASS, interfaces);
     }
 
     public static byte[] create(String generatedKlassName, KlassInfo delegateKlass) {
@@ -57,10 +57,10 @@ final class ASMBuilder {
     }
 
     public void insertArgumentsLengthField(List<? extends Executable> constructors, List<? extends Executable> methods) {
-        cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, FIELD_EXPECTED_CONSTRUCTOR_ARGUMENT_LENGTHS, "[I", null, null).visitEnd();
-        cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, FIELD_EXPECTED_METHOD_ARGUMENT_LENGTHS, "[I", null, null).visitEnd();
+        cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC + ACC_SYNTHETIC, FIELD_EXPECTED_CONSTRUCTOR_ARGUMENT_LENGTHS, "[I", null, null).visitEnd();
+        cw.visitField(ACC_PRIVATE + ACC_FINAL + ACC_STATIC + ACC_SYNTHETIC, FIELD_EXPECTED_METHOD_ARGUMENT_LENGTHS, "[I", null, null).visitEnd();
 
-        MethodVisitor mv = cw.visitMethod(ACC_STATIC, "<clinit>", "()V", null, null);
+        MethodVisitor mv = cw.visitMethod(ACC_STATIC + ACC_SYNTHETIC, "<clinit>", "()V", null, null);
         mv.visitCode();
 
         int size;
@@ -96,7 +96,7 @@ final class ASMBuilder {
 
     public void insertCheckArgumentsMethod() {
         // private static final void checkArguments(int[] argumentsLength, int offset, Object[] args);
-        MethodVisitor mv = cw.visitMethod(ACC_PRIVATE + ACC_FINAL + ACC_STATIC, METHOD_CHECK_ARGUMENTS, "([II[Ljava/lang/Object;)V", null, null);
+        MethodVisitor mv = cw.visitMethod(ACC_PRIVATE + ACC_FINAL + ACC_STATIC + ACC_SYNTHETIC, METHOD_CHECK_ARGUMENTS, "([II[Ljava/lang/Object;)V", null, null);
         mv.visitCode();
 
         Label labelStep2 = new Label();
@@ -143,7 +143,7 @@ final class ASMBuilder {
     }
 
     public void insertConstructor() {
-        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
+        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC + ACC_SYNTHETIC, "<init>", "()V", null, null);
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
         mv.visitMethodInsn(INVOKESPECIAL, SUN_MAGIC_ACCESSOR_KLASS, "<init>", "()V", false);
@@ -153,7 +153,7 @@ final class ASMBuilder {
     }
 
     public void insertNewInstance() {
-        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "newInstance", "()Ljava/lang/Object;", null, null);
+        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC + ACC_SYNTHETIC, "newInstance", "()Ljava/lang/Object;", null, null);
         mv.visitCode();
         mv.visitTypeInsn(NEW, delegateKlassNameInternal);
         mv.visitInsn(DUP);
@@ -164,7 +164,7 @@ final class ASMBuilder {
     }
 
     public void insertNewInstance(List<ConstructorInfo> constructors) {
-        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC + ACC_VARARGS, "newInstance", "(I[Ljava/lang/Object;)Ljava/lang/Object;", null, null);
+        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC + ACC_VARARGS + ACC_SYNTHETIC, "newInstance", "(I[Ljava/lang/Object;)Ljava/lang/Object;", null, null);
         mv.visitCode();
 
         // checkArgument(expectedArgumentLengths, offset, arguments);
@@ -217,7 +217,7 @@ final class ASMBuilder {
     }
 
     public void insertInvoke(List<MethodInfo> methods) {
-        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC + ACC_VARARGS, "invoke", "(Ljava/lang/Object;I[Ljava/lang/Object;)Ljava/lang/Object;", null, null);
+        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC + ACC_VARARGS + ACC_SYNTHETIC, "invoke", "(Ljava/lang/Object;I[Ljava/lang/Object;)Ljava/lang/Object;", null, null);
         mv.visitCode();
 
         // checkArgument(expectedArgumentLengths, offset, arguments);
@@ -292,7 +292,7 @@ final class ASMBuilder {
     }
 
     public void insertGetField(List<FieldInfo> fields) {
-        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "getField", "(Ljava/lang/Object;I)Ljava/lang/Object;", null, null);
+        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC + ACC_SYNTHETIC, "getField", "(Ljava/lang/Object;I)Ljava/lang/Object;", null, null);
         mv.visitCode();
 
         int n = fields.size();
@@ -332,7 +332,7 @@ final class ASMBuilder {
     }
 
     public void insertSetField(List<FieldInfo> fields) {
-        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "setField", "(Ljava/lang/Object;ILjava/lang/Object;)V", null, null);
+        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC + ACC_SYNTHETIC, "setField", "(Ljava/lang/Object;ILjava/lang/Object;)V", null, null);
         mv.visitCode();
 
         int n = fields.size();

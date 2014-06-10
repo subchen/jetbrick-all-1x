@@ -22,7 +22,7 @@ import java.io.File;
 import javax.servlet.ServletContext;
 import jetbrick.web.servlet.ServletUtils;
 
-public class WebContext {
+public final class WebContext {
     private static ServletContext sc = null;
     private static File webroot = null;
 
