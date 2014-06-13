@@ -29,18 +29,18 @@ import org.slf4j.LoggerFactory;
  */
 public class JdbcLogSupport {
     protected static final Logger log = LoggerFactory.getLogger(JdbcLogSupport.class);
-    protected static int nextId = 1000;
     protected static final Set<String> SET_METHODS = new HashSet<String>();
     protected static final Set<String> GET_METHODS = new HashSet<String>();
     protected static final Set<String> UPDATE_METHODS = new HashSet<String>();
     protected static final Set<String> MOVE_METHODS = new HashSet<String>();
     protected static final Set<String> EXECUTE_METHODS = new HashSet<String>();
     protected static final Set<String> RESULTSET_METHODS = new HashSet<String>();
-
-    protected int id = getNextId();
-    protected List<Object> paramNameList = new ArrayList<Object>();
-    protected List<Object> paramValueList = new ArrayList<Object>();
-    protected List<String> paramTypeList = new ArrayList<String>();
+    protected static final AtomicInteger idGenerated = new AtomicInteger(1000);
+    
+    protected final int id = idGenerated.getAndIncrement();
+    protected final List<Object> paramNameList = new ArrayList<Object>();
+    protected final List<Object> paramValueList = new ArrayList<Object>();
+    protected final List<String> paramTypeList = new ArrayList<String>();
 
     static {
         SET_METHODS.add("setString");
@@ -185,10 +185,6 @@ public class JdbcLogSupport {
 
     protected String formatSQL(String original) {
         return original.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ');
-    }
-
-    protected synchronized static int getNextId() {
-        return nextId++;
     }
 
     /**
