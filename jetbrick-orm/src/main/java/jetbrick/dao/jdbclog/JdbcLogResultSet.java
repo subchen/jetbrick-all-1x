@@ -26,10 +26,21 @@ import org.slf4j.LoggerFactory;
 /**
  * ResultSet Wrapper to add logging
  */
-public class JdbcLogResultSet extends JdbcLogSupport implements InvocationHandler {
-
+public final class JdbcLogResultSet extends JdbcLogSupport implements InvocationHandler {
     private static final Logger log = LoggerFactory.getLogger(JdbcLogResultSet.class);
-    private ResultSet rs;
+    private final ResultSet rs;
+
+    /**
+     * Creates a logging version of a ResultSet
+     *
+     * @param rs   - the ResultSet to proxy
+     * @return - the ResultSet with logging
+     */
+    public static ResultSet getInstance(ResultSet rs) {
+        InvocationHandler handler = new JdbcLogResultSet(rs);
+        ClassLoader cl = ResultSet.class.getClassLoader();
+        return (ResultSet) Proxy.newProxyInstance(cl, new Class[] { ResultSet.class }, handler);
+    }
 
     private JdbcLogResultSet(ResultSet rs) {
         this.rs = rs;
@@ -39,7 +50,9 @@ public class JdbcLogResultSet extends JdbcLogSupport implements InvocationHandle
     public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
         try {
             Object value = method.invoke(rs, params);
-            if (GET_METHODS.contains(method.getName())) {
+
+            String methodName = method.getName();
+            if (GET_METHODS.contains(methodName)) {
                 String columnName;
                 if (params[0] instanceof String) {
                     columnName = (String) params[0];
@@ -51,14 +64,14 @@ public class JdbcLogResultSet extends JdbcLogSupport implements InvocationHandle
                     value = null;
                 }
                 addParam(columnName, value);
-            } else if (MOVE_METHODS.contains(method.getName())) {
+            } else if (MOVE_METHODS.contains(methodName)) {
                 if (isParamNotEmpty() && log.isDebugEnabled()) {
                     log.debug("#{} ResultSet.Get(): {}", id, getParamNameList());
                     log.debug("#{} Parameters: {}", id, getParamValueList());
                     log.debug("#{} Types: {}", id, getParamTypeList());
                 }
                 resetParamsInfo();
-            } else if (UPDATE_METHODS.contains(method.getName())) {
+            } else if (UPDATE_METHODS.contains(methodName)) {
                 String columnName;
                 if (params[0] instanceof String) {
                     columnName = (String) params[0];
@@ -67,38 +80,22 @@ public class JdbcLogResultSet extends JdbcLogSupport implements InvocationHandle
                     columnName = rs.getMetaData().getColumnName(index);
                 }
                 addParam(columnName, value);
-            } else if ("updateRow".equals(method.getName()) || "cancelRowUpdates".equals(method.getName())) {
+            } else if ("updateRow".equals(methodName) || "cancelRowUpdates".equals(methodName)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("#{} ResultSet.{}(): {}", id, method.getName(), getParamNameList());
+                    log.debug("#{} ResultSet.{}(): {}", id, methodName, getParamNameList());
                     log.debug("#{} Parameters: {}", id, getParamValueList());
                     log.debug("#{} Types: {}", id, getParamTypeList());
                 }
                 resetParamsInfo();
-            } else if ("insertRow".equals(method.getName())) {
+            } else if ("insertRow".equals(methodName)) {
                 log.debug("#{} ResultSet.insertRow()", id);
                 resetParamsInfo();
             }
+
             return value;
         } catch (Throwable t) {
+            log.error("#{} <ERROR> in {}", id, toString(method, params));
             throw unwrapThrowable(t);
         }
     }
-
-    /**
-     * Creates a logging version of a ResultSet
-     * 
-     * @param rs
-     *            - the ResultSet to proxy
-     * @return - the ResultSet with logging
-     */
-    public static ResultSet getInstance(ResultSet rs) {
-        if (rs instanceof JdbcLogResultSet) {
-            return rs;
-        } else {
-            InvocationHandler handler = new JdbcLogResultSet(rs);
-            ClassLoader cl = ResultSet.class.getClassLoader();
-            return (ResultSet) Proxy.newProxyInstance(cl, new Class[] { ResultSet.class }, handler);
-        }
-    }
-
 }

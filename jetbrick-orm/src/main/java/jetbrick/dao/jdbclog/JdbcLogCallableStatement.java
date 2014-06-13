@@ -19,32 +19,35 @@
 package jetbrick.dao.jdbclog;
 
 import java.lang.reflect.*;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Statement Wrapper to add logging
+ * PreparedStatement Wrapper to add logging
  */
-public final class JdbcLogStatement extends JdbcLogSupport implements InvocationHandler {
-    private static final Logger log = LoggerFactory.getLogger(JdbcLogStatement.class);
-    private final Statement statement;
+public final class JdbcLogCallableStatement extends JdbcLogSupport implements InvocationHandler {
+    private static final Logger log = LoggerFactory.getLogger(JdbcLogCallableStatement.class);
+    private final CallableStatement statement;
+    private final String sql;
 
     /**
-     * Creates a logging version of a Statement
+     * Creates a logging version of a PreparedStatement
      *
-     * @param stmt  - the statement
+     * @param stmt - the statement
+     * @param sql  - the sql statement
      * @return - the proxy
      */
-    public static Statement getInstance(Statement stmt) {
-        InvocationHandler handler = new JdbcLogStatement(stmt);
-        ClassLoader cl = Statement.class.getClassLoader();
-        return (Statement) Proxy.newProxyInstance(cl, new Class[] { Statement.class }, handler);
+    public static CallableStatement getInstance(CallableStatement stmt, String sql) {
+        InvocationHandler handler = new JdbcLogCallableStatement(stmt, sql);
+        ClassLoader cl = CallableStatement.class.getClassLoader();
+        return (CallableStatement) Proxy.newProxyInstance(cl, new Class[] { CallableStatement.class }, handler);
     }
 
-    private JdbcLogStatement(Statement stmt) {
+    private JdbcLogCallableStatement(CallableStatement stmt, String sql) {
         this.statement = stmt;
+        this.sql = sql;
     }
 
     @Override
@@ -53,15 +56,23 @@ public final class JdbcLogStatement extends JdbcLogSupport implements Invocation
             String methodName = method.getName();
             if (EXECUTE_METHODS.contains(methodName)) {
                 if (log.isDebugEnabled()) {
-                    String sql = formatSql((String) params[0]);
-                    log.debug("#{} Statement.{}(): {}", id, methodName, sql);
+                    log.debug("#{} CallableStatement.{}(): {}", id, methodName, formatSql(sql));
+                    log.debug("#{} Parameters: {}", id, getParamValueList());
+                    log.debug("#{} Types: {}", id, getParamTypeList());
                 }
+                resetParamsInfo();
             } else if (RESULTSET_METHODS.contains(methodName)) {
                 Object value = method.invoke(statement, params);
                 if (value != null && value instanceof ResultSet) {
                     value = JdbcLogResultSet.getInstance((ResultSet) value);
                 }
                 return value;
+            } else if (SET_METHODS.contains(methodName)) {
+                if ("setNull".equals(methodName)) {
+                    addParam(params[0], null);
+                } else {
+                    addParam(params[0], params[1]);
+                }
             }
 
             return method.invoke(statement, params);

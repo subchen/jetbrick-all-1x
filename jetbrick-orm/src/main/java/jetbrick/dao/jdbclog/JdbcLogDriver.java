@@ -69,10 +69,10 @@ import org.slf4j.LoggerFactory;
  * For Derby:
  * <code>jdbclog::jdbc:derby:MyDB;user=test;password=test</code>
  */
-public class JdbcLogDriver implements Driver {
+public final class JdbcLogDriver implements Driver {
     private static final Logger log = LoggerFactory.getLogger(JdbcLogDriver.class);
     private static final String CONNECTION_URL_SUFFIX = "jdbclog:";
-    private Map<String, Driver> drivers = new HashMap<String, Driver>();
+    private final Map<String, Driver> drivers = new HashMap<String, Driver>(8);
 
     static {
         try {

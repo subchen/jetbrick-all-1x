@@ -18,9 +18,9 @@
  */
 package jetbrick.dao.jdbclog;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.UndeclaredThrowableException;
+import java.lang.reflect.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ public class JdbcLogSupport {
     protected static final Set<String> EXECUTE_METHODS = new HashSet<String>();
     protected static final Set<String> RESULTSET_METHODS = new HashSet<String>();
     protected static final AtomicInteger idGenerated = new AtomicInteger(1000);
-    
+
     protected final int id = idGenerated.getAndIncrement();
     protected final List<Object> paramNameList = new ArrayList<Object>();
     protected final List<Object> paramValueList = new ArrayList<Object>();
@@ -183,15 +183,29 @@ public class JdbcLogSupport {
         paramTypeList.clear();
     }
 
-    protected String formatSQL(String original) {
+    protected String formatSql(String original) {
         return original.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ');
+    }
+
+    protected String toString(Method method, Object[] params) {
+        StringBuilder sb = new StringBuilder(32);
+        sb.append(method.getDeclaringClass().getSimpleName());
+        sb.append('.').append(method.getName());
+        sb.append('(');
+        for (int i = 0; i < params.length; i++) {
+            if (i > 0) {
+                sb.append(',');
+            }
+            sb.append(String.valueOf(params[i]));
+        }
+        sb.append(')');
+        return sb.toString();
     }
 
     /**
      * Examines a Throwable object and gets it's root cause
-     * 
-     * @param t
-     *            - the exception to examine
+     *
+     * @param t - the exception to examine
      * @return The root cause
      */
     protected Throwable unwrapThrowable(Throwable t) {
