@@ -144,6 +144,44 @@ public class ClassUtils {
         return false;
     }
 
+    public static boolean isInstance(Class<?> type, Object object) {
+        if (object == null) {
+            return true;
+        }
+        if (type.isPrimitive()) {
+            Class<?> cls = object.getClass();
+            if (Number.class.isAssignableFrom(cls)) {
+                if (Integer.TYPE == type) {
+                    return (Integer.class == cls || Short.class == cls || Byte.class == cls);
+                }
+                if (Long.TYPE == type) {
+                    return (Long.class == cls || Integer.class == cls || Short.class == cls || Byte.class == cls);
+                }
+                if (Float.TYPE == type) {
+                    return (Float.class == cls || Long.class == cls || Integer.class == cls || Short.class == cls || Byte.class == cls);
+                }
+                if (Double.TYPE == type) {
+                    return (Double.class == cls || Float.class == cls || Long.class == cls || Integer.class == cls || Short.class == cls || Byte.class == cls);
+                }
+                if (Short.TYPE == type) {
+                    return (Short.class == cls || Byte.class == cls);
+                }
+                if (Byte.TYPE == type) {
+                    return (Byte.class == cls);
+                }
+            }
+            if (Boolean.TYPE == type) {
+                return Boolean.class == cls;
+            }
+            if (Character.TYPE == type) {
+                return Character.class == cls;
+            }
+        } else if (type.isInstance(object)) {
+            return true;
+        }
+        return false;
+    }
+
     static {
         boxed_class_set = new IdentityHashSet<Class<?>>();
         boxed_class_set.add(Boolean.class);
