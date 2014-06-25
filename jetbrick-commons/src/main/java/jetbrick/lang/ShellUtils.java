@@ -125,7 +125,7 @@ public class ShellUtils {
            sb.append("exitValue: ").append(exitValue).append('\n');
            sb.append("stdout: ").append(stdout.toString()).append('\n');
            sb.append("stderr: ").append(stderr.toString()).append('\n');
-           sb.append("error: ").append(error.toString()).append('\n');
+           sb.append("error: ").append(error).append('\n');
            return sb.toString();
         }
     }
