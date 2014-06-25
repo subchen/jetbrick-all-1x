@@ -118,6 +118,16 @@ public class ShellUtils {
         public Throwable error() {
             return error;
         }
+
+        @Override
+        public String toString() {
+           StringBuilder sb = new StringBuilder();
+           sb.append("exitValue: ").append(exitValue).append('\n');
+           sb.append("stdout: ").append(stdout.toString()).append('\n');
+           sb.append("stderr: ").append(stderr.toString()).append('\n');
+           sb.append("error: ").append(error.toString()).append('\n');
+           return sb.toString();
+        }
     }
 
     static final class InputStreamReadThread extends Thread {
