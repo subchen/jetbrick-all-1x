@@ -24,14 +24,18 @@ import jetbrick.reflect.KlassInfo;
 import org.slf4j.LoggerFactory;
 
 public final class ASMFactory {
-    public static int ASM_THRESHOLD_VALUE = Integer.valueOf(System.getProperty("jetbrick.asm.threshold", "5"));
-    public static boolean ASM_DEBUG_ENABLED = Boolean.valueOf(System.getProperty("jetbrick.asm.debug", "false"));
+    private static int ASM_THRESHOLD_VALUE = 5;
+    private static boolean ASM_DEBUG_ENABLED = false;
 
-    public static final void setThreshold(int value) {
+    public static int getThreshold() {
+        return ASM_THRESHOLD_VALUE;
+    }
+
+    public static void setThreshold(int value) {
         ASM_THRESHOLD_VALUE = value;
     }
 
-    public static final void setEnabled(boolean enabled) {
+    public static void setDebugEnabled(boolean enabled) {
         ASM_DEBUG_ENABLED = enabled;
     }
 

@@ -478,7 +478,7 @@ public final class KlassInfo {
 
     protected ASMAccessor getASMAccessor() {
         if (asmAccessor == null) {
-            if (asmCallNumber >= ASMFactory.ASM_THRESHOLD_VALUE) {
+            if (asmCallNumber >= ASMFactory.getThreshold()) {
                 asmAccessor = ASMFactory.generateAccessor(this);
             } else {
                 asmCallNumber++;

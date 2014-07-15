@@ -27,12 +27,12 @@ public class ASMFactoryTest {
     @Before
     public void setup() {
         ASMFactory.setThreshold(0);
-        ASMFactory.setEnabled(true);
+        ASMFactory.setDebugEnabled(true);
     }
 
     @After
     public void cleanup() {
-        ASMFactory.setEnabled(false);
+        ASMFactory.setDebugEnabled(false);
     }
 
     @Test
