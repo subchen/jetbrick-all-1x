@@ -36,7 +36,7 @@ public class ClassLoaderUtils {
         ClassLoader loader = null;
         try {
             loader = Thread.currentThread().getContextClassLoader();
-        } catch (Throwable e) {
+        } catch (Exception e) {
         }
         if (loader == null) {
             loader = ClassLoaderUtils.class.getClassLoader();

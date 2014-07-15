@@ -139,7 +139,7 @@ public final class AnnotationClassReader {
         try {
             ClassFileDataInput input = new ClassFileDataInput(classInputStream);
             return readClassFile(input);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             log.warn("UnknownException in parsing class file.", e);
             return false;
         } finally {

@@ -63,7 +63,7 @@ public class ClassFinder {
                     Class<?> klass = loader.loadClass(qualifiedClassName);
                     classes.add(klass);
                 } catch (ClassNotFoundException e) {
-                } catch (Throwable e) {
+                } catch (Exception e) {
                     if (skiperrors) {
                         log.warn("Class load error.", e);
                     } else {

@@ -67,7 +67,7 @@ public final class ShellUtils {
             new InputStreamReadThread("shell-exec-stderr", p.getErrorStream(), result.stderr).start();
             p.waitFor();
             result.exitValue = p.exitValue();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             result.error = e;
         } finally {
             if (p != null) {
@@ -81,7 +81,7 @@ public final class ShellUtils {
         int exitValue = -99;
         UnsafeByteArrayOutputStream stdout = new UnsafeByteArrayOutputStream();
         UnsafeByteArrayOutputStream stderr = new UnsafeByteArrayOutputStream();
-        Throwable error;
+        Exception error;
 
         public boolean good() {
             return error == null && exitValue == 0;
@@ -115,7 +115,7 @@ public final class ShellUtils {
             }
         }
 
-        public Throwable error() {
+        public Exception error() {
             return error;
         }
 

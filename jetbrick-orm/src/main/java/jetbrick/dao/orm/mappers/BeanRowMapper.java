@@ -55,7 +55,7 @@ public class BeanRowMapper<T> implements RowMapper<T> {
             }
             return bean;
 
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new SQLException("Can't set bean property.", e);
         }
     }

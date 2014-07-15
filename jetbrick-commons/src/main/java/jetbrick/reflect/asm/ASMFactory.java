@@ -68,7 +68,7 @@ public final class ASMFactory {
 
         try {
             return (ASMAccessor) generatedKlass.newInstance();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new RuntimeException("Error constructing access class: " + generatedKlassName, e);
         }
     }

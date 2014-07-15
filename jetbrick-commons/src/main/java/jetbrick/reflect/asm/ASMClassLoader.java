@@ -24,29 +24,29 @@ import java.util.List;
 import jetbrick.lang.UnsafeUtils;
 
 final class ASMClassLoader extends ClassLoader {
-    private static final String ASMAccessor_KLASS_NAME = ASMAccessor.class.getName();
-    private static final List<ASMClassLoader> asmClassLoaders = new ArrayList<ASMClassLoader>();
+    private static final String ASMACCESSOR_CLASS_NAME = ASMAccessor.class.getName();
+    private static final List<ASMClassLoader> ASM_CLASS_LOADERS = new ArrayList<ASMClassLoader>();
 
     // Fast-path for classes loaded in the same ClassLoader as this class.
-    private static final ClassLoader parentASMClassLoader = ASMClassLoader.class.getClassLoader();
-    private static final ASMClassLoader defaultASMClassLoader = new ASMClassLoader(parentASMClassLoader);
+    private static final ClassLoader PARENT_ASM_CLASS_LOADER = ASMClassLoader.class.getClassLoader();
+    private static final ASMClassLoader DEFAULT_ASM_CLASS_LOADER = new ASMClassLoader(PARENT_ASM_CLASS_LOADER);
 
     public static ASMClassLoader get(Class<?> type) {
         ClassLoader parent = type.getClassLoader();
         // 1. fast-path:
-        if (parentASMClassLoader == parent) {
-            return defaultASMClassLoader;
+        if (PARENT_ASM_CLASS_LOADER == parent) {
+            return DEFAULT_ASM_CLASS_LOADER;
         }
         // 2. normal search:
-        synchronized (asmClassLoaders) {
-            for (int i = 0, n = asmClassLoaders.size(); i < n; i++) {
-                ASMClassLoader loader = asmClassLoaders.get(i);
+        synchronized (ASM_CLASS_LOADERS) {
+            for (int i = 0, n = ASM_CLASS_LOADERS.size(); i < n; i++) {
+                ASMClassLoader loader = ASM_CLASS_LOADERS.get(i);
                 if (loader.getParent() == parent) {
                     return loader;
                 }
             }
             ASMClassLoader loader = new ASMClassLoader(parent);
-            asmClassLoaders.add(loader);
+            ASM_CLASS_LOADERS.add(loader);
             return loader;
         }
     }
@@ -58,7 +58,7 @@ final class ASMClassLoader extends ClassLoader {
     @Override
     protected synchronized java.lang.Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         // These classes come from the class loader that loaded AccessClassLoader.
-        if (name.equals(ASMAccessor_KLASS_NAME)) return ASMAccessor.class;
+        if (name.equals(ASMACCESSOR_CLASS_NAME)) return ASMAccessor.class;
 
         // All other classes come from the class loader that loaded the type we are accessing.
         return super.loadClass(name, resolve);
@@ -68,7 +68,7 @@ final class ASMClassLoader extends ClassLoader {
         // method 1:
         try {
             return UnsafeUtils.defineClass(qualifiedClassName, bytes, 0, bytes.length, this, protectionDomain);
-        } catch (Throwable e) {
+        } catch (Exception e) {
         }
 
         // method 2:

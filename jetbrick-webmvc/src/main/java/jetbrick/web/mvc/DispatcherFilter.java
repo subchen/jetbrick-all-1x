@@ -78,7 +78,7 @@ public final class DispatcherFilter implements Filter {
                 log.info("load interceptor: {}", interceptor.getClass().getName());
                 interceptor.init(config);
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             log.error("DispatcherFilter init error.", e);
             log.error("************************************");
             log.error("       System.exit() !");
@@ -138,20 +138,17 @@ public final class DispatcherFilter implements Filter {
                 ResultHandler<Object> handler = resultHandlerResolver.lookup(result.getResultClass());
                 handler.handle(ctx, result.getResultObject());
             }
-        } catch (Throwable e) {
+        } catch (Exception e) {
             request.setAttribute(ExceptionHandler.KEY_IN_REQUEST, e);
 
             if (exceptionHandler != null) {
                 try {
                     exceptionHandler.handleError(ctx, e);
                     return;
-                } catch (Throwable ex) {
+                } catch (Exception ex) {
                     e = ex;
                 }
             }
-            //if (e instanceof InvocationTargetException) {
-            //    e = ((InvocationTargetException) e).getTargetException();
-            //}
             if (e instanceof IOException) {
                 throw (IOException) e;
             }

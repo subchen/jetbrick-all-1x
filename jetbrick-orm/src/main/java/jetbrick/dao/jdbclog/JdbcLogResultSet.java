@@ -93,9 +93,9 @@ public final class JdbcLogResultSet extends JdbcLogSupport implements Invocation
             }
 
             return value;
-        } catch (Throwable t) {
+        } catch (Exception e) {
             log.error("#{} <ERROR> in {}", id, toString(method, params));
-            throw unwrapThrowable(t);
+            throw unwrapThrowable(e);
         }
     }
 }

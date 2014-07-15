@@ -58,13 +58,13 @@ public final class FileUploaderUtils {
             return request;
         } catch (RuntimeException e) {
             throw e;
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     // multipart/form-data
-    private static MultipartRequest asMultipartRequest(HttpServletRequest request) throws Throwable {
+    private static MultipartRequest asMultipartRequest(HttpServletRequest request) throws Exception {
         MultipartRequest req = new MultipartRequest(request);
 
         ServletFileUpload upload = new ServletFileUpload();
@@ -99,7 +99,7 @@ public final class FileUploaderUtils {
     }
 
     // application/octet-stream
-    private static MultipartRequest asHtml5Request(HttpServletRequest request) throws Throwable {
+    private static MultipartRequest asHtml5Request(HttpServletRequest request) throws Exception {
         String originalFilename = request.getHeader("content-disposition");
         if (originalFilename == null) {
             throw new ServletException("The request is not a html5 file upload request.");

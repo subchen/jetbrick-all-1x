@@ -59,9 +59,9 @@ public final class JdbcLogConnection extends JdbcLogSupport implements Invocatio
             } else {
                 return method.invoke(connection, params);
             }
-        } catch (Throwable t) {
+        } catch (Exception e) {
             log.error("#{} <ERROR> in {}", id, toString(method, params));
-            throw unwrapThrowable(t);
+            throw unwrapThrowable(e);
         }
     }
 }

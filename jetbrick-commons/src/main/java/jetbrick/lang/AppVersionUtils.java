@@ -60,7 +60,7 @@ public final class AppVersionUtils {
             }
             return version;
 
-        } catch (Throwable e) {
+        } catch (Exception e) {
             return defaultVersion;
         }
     }
