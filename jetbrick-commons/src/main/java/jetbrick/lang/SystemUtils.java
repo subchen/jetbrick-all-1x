@@ -64,8 +64,8 @@ public class SystemUtils {
     public static final String LINE_SEPARATOR = System.getProperty("line.separator");
     public static final String PATH_SEPARATOR = System.getProperty("path.separator");
 
-    public static final boolean IS_OS_WINDOWS = (File.pathSeparatorChar == '\\');
-    public static final boolean IS_OS_UNIX = (File.pathSeparatorChar == '/');
+    public static final boolean IS_OS_WINDOWS = (File.separatorChar == '\\');
+    public static final boolean IS_OS_UNIX = (File.separatorChar == '/');
 
     public static File getJavaHome() {
         return new File(System.getProperty(JAVA_HOME_KEY));

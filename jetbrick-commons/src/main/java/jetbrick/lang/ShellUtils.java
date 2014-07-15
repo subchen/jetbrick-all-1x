@@ -26,7 +26,7 @@ import jetbrick.io.streams.UnsafeByteArrayOutputStream;
 /**
  * Java 调用外部命令，并获取输出 (解决了 IO 阻塞问题).
  */
-public class ShellUtils {
+public final class ShellUtils {
 
     /**
      * shell("ls -l")
@@ -77,7 +77,7 @@ public class ShellUtils {
         return result;
     }
 
-    static final class Result {
+    public static final class Result {
         int exitValue = -99;
         UnsafeByteArrayOutputStream stdout = new UnsafeByteArrayOutputStream();
         UnsafeByteArrayOutputStream stderr = new UnsafeByteArrayOutputStream();
