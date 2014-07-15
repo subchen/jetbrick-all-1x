@@ -46,7 +46,10 @@ Version 1.0.1 (2014-05-18)
 * [变更] jetbrick.web 移到 jetbrick-commons 中
 
 Version 1.0.0 (2014-05-11)
------------------------------
+--------------------------------
 
-* Public Release
+- jetbrick-commons
+- jetbrick-ioc
+- jetbrick-webmvc
+- First Public Release
 
