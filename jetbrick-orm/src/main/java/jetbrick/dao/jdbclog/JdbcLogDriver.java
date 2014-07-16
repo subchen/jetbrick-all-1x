@@ -26,14 +26,14 @@ import org.slf4j.LoggerFactory;
 /**
  * Description: Wrapper class for Jdbc Driver.
  * <p>
- * <code><pre>
+ * <pre><code>
  * DriverManagerDataSource ds = new DriverManagerDataSource();
  * //ds.setDriverClassName("oracle.jdbc.driver.OracleDriver");
  * ds.setDriverClassName("jetbrick.commons.jdbc.log.JdbcLogDriver");
  * ds.setUrl("jdbc:oracle:thin:@localhost:1521:orcl");
  * ds.setUsername("sa");
  * ds.setPassword("");
- * </pre></code>
+ * </code></pre>
  * <p>
  * This JdbcLogDriver can auto identify following drivers.
  * <ul>
