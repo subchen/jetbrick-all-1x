@@ -1,5 +1,6 @@
 *.class
 *.asc
 *.zip
-*/build/
-*/target/
+
+**/target/
+
