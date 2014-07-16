@@ -24,7 +24,12 @@ import jetbrick.beans.ClassUtils;
 public final class ExecutableUtils {
 
     /**
-     * 查找完全匹配的方法或者构造函数
+     * 查找完全匹配的方法或者构造函数.
+     *
+     * @param executables - 带查找的 list
+     * @param name - 方法名称(如果查找构造函数，那么name可以是null)
+     * @param parameterTypes － 方法或者构造函数参数(完全匹配)
+     * @return 找到的方法或者构造函数，找不到返回 null.
      */
     public static <T extends Executable> T getExecutable(List<T> executables, String name, Class<?>... parameterTypes) {
         for (T info : executables) {
@@ -48,7 +53,12 @@ public final class ExecutableUtils {
     }
 
     /**
-     * 查找最佳匹配的方法或者构造函数
+     * 查找最佳匹配的方法或者构造函数。
+     *
+     * @param executables - 带查找的 list
+     * @param name - 方法名称(如果查找构造函数，那么name可以是null)
+     * @param parameterTypes － 方法或者构造函数参数(支持类型转换)
+     * @return 找到的方法或者构造函数，找不到返回 null.
      */
     public static <T extends Executable> T searchExecutable(List<T> executables, String name, Class<?>... parameterTypes) {
         T best = null;
@@ -80,7 +90,13 @@ public final class ExecutableUtils {
     }
 
     /**
-     * 判断参数列表是否兼容, 支持可变参数
+     * 判断参数列表是否兼容, 支持可变参数.
+     *
+     * @param lhs - left operand
+     * @param rhs - right operand
+     * @param lhsVarArgs － lhs 是否是可变参数
+     * @param rhsVarArgs － rhs 是否是可变参数
+     * @return 是否兼容
      */
     public static boolean isParameterTypesCompatible(Class<?>[] lhs, Class<?>[] rhs, boolean lhsVarArgs, boolean rhsVarArgs) {
         if (lhs == null) {

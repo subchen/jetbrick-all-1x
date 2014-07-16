@@ -156,14 +156,20 @@ public final class KlassInfo {
     }
 
     /**
-     * 根据目标参数类型，查找完全匹配的构造函数。
+     * 根据目标参数类型，查找完全匹配的构造函数.
+     *
+     * @param parameterTypes - 匹配的构造函数参数
+     * @return 找到的构造函数对象，找不到返回 null.
      */
     public ConstructorInfo getDeclaredConstructor(Class<?>... parameterTypes) {
         return ExecutableUtils.getExecutable(declaredConstructorsGetter.get(), null, parameterTypes);
     }
 
     /**
-     * 根据目标参数类型，查找最佳匹配的构造函数。
+     * 根据目标参数类型，查找最佳匹配的构造函数.
+     *
+     * @param parameterTypes - 匹配的构造函数参数
+     * @return 找到的构造函数对象，找不到返回 null.
      */
     public ConstructorInfo searchDeclaredConstructor(Class<?>... parameterTypes) {
         ConstructorInfo constructor = ExecutableUtils.getExecutable(declaredConstructorsGetter.get(), null, parameterTypes);
@@ -291,14 +297,20 @@ public final class KlassInfo {
     }
 
     /**
-     * 根据目标参数类型，查找完全匹配的方法。
+     * 根据目标参数类型，查找完全匹配的方法.
+     *
+     * @param parameterTypes - 匹配的方法参数
+     * @return 找到的方法对象，找不到返回 null.
      */
     public MethodInfo getMethod(String name, Class<?>... parameterTypes) {
         return ExecutableUtils.getExecutable(methodsGetter.get(), name, parameterTypes);
     }
 
     /**
-     * 根据目标参数类型，查找最佳匹配的方法。
+     * 根据目标参数类型，查找最佳匹配的方法.
+     *
+     * @param parameterTypes - 匹配的方法参数
+     * @return 找到的方法对象，找不到返回 null.
      */
     public MethodInfo searchMethod(String name, Class<?>... parameterTypes) {
         MethodInfo method = ExecutableUtils.getExecutable(methodsGetter.get(), name, parameterTypes);
@@ -489,8 +501,11 @@ public final class KlassInfo {
 
     /**
      * 调用默认的构造函数生成对象实例.
+     *
+     * @return 生成的对象实例.
+     * @throws IllegalStateException - 如果找不到默认的构造函数或者没有访问权限，那么抛出该异常.
      */
-    public Object newInstance() {
+    public Object newInstance() throws IllegalStateException {
         ASMAccessor accessor = getASMAccessor();
         if (accessor == null) {
             ConstructorInfo ctor = getDefaultConstructor();

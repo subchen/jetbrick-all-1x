@@ -26,7 +26,7 @@ import jetbrick.reflect.asm.ASMAccessor;
 
 /**
  * 代表一个构造函数.
- * 
+ *
  * @author Guoqiang Chen
  */
 public final class ConstructorInfo extends Executable implements Creater, Comparable<ConstructorInfo> {
@@ -36,6 +36,8 @@ public final class ConstructorInfo extends Executable implements Creater, Compar
 
     /**
      * 将 Constructor 对象转成 ConstructorInfo 对象.
+     * @param constructor - 原始对象
+     * @return ConstructorInfo 对象
      */
     public static ConstructorInfo create(Constructor<?> constructor) {
         KlassInfo klass = KlassInfo.create(constructor.getDeclaringClass());
