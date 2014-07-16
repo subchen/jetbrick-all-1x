@@ -362,7 +362,7 @@ public class Matcher implements MatchResult {
      * Returns the offset after the last character of the subsequence
      * captured by the given named group during the previous match operation.
      *
-     * @param group the name of the capture group
+     * @param groupName the name of the capture group
      * @return the offset
      */
     @Override

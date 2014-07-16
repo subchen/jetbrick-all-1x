@@ -229,8 +229,6 @@ public final class StringUtils {
      * StringUtils.defaultIfEmpty("bat", "NULL") = "bat"
      * StringUtils.defaultIfEmpty("", null)      = null
      * </pre>
-     *
-     * @see #defaultString(String, String)
      */
     public static String defaultIfEmpty(final String s, final String defaultStr) {
         return isEmpty(s) ? defaultStr : s;
@@ -249,8 +247,6 @@ public final class StringUtils {
      * StringUtils.defaultIfBlank("bat", "NULL") = "bat"
      * StringUtils.defaultIfBlank("", null)      = null
      * </pre>
-     *
-     * @see #defaultString(String, String)
      */
     public static String defaultIfBlank(final String s, final String defaultStr) {
         return isBlank(s) ? defaultStr : s;
@@ -2409,7 +2405,7 @@ public final class StringUtils {
      * </p>
      *
      * <p>
-     * For example:<br />
+     * For example:<br>
      * <code>replaceChars(&quot;hello&quot;, &quot;ho&quot;, &quot;jy&quot;) = jelly</code>
      * .
      * </p>

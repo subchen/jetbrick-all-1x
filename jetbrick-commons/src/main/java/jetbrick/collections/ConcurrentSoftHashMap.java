@@ -30,15 +30,15 @@ import java.util.concurrent.locks.ReentrantLock;
  * {@link SoftReference SoftReference}s.  (Contrast this with the JDK's
  * {@link WeakHashMap WeakHashMap}, which uses weak references for its <em>keys</em>, which is of little value if you
  * want the cache to auto-resize itself based on memory constraints).
- * <p/>
+ * <p>
  * Having the values wrapped by soft references allows the cache to automatically reduce its size based on memory
  * limitations and garbage collection.  This ensures that the cache will not cause memory leaks by holding strong
  * references to all of its values.
- * <p/>
+ * <p>
  * This class is a generics-enabled Map based on initial ideas from Heinz Kabutz's and Sydney Redelinghuys's
  * <a href="http://www.javaspecialists.eu/archive/Issue015.html">publicly posted version (with their approval)</a>, with
  * continued modifications.
- * <p/>
+ * <p>
  * This implementation is thread-safe and usable in concurrent environments.
  */
 public class ConcurrentSoftHashMap<K, V> implements Map<K, V> {
@@ -82,12 +82,12 @@ public class ConcurrentSoftHashMap<K, V> implements Map<K, V> {
 
     /**
      * Creates a new ConcurrentSoftHashMap with the specified retention size.
-     * <p/>
+     * <p>
      * The retention size (n) is the total number of most recent entries in the map that will be strongly referenced
      * (ie 'retained') to prevent them from being eagerly garbage collected.  That is, the point of a ConcurrentSoftHashMap is to
      * allow the garbage collector to remove as many entries from this map as it desires, but there will always be (n)
      * elements retained after a GC due to the strong references.
-     * <p/>
+     * <p>
      * Note that in a highly concurrent environments the exact total number of strong references may differ slightly
      * than the actual <code>retentionSize</code> value.  This number is intended to be a best-effort retention low
      * water mark.
@@ -118,12 +118,12 @@ public class ConcurrentSoftHashMap<K, V> implements Map<K, V> {
 
     /**
      * Creates a {@code ConcurrentSoftHashMap} backed by the specified {@code source}, with the specified retention size.
-     * <p/>
+     * <p>
      * The retention size (n) is the total number of most recent entries in the map that will be strongly referenced
      * (ie 'retained') to prevent them from being eagerly garbage collected.  That is, the point of a ConcurrentSoftHashMap is to
      * allow the garbage collector to remove as many entries from this map as it desires, but there will always be (n)
      * elements retained after a GC due to the strong references.
-     * <p/>
+     * <p>
      * Note that in a highly concurrent environments the exact total number of strong references may differ slightly
      * than the actual <code>retentionSize</code> value.  This number is intended to be a best-effort retention low
      * water mark.

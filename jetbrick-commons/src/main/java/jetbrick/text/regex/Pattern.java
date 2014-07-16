@@ -24,7 +24,7 @@ import java.util.regex.PatternSyntaxException;
 /**
  * A compiled representation of a regular expression. This is a wrapper
  * for the java.util.regex.Pattern with support for named capturing
- * groups. The named groups are specified with "(?&lt;name>exp)", which
+ * groups. The named groups are specified with "(?&lt;name&gt;exp)", which
  * is identical to Java 7 named groups.
  */
 public class Pattern {
