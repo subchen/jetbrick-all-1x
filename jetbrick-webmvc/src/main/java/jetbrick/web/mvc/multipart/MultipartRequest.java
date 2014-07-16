@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
 /**
  * <p> This class functions as a wrapper around HttpServletRequest to provide
  * working getParameter methods for multipart requests. </p>
- * @see org.apache.struts.upload.MultipartRequestWrapper
  */
 public class MultipartRequest extends HttpServletRequestWrapper {
     private Map<String, String[]> parameters = new HashMap<String, String[]>();

@@ -21,7 +21,7 @@ package jetbrick.web.mvc.action;
 import java.util.*;
 
 /**
- * 为了优化性能，没有使用 Map<String, String>，而是自己实现的容器.
+ * 为了优化性能，没有使用 Map&lt;String, String&gt;，而是自己实现的容器.
  */
 public final class PathVariables {
     private String[] items;
