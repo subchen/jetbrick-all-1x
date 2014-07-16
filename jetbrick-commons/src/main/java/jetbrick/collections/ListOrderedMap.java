@@ -23,7 +23,7 @@ import java.util.*;
 
 public class ListOrderedMap<K, V> extends AbstractMap<K, V> implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
-    private Map<K, LinkedEntry<K, V>> map;
+    private final Map<K, LinkedEntry<K, V>> map;
     private LinkedEntry<K, V> header;
 
     public ListOrderedMap() {

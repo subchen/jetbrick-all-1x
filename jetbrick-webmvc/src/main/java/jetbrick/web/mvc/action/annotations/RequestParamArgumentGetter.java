@@ -29,12 +29,13 @@ import jetbrick.web.mvc.multipart.FilePart;
 
 @Managed
 public class RequestParamArgumentGetter implements AnnotatedArgumentGetter<RequestParam, Object> {
-    // 区分不同的场景
-    private enum Scenario {
-        FILE, ARRAY, ELEMENT
-    }
 
-    private Scenario scenario;
+    // 区分不同的场景
+    private static final int SCENARIO_FILE = 1;
+    private static final int SCENARIO_ARRAY = 2;
+    private static final int SCENARIO_ELEMENT = 3;
+
+    private int scenario;
     private Class<?> type; // 参数类型
     private String name;
     private boolean required;
@@ -45,14 +46,14 @@ public class RequestParamArgumentGetter implements AnnotatedArgumentGetter<Reque
     public void initialize(ArgumentContext<RequestParam> ctx) {
         type = ctx.getRawParameterType();
         if (FilePart.class.isAssignableFrom(type)) {
-            scenario = Scenario.FILE;
+            scenario = SCENARIO_FILE;
             cast = null;
         } else if (type.isArray()) {
-            scenario = Scenario.ARRAY;
+            scenario = SCENARIO_ARRAY;
             type = type.getComponentType();
             cast = null;
         } else {
-            scenario = Scenario.ELEMENT;
+            scenario = SCENARIO_ELEMENT;
             cast = ctx.getTypeConvertor();
         }
 
@@ -68,7 +69,7 @@ public class RequestParamArgumentGetter implements AnnotatedArgumentGetter<Reque
     @Override
     public Object get(RequestContext ctx) {
         switch (scenario) {
-        case ELEMENT: {
+        case SCENARIO_ELEMENT: {
             String value = ctx.getParameter(name);
             if (value == null) {
                 value = defaultValue;
@@ -84,7 +85,7 @@ public class RequestParamArgumentGetter implements AnnotatedArgumentGetter<Reque
             }
             return value;
         }
-        case ARRAY: {
+        case SCENARIO_ARRAY: {
             String[] values = ctx.getParameterValues(name);
             if (values == null) {
                 if (defaultValue != null) {
@@ -96,7 +97,7 @@ public class RequestParamArgumentGetter implements AnnotatedArgumentGetter<Reque
             }
             return TypeCastUtils.convertToArray(values, type);
         }
-        case FILE: {
+        case SCENARIO_FILE: {
             Object value = ctx.getFilePart(name);
             if (value == null && required) {
                 throw new IllegalStateException("upload file object is not found: " + name);

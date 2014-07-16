@@ -32,7 +32,7 @@ public final class UnsafeUtils {
 
     static {
         try {
-            Field field = Unsafe.class.getDeclaredField("unsafe");
+            Field field = Unsafe.class.getDeclaredField("theUnsafe");
             field.setAccessible(true);
             unsafe = (Unsafe) field.get(null);
         } catch (Exception e) {

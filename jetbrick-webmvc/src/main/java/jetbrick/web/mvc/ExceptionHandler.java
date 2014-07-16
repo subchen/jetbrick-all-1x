@@ -27,6 +27,6 @@ public interface ExceptionHandler {
 
     public static final String KEY_IN_REQUEST = "jetbrick.mvc.exception";
 
-    public void handleError(RequestContext ctx, Throwable e) throws Throwable;
+    public void handleError(RequestContext ctx, Exception e) throws Exception;
 
 }
