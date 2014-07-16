@@ -148,7 +148,7 @@ public class DateUtils {
      * 用指定的格式解析日期时间.
      *
      * @param date      时间字符串
-     * @param pattern   see {@link java.text.SimpleDateFormat}
+     * @param patterns  多个模式，see {@link java.text.SimpleDateFormat}
      * @return          如果无法解析，那么返回 {@code null}
      */
     public static Date parseUsingPatterns(String date, String[] patterns) {

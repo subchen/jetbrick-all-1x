@@ -32,7 +32,7 @@ public final class TypeResolverUtils {
      * Returns raw class for given <code>type</code>. Use this method with both
      * regular and generic types.
      *
-     * @param type the type to convert
+     * @param type - the type to convert
      * @return the closest class representing the given <code>type</code>
      * @see #getRawType(java.lang.reflect.Type, Class)
      */
@@ -43,6 +43,10 @@ public final class TypeResolverUtils {
     /**
      * Returns raw class for given <code>type</code> when implementation class is known
      * and it makes difference.
+     *
+     * @param type - given type
+     * @param implClass - implementation clas
+     * @return raw class
      * @see #resolveVariable(java.lang.reflect.TypeVariable, Class)
      */
     public static Class<?> getRawType(Type type, Class<?> implClass) {
@@ -93,6 +97,10 @@ public final class TypeResolverUtils {
 
     /**
      * Resolves <code>TypeVariable</code> with given implementation class.
+     *
+     * @param variable - variable
+     * @param implClass - implementation class
+     * @return resolved type
      */
     public static Type resolveVariable(TypeVariable<?> variable, Class<?> implClass) {
         Class<?> rawType = getRawType(implClass, null);
@@ -169,6 +177,11 @@ public final class TypeResolverUtils {
      * than it represents order of component type. If the value is negative, then it represents
      * component type counted from the end! Therefore, the default value of <code>-1</code>
      * always returns the <b>last</b> component type.
+     *
+     * @param type - type
+     * @param implClass - implementation class
+     * @param index - index of component type
+     * @return component type
      */
     public static Class<?> getComponentType(Type type, Class<?> implClass, int index) {
         if (type instanceof Class) {

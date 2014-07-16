@@ -63,8 +63,8 @@ public final class ArrayStack<T> {
 
     /**
      * Pushes an item onto the top of this stack.
-     * 
-     * @param the element to be pushed onto this stack
+     *
+     * @param element － the element to be pushed onto this stack
      * @return the item argument
      */
     public T push(T element) {
@@ -79,7 +79,7 @@ public final class ArrayStack<T> {
 
     /**
      * Removes the object at the top of this stack and returns that object as the value of this function.
-     * 
+     *
      * @return The object at the top of this stack
      * @throws EmptyStackException - if this queue is empty
      */
@@ -98,7 +98,7 @@ public final class ArrayStack<T> {
 
     /**
      * Looks at the object at the top of this stack without removing it from the stack.
-     * 
+     *
      * @return the object at the top of this stack
      * @throws EmptyStackException - if this stack is empty.
      */

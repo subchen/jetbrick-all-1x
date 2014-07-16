@@ -17,8 +17,9 @@
  * limitations under the License.
  */
 /**
- * 由于 JDK6 不支持 namedGroup 的 Pattern，所以这个包提供给 JDK6 使用的兼容功能.<br/>
+ * 由于 JDK6 不支持 namedGroup 的 Pattern，所以这个包提供给 JDK6 使用的兼容功能.
  *
+ * <p>
  * 具体可以看 {@link jetbrick.text.regex.Pattern}
  */
 package jetbrick.text.regex;

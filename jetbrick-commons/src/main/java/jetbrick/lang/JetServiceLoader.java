@@ -33,7 +33,7 @@ import jetbrick.io.IoUtils;
  *      "jetbrick.log.Log4jLoggerFactory, org.apache.log4j.Logger",
  *      "jetbrick.log.Jdk14LoggerFactory"
  * );
- * <code></pre>
+ * </code></pre>
  *
  * Load Service Sequence:
  * <ul>
