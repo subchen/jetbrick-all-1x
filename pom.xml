@@ -13,6 +13,14 @@
     <description>A parent pom.xml for jetbrick.</description>
     <url>http://subchen.github.io/jetbrick/</url>
 
+    <modules>
+        <module>jetbrick-commons</module>
+        <module>jetbrick-ioc</module>
+        <module>jetbrick-webmvc</module>
+        <module>jetbrick-orm</module>
+        <module>jetbrick-all</module>
+    </modules>
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
