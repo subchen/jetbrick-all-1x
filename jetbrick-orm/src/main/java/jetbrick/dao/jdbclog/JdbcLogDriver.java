@@ -154,8 +154,8 @@ public final class JdbcLogDriver implements Driver {
             log.info("connectionUrl = {}", connectionUrl);
             try {
                 driver = (Driver) Class.forName(driverClassName).newInstance();
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
             }
             drivers.put(url, driver);
         }

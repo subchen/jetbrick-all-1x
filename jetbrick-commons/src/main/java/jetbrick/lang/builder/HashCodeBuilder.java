@@ -159,21 +159,21 @@ public final class HashCodeBuilder {
         if (object == null) {
             result *= constant;
         } else if (object.getClass().isArray()) {
-            if ((object instanceof long[])) {
+            if (object instanceof long[]) {
                 append((long[]) object);
-            } else if ((object instanceof int[])) {
+            } else if (object instanceof int[]) {
                 append((int[]) object);
-            } else if ((object instanceof short[])) {
+            } else if (object instanceof short[]) {
                 append((short[]) object);
-            } else if ((object instanceof char[])) {
+            } else if (object instanceof char[]) {
                 append((char[]) object);
-            } else if ((object instanceof byte[])) {
+            } else if (object instanceof byte[]) {
                 append((byte[]) object);
-            } else if ((object instanceof double[])) {
+            } else if (object instanceof double[]) {
                 append((double[]) object);
-            } else if ((object instanceof float[])) {
+            } else if (object instanceof float[]) {
                 append((float[]) object);
-            } else if ((object instanceof boolean[])) {
+            } else if (object instanceof boolean[]) {
                 append((boolean[]) object);
             } else {
                 append((Object[]) object);
@@ -219,10 +219,5 @@ public final class HashCodeBuilder {
 
     public int toHashCode() {
         return result;
-    }
-
-    @Override
-    public int hashCode() {
-        return toHashCode();
     }
 }
