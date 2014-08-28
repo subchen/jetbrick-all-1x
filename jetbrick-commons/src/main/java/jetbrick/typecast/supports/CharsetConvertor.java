@@ -21,7 +21,8 @@ package jetbrick.typecast.supports;
 import java.nio.charset.Charset;
 import jetbrick.typecast.Convertor;
 
-public class CharsetConvertor implements Convertor<Charset> {
+public final class CharsetConvertor implements Convertor<Charset> {
+    public static final CharsetConvertor INSTANCE = new CharsetConvertor();
 
     @Override
     public Charset convert(String value) {

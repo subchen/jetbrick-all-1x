@@ -21,6 +21,7 @@ package jetbrick.typecast;
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
@@ -66,6 +67,7 @@ public final class TypeCastResolver {
         // commons
         register(String.class, StringConvertor.INSTANCE);
         register(Class.class, ClassConvertor.INSTANCE);
+        register(Charset.class, CharsetConvertor.INSTANCE);
 
         // date time
         register(java.util.Date.class, DateConvertor.INSTANCE);
