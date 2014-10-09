@@ -65,22 +65,25 @@ public final class FileUploaderUtils {
 
     // multipart/form-data
     private static MultipartRequest asMultipartRequest(HttpServletRequest request) throws Exception {
-        MultipartRequest req = new MultipartRequest(request);
+        String encoding = request.getCharacterEncoding();
 
+        MultipartRequest req = new MultipartRequest(request);
         ServletFileUpload upload = new ServletFileUpload();
+        upload.setHeaderEncoding(encoding);
         FileItemIterator it = upload.getItemIterator(request);
+
         while (it.hasNext()) {
             FileItemStream item = it.next();
             String fieldName = item.getFieldName();
             InputStream stream = item.openStream();
             try {
                 if (item.isFormField()) {
-                    req.setParameter(fieldName, Streams.asString(stream));
+                    req.setParameter(fieldName, Streams.asString(stream, encoding));
                 } else {
                     String originalFilename = item.getName();
                     File diskFile = getTempFile(originalFilename);
-
                     OutputStream fos = new FileOutputStream(diskFile);
+
                     try {
                         IoUtils.copy(stream, fos);
                     } finally {
